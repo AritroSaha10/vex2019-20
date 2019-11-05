@@ -24,7 +24,7 @@ pros::Motor frontRightMtr (3);
 pros::Motor backRightMtr (4);
 
 auto drive = ChassisControllerFactory::create(
-	{1, 2}, {3, 4},
+	{1, 9}, {2, 10},
 	AbstractMotor::gearset::green,
 	{4_in, 11.5_in}
 );
@@ -34,37 +34,40 @@ void opcontrol() {
 	//TRADITIONAL CONTROLLER
 	//pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-	//OKAPILIB CONTROLLER
-	okapi::Controller master;
+	/*Traditional
+	int left = master.get_analog(ANALOG_LEFT_Y);
+	int right = master.get_analog(ANALOG_RIGHT_Y);
 
-		while (true)
-	{
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
+	backLeftMtr = left;
+	frontLeftMtr = left;
+	frontRightMtr = right;
+	backRightMtr = right;
 
-		/*Traditional
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
+	pros::delay(20);
+	*/
 
-		backLeftMtr = left;
-		frontLeftMtr = left;
-		frontRightMtr = right;
-		backRightMtr = right;
+	//OkapiLib
+	frontLeftMtr.move(100);
+	pros::delay(5000);
+	frontLeftMtr.move(0);
+	backLeftMtr.move(100);
+	pros::delay(5000);
+	backLeftMtr.move(0);
+	frontRightMtr.move(100);
+	pros::delay(5000);
+	frontRightMtr.move(0);
+	backRightMtr.move(100);
+	pros::delay(5000);
+	backRightMtr.move(0);
+	//drive.tank(master.getAnalog(ControllerAnalog::leftY),
+	//			   master.getAnalog(ControllerAnalog::rightY),0.2);
 
-		pros::delay(20);
-		*/
+	/*OkapiLib Arcade
+	drive.arcade(master.getAnalog(ControllerAnalog::leftY),
+				master.getAnalog(ControllerAnalog::rightY));
+	*/
 
-		//OkapiLib
-
-		drive.tank(master.getAnalog(ControllerAnalog::leftY),
-				   master.getAnalog(ControllerAnalog::rightY));
-
-		/*OkapiLib Arcade
-		drive.arcade(master.getAnalog(ControllerAnalog::leftY),
-					master.getAnalog(ControllerAnalog::rightY));
-		*/
-
-		pros::delay(10);
-	}
+	pros::delay(10);
+	//}
 }
+		
