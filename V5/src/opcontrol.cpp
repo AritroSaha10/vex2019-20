@@ -1,4 +1,5 @@
 #include "main.h"
+
 #include <initializer_list>
 
 /**
@@ -18,10 +19,13 @@
 using namespace pros;
 using namespace okapi;
 
+//Controller master;
 pros::Motor frontLeftMtr (1);
 pros::Motor backLeftMtr (2);
 pros::Motor frontRightMtr (9);
 pros::Motor backRightMtr (10);
+
+okapi::Controller master;
 
 auto drive = ChassisControllerFactory::create(
 	{1, 9}, {2, 10},
