@@ -1,4 +1,6 @@
 #include "main.h"
+#include "chassis.h"
+
 
 #include <initializer_list>
 
@@ -20,21 +22,17 @@ using namespace pros;
 using namespace okapi;
 
 //Controller master;
-pros::Motor frontLeftMtr (1);
-pros::Motor backLeftMtr (2);
-pros::Motor frontRightMtr (9);
-pros::Motor backRightMtr (10);
 
 okapi::Controller master;
 
 auto drive = ChassisControllerFactory::create(
-	{1, 9}, {2, 10},
+	{+FL, +BL}, {-FR, -BR},
 	AbstractMotor::gearset::green,
 	{4_in, 11.5_in}
 );
 
 void opcontrol() {
-
+	while (1) {	
 	//TRADITIONAL CONTROLLER
 	//pros::Controller master(pros::E_CONTROLLER_MASTER);
 
@@ -63,15 +61,20 @@ void opcontrol() {
 	backRightMtr.move(100);
 	pros::delay(5000);
 	backRightMtr.move(0);*/
-	drive.tank(master.getAnalog(ControllerAnalog::leftY),
-				   master.getAnalog(ControllerAnalog::rightY),0.2);
+		drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY)),
+				   joystickSlew(master.getAnalog(ControllerAnalog::rightY)),0.05);
 
 	/*OkapiLib Arcade
 	drive.arcade(master.getAnalog(ControllerAnalog::leftY),
 				master.getAnalog(ControllerAnalog::rightY));
 	*/
-
-	pros::delay(10);
+		pros::lcd::set_text(2, "I'm working and printing fool");
+		pros::delay(10);
 	//}
+	}
+}
+
+double joystickSlew(double input) {
+	return pow(input, 3);
 }
 		

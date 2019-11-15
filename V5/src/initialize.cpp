@@ -1,5 +1,6 @@
 #include "main.h"
 #include "tracking.h"
+#include "chassis.h"
 
 void on_center_button() {
 	static bool pressed = false;
@@ -18,6 +19,11 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	pros::Motor frontLeftMtr (FL);
+	pros::Motor backLeftMtr (BL);
+	pros::Motor frontRightMtr (FR);
+	pros::Motor backRightMtr (BR);
+
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 

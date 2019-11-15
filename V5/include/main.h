@@ -40,6 +40,7 @@
  * You should add more #includes here
  */
 #include "okapi/api.hpp"
+#include "chassis.h"
 //#include "pros/api_legacy.h"
 
 /**
@@ -79,7 +80,5 @@ void opcontrol(void);
  */
 //#include <iostream>
 #endif
-
-#include "chassis.h"
 
 #endif  // _PROS_MAIN_H_
