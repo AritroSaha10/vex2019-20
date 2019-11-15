@@ -20,8 +20,8 @@ using namespace okapi;
 
 pros::Motor frontLeftMtr (1);
 pros::Motor backLeftMtr (2);
-pros::Motor frontRightMtr (3);
-pros::Motor backRightMtr (4);
+pros::Motor frontRightMtr (9);
+pros::Motor backRightMtr (10);
 
 auto drive = ChassisControllerFactory::create(
 	{1, 9}, {2, 10},
@@ -47,7 +47,7 @@ void opcontrol() {
 	*/
 
 	//OkapiLib
-	frontLeftMtr.move(100);
+	/*frontLeftMtr.move(100);
 	pros::delay(5000);
 	frontLeftMtr.move(0);
 	backLeftMtr.move(100);
@@ -58,9 +58,9 @@ void opcontrol() {
 	frontRightMtr.move(0);
 	backRightMtr.move(100);
 	pros::delay(5000);
-	backRightMtr.move(0);
-	//drive.tank(master.getAnalog(ControllerAnalog::leftY),
-	//			   master.getAnalog(ControllerAnalog::rightY),0.2);
+	backRightMtr.move(0);*/
+	drive.tank(master.getAnalog(ControllerAnalog::leftY),
+				   master.getAnalog(ControllerAnalog::rightY),0.2);
 
 	/*OkapiLib Arcade
 	drive.arcade(master.getAnalog(ControllerAnalog::leftY),
