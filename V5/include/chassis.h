@@ -1,13 +1,19 @@
-#ifndef _CHASSIS_H
-#define _CHASSIS_H
-
+#pragma once
 #include "main.h"
+#include "vector"
 
 #define FL 1
 #define FR 2
 #define BL 9
 #define BR 10
 
-double joystickSlew(double input);
+// ---------------- PLACEHOLDERS --------------------//
+#define M1 3
+#define M2 4
+#define M3 7
+#define M4 8
+// ---------------- PLACEHOLDERS --------------------//
 
-#endif
+double joystickSlew(double input);
+std::vector<double> getEncoders(std::vector<int> ports);
+
