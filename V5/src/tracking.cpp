@@ -1,27 +1,35 @@
 #include "tracking.h"
 #include "chassis.h"
 
-#define DEGREE_TO_CM M_PI*8.255/360 //cm per tick
+#define DEGREE_TO_CM M_PI*8.255/360 	//cm per tick
 
-double lDist, rDist, dist, deltaL, deltaR, deltaS = 0;
-double lastL, lastR, lastS, lastTheta = 0;
-double theta, distOfWheels, changeInTheta, x, y;
+float lDist, rDist, dist, lastTheta, x, y = 0;
+float theta;
+float changeInTheta;
+float distOfWheels = 26.6; 		//cm
+std::vector<double> encoders;
 
 void tracking(void* param) {
-	while(true) {
+	while(1) {
 		
-		std::vector<double> encoders = getEncoders({FL, FR});
+		encoders = getEncoders({FL, FR});
 		lDist = (encoders[0]-lDist)*DEGREE_TO_CM;
-		rDist = encoders[1]-rDist*DEGREE_TO_CM;
+		rDist = (encoders[1]-rDist)*DEGREE_TO_CM;
+		
 		dist = (rDist+lDist)/2;
-		theta = (deltaL-deltaR)/distOfWheels; 
-		changeInTheta = theta-lastTheta;
+		theta = (rDist-lDist)/distOfWheels; 
+		changeInTheta = (theta - lastTheta);
+		if (abs((theta)-(lastTheta)) >= 0.1) {
+			x += dist*sin(theta-lastTheta+(M_PI/2));
+			y += dist*sin(theta-lastTheta);
+		}		
 
-		lastL = lDist;
-		lastR = rDist;
+		theta += theta-lastTheta;
+	
+		pros::lcd::print(2, "x: %f, y: %f, theta: %f", x, y, theta);
+		pros::lcd::print(3, "theta: %f, lastTheta: %f", theta, lastTheta);
+		pros::lcd::print(4, "change in theta: %f", (theta-lastTheta));
 		lastTheta = theta;
-		pros::lcd::print(2, "deltaL %f", deltaL);
-		pros::lcd::print(3, "deltaR %f", deltaR);
 		pros::delay(2);
 	}
 }

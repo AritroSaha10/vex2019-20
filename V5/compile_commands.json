@@ -28,11 +28,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/chassis.cpp.o",
-            "src\\chassis.cpp"
+            "bin/initialize.cpp.o",
+            "src\\initialize.cpp"
         ],
         "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
-        "file": "src\\chassis.cpp"
+        "file": "src\\initialize.cpp"
     },
     {
         "arguments": [
@@ -63,11 +63,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/initialize.cpp.o",
-            "src\\initialize.cpp"
+            "bin/chassis.cpp.o",
+            "src\\chassis.cpp"
         ],
         "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
-        "file": "src\\initialize.cpp"
+        "file": "src\\chassis.cpp"
     },
     {
         "arguments": [

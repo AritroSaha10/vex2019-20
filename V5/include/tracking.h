@@ -3,7 +3,8 @@
 
 #include "tracking.h"
 #include "main.h"
-#include "chassis.h" 
+#include "chassis.h"
+#include <math.h> 
 #define _USE_MATH_DEFINES
 
 /*
