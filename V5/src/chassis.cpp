@@ -1,16 +1,15 @@
 #include "chassis.h"
 #include <vector>
 
-pros::Motor allMotors [] = {
-    pros::Motor(FR),
-    pros::Motor(BR),
-    pros::Motor(FL),
-    pros::Motor(BL),
-    pros::Motor(M1),
-    pros::Motor(M2),
-    pros::Motor(M3),
-    pros::Motor(M4)
-};
+pros::Motor allMotors[] = {
+    pros::Motor(FR_PORT),
+    pros::Motor(BR_PORT),
+    pros::Motor(FL_PORT),
+    pros::Motor(BL_PORT),
+    pros::Motor(M1_PORT),
+    pros::Motor(M2_PORT),
+    pros::Motor(M3_PORT),
+    pros::Motor(M4_PORT)};
 
 void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[FR].move(rightSpeed);
