@@ -13,8 +13,8 @@ void tracking(void* param) {
 	while(1) {
 		
 		encoders = getEncoders({FL, FR});
-		lDist = (encoders[0]-lDist)*DEGREE_TO_CM;
-		rDist = (encoders[1]-rDist)*DEGREE_TO_CM;
+		lDist = (encoders[0])*DEGREE_TO_CM-lDist;
+		rDist = (encoders[1])*DEGREE_TO_CM-rDist;
 		
 		dist = (rDist+lDist)/2;
 		theta = (rDist-lDist)/distOfWheels; 
