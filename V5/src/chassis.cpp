@@ -19,23 +19,19 @@ void chassisSet(float leftSpeed, float rightSpeed) {
 }
 
 void moveIntake() {
-
-    while (pressed)
-	{
-		if (MasterController.ButtonR2.pressing()) {
-			allMotors[M1].spin(directionType::fwd, 100, percentUnits::pct);
-			allMotors[M2].spin(directionType::rev, 100, percentUnits::pct);
+	
+	if (MasterController.ButtonR2.pressing()) {
+			allMotors[M1].move(50);
+			allMotors[M2].move(-50);
 		}
-		else if (MasterController.ButtonR1.pressing()) {
-			allMotors[M1].spin(directionType::rev, 100, percentUnits::pct);
-			allMotors[M2].spin(directionType::fwd, 100, percentUnits::pct);
+	else if (MasterController.ButtonR1.pressing()) {
+			allMotors[M1].move(-50);
+			allMotors[M2].move(50);
 		}
-		else {
-			allMotors[M1].stop(brakeType::hold);
-			allMotors[M2].stop(brakeType::hold);
+	else {
+			allMotors[M1].move(0);
+			allMotors[M2].move(0);
 		}
-
-	}
 }
 
 std::vector<double> getEncoders(std::vector<int> ports) {
