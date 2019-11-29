@@ -64,11 +64,15 @@
 extern "C" {
 #endif
 
+#define VISION_PORT 2
 void autonomous(void);
 void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
+
+
+//pros::Vision vision_sensor(VISION_PORT);
 
 #ifdef __cplusplus
 }

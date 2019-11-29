@@ -20,15 +20,15 @@ void tracking(void* param) {
 		theta = (rDist-lDist)/distOfWheels; 
 		changeInTheta = (theta - lastTheta);
 		if (abs((theta)-(lastTheta)) >= 0.1) {
-			x += dist*sin(theta-lastTheta+(M_PI/2));
+			x += dist*cos(theta-lastTheta);
 			y += dist*sin(theta-lastTheta);
-		}		
+		}	
 
 		theta += theta-lastTheta;
 	
-		pros::lcd::print(2, "x: %f, y: %f, theta: %f", x, y, theta);
+		/*pros::lcd::print(2, "x: %f, y: %f, theta: %f", x, y, theta);
 		pros::lcd::print(3, "theta: %f, lastTheta: %f", theta, lastTheta);
-		pros::lcd::print(4, "change in theta: %f", (theta-lastTheta));
+		pros::lcd::print(4, "change in theta: %f", (theta-lastTheta));*/
 		lastTheta = theta;
 		pros::delay(2);
 	}

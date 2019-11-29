@@ -35,6 +35,8 @@ void opcontrol() {
 	while (1) {	
 	//TRADITIONAL CONTROLLER
 	//pros::Controller master(pros::E_CONTROLLER_MASTER);
+	
+	
 
 	/*Traditional
 	int left = master.get_analog(ANALOG_LEFT_Y);
@@ -71,6 +73,8 @@ void opcontrol() {
 		pros::lcd::set_text(2, "I'm working and printing fool");
 		pros::delay(10);
 	//}
+	vision_object
+	pros::lcd::print(2, "location of purple cube: %f", 
 	}
 }
 
