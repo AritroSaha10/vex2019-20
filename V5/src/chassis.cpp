@@ -18,7 +18,7 @@ void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[BL].move(leftSpeed);
 }
 
-void moveIntake() {
+/*void moveIntake() {
 	
 	if (MasterController.ButtonR2.pressing()) {
 			allMotors[M1].move(50);
@@ -32,7 +32,7 @@ void moveIntake() {
 			allMotors[M1].move(0);
 			allMotors[M2].move(0);
 		}
-}
+}*/
 
 std::vector<double> getEncoders(std::vector<int> ports) {
     std::vector<double> returnVec;
