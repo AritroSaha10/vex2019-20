@@ -1,6 +1,5 @@
 #include "main.h"
 #include "tracking.h"
-#include "visionSensor.h"
 
 void on_center_button() {
 	static bool pressed = false;
@@ -29,7 +28,6 @@ void initialize() {
 
 	pros::lcd::register_btn1_cb(on_center_button);
 	pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
-	pros::vision_signature_s_t PURPLE_CUBE = pros::Vision::signature_from_utility (PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);	
 }
 
 /**
