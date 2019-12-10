@@ -11,4 +11,8 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	pros::Vision autonSensor;
+	pros::vision_signature_s_t PURPLE[3];
+	PURPLE_CUBE = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);	
+}

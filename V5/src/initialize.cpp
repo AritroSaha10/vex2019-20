@@ -1,6 +1,8 @@
 #include "main.h"
 #include "tracking.h"
 
+extern pros::vision_signature_s_t PURPLE_CUBE;
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;

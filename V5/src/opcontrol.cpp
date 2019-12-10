@@ -1,6 +1,5 @@
 #include "main.h"
 #include "chassis.h"
-#include "visionSensor.h"
 #include <initializer_list>
 
 /**
@@ -72,8 +71,8 @@ void opcontrol() {
 		pros::lcd::set_text(2, "I'm working and printing fool");
 		pros::delay(10);
 	//}
-	vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG);
-	pros::lcd::print(2, "location of purple cube: %f", testCube.left_coord);
+	//vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG);
+//	pros::lcd::print(2, "location of purple cube: %f", testCube.left_coord);
 	}
 }
 

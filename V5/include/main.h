@@ -41,6 +41,7 @@
  */
 #include "okapi/api.hpp"
 #include "chassis.h"
+#include "visionSensor.h"
 //#include "pros/api_legacy.h"
 
 /**
