@@ -5,8 +5,10 @@
 
 #define PURPLE_SIG 1
 
-//pros::vision_signature_s_t PURPLE[3];
+static pros::vision_signature_s_t PURPLE[3];
 
-//pros::Vision andyVision (VISION_PORT);
+static pros::Vision andyVision (VISION_PORT);
+
+static int x = 5;
 
 #endif

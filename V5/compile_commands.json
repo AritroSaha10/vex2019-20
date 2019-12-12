@@ -28,11 +28,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/tracking.cpp.o",
-            "src\\tracking.cpp"
+            "bin/initialize.cpp.o",
+            "src\\initialize.cpp"
         ],
         "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
-        "file": "src\\tracking.cpp"
+        "file": "src\\initialize.cpp"
     },
     {
         "arguments": [
@@ -168,11 +168,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/opcontrol.cpp.o",
-            "src\\opcontrol.cpp"
+            "bin/tracking.cpp.o",
+            "src\\tracking.cpp"
         ],
         "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
-        "file": "src\\opcontrol.cpp"
+        "file": "src\\tracking.cpp"
     },
     {
         "arguments": [
@@ -203,10 +203,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/initialize.cpp.o",
-            "src\\initialize.cpp"
+            "bin/opcontrol.cpp.o",
+            "src\\opcontrol.cpp"
         ],
         "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
-        "file": "src\\initialize.cpp"
+        "file": "src\\opcontrol.cpp"
     }
 ]

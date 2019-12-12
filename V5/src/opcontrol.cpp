@@ -1,5 +1,6 @@
 #include "main.h"
 #include "chassis.h"
+#include "visionSensor.h"
 #include <initializer_list>
 
 /**
@@ -30,12 +31,12 @@ auto drive = ChassisControllerFactory::create(
 );
 
 void opcontrol() {
+	//pros::vision_signature_s_t PURPLE[3];
 	while (1) {	
 	//TRADITIONAL CONTROLLER
 	//pros::Controller master(pros::E_CONTROLLER_MASTER);
 	
 	
-
 	/*Traditional
 	int left = master.get_analog(ANALOG_LEFT_Y);
 	int right = master.get_analog(ANALOG_RIGHT_Y);
@@ -57,7 +58,7 @@ void opcontrol() {
 	backLeftMtr.move(0);
 	frontRightMtr.move(100);
 	pros::delay(5000);
-	frontRightMtr.move(0);
+	frontRightMtr.move(0
 	backRightMtr.move(100);
 	pros::delay(5000);
 	backRightMtr.move(0);*/
@@ -71,7 +72,7 @@ void opcontrol() {
 		pros::lcd::set_text(2, "I'm working and printing fool");
 		pros::delay(10);
 	//}
-	//vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG);
+		vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG);
 //	pros::lcd::print(2, "location of purple cube: %f", testCube.left_coord);
 	}
 }

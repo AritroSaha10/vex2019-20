@@ -41,7 +41,6 @@
  */
 #include "okapi/api.hpp"
 #include "chassis.h"
-#include "visionSensor.h"
 //#include "pros/api_legacy.h"
 
 /**
@@ -71,9 +70,6 @@ void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
-
-
-//pros::Vision vision_sensor(VISION_PORT);
 
 #ifdef __cplusplus
 }
