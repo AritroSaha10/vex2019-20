@@ -72,12 +72,11 @@ void opcontrol() {
 		pros::lcd::set_text(2, "I'm working and printing fool");
 		pros::delay(10);
 	//}
-		vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG);
-//	pros::lcd::print(2, "location of purple cube: %f", testCube.left_coord);
+		pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
+		pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
 	}
 }
 
 double joystickSlew(double input) {
 	return pow(input, 3);
 }
-		
