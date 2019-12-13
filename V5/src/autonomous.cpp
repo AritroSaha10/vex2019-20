@@ -28,15 +28,19 @@ auto drive = ChassisControllerFactory::create(
 );
 
 void autonomous() {
-	/*pros::Vision autonSensor;
-	pros::vision_signature_s_t PURPLE[3];
-	;	*/
-	
 	/*
-	chassis.moveDistance(1_m);
+	chassis.moveDistance(2_ft);
 
-	chassis.turnAngle(90_deg);
+	chassis.turnAngle(135_deg);
 
-	chassis.moveDistance(1.5_ft);
+	chassis.moveDistance(2_ft);
+
+	chassis.turnAngle(-135_deg);
+
+	chassis.moveDistance(2_ft);
+
+	chassis.turnAngle(-135_deg);
+
+	chassis.moveDistance(3_ft);
 	*/
 }
