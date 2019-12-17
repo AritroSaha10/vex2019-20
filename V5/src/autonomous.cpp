@@ -28,7 +28,8 @@ const auto CHASSIS_WIDTH = 11.5_in;
 );*/
 
 void autonomous() {
-	/*
+		/*
+	*Possible auton path number 1
 	chassis.moveDistance(2_ft);
 
 	chassis.turnAngle(135_deg);
@@ -42,5 +43,16 @@ void autonomous() {
 	chassis.turnAngle(-135_deg);
 
 	chassis.moveDistance(3_ft);
+	*/
+
+	/*
+	*Possible auton path number 2
+	chassis.moveDistance(2_ft);
+
+	chassis.moveDistance(-2_ft);
+
+	chassis.turnAngle(-90_deg);
+
+	chassis.moveDistance(1_ft);
 	*/
 }
