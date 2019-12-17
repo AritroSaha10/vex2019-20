@@ -39,7 +39,11 @@
 /**
  * You should add more #includes here
  */
+#define VISION_PORT 2
+
 #include "okapi/api.hpp"
+#include "tracking.h"
+#include "visionSensor.h"
 #include "chassis.h"
 //#include "pros/api_legacy.h"
 
@@ -64,7 +68,6 @@
 extern "C" {
 #endif
 
-#define VISION_PORT 2
 void autonomous(void);
 void initialize(void);
 void disabled(void);
