@@ -1,7 +1,7 @@
 #include "tracking.h"
 #include "chassis.h"
 
-#define DEGREE_TO_CM (M_PI*8.255/360) 	//cm per tick
+	//cm per tick
 
 float lDist, rDist, dist, lastTheta, x, y, rCycle, lCycle = 0;
 float theta;

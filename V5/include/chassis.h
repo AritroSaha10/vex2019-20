@@ -9,10 +9,10 @@
 #define BR 3
 
 // Physical motor port connections -- Drive Motors
-#define FL_PORT 1
-#define FR_PORT 2
-#define BL_PORT 9
-#define BR_PORT 10
+#define FL_PORT 19
+#define FR_PORT 11
+#define BL_PORT 20
+#define BR_PORT 12
 
 // ---------------- PLACEHOLDERS --------------------//
 // allMotors array index --- Misc. Motors
@@ -28,6 +28,9 @@
 #define M4_PORT 8
 // ---------------- PLACEHOLDERS --------------------//
 
+#define AUTO_SPEED 80
+
 double joystickSlew(double input);
+void moveDistance(double dist);
 std::vector<double> getEncoders(std::vector<int> ports);
 

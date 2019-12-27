@@ -1,4 +1,5 @@
 #include "main.h"
+#include "visionSensor.h"
 #include "tracking.h"
 #include <initializer_list>
 
@@ -28,7 +29,7 @@ extern float theta;
 okapi::Controller master;
 
 auto drive = ChassisControllerFactory::create(
-	{+FL, +BL}, {-FR, -BR},
+	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
 	AbstractMotor::gearset::green,
 	{4_in, 11.5_in}
 );
@@ -38,6 +39,8 @@ void opcontrol() {
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);
+	pros::delay(2000);
+	drive.moveDistance(1_m);
 	while (1) {	
 	//TRADITIONAL CONTROLLER
 	//pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -80,7 +83,7 @@ void opcontrol() {
 	//}
 		pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		pros::lcd::print(5, "location of purple cube: %d", testCube.left_coord);
-		pros::lcd::print(7, "x loc : %f", x);
+		pros::lcd::print(7, "x loc : %f, y loc: %f, theta %f", x, y, theta);
 	}
 }
 

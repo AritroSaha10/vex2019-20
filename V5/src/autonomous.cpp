@@ -15,14 +15,9 @@
 using namespace pros;
 using namespace okapi;
 
-/*const int { +FL, +BL } = 1;
-const int { -FR, -BR } = 2;
-const auto WHEEL_DIAMETER = 4_in;
-const auto CHASSIS_WIDTH = 11.5_in;
-*/
 
 /*auto drive = ChassisControllerFactory::create(
-	{ +FL, +BL }, { -FR, -BR },
+	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
 	AbstractMotor::gearset::green,
 	{ 4_in, 11.5_in }
 );*/

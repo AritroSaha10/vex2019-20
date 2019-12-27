@@ -1,4 +1,5 @@
 #include "chassis.h"
+#include "tracking.h"
 #include <vector>
 
 pros::Motor allMotors[] = {
@@ -18,7 +19,16 @@ void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[BL].move(leftSpeed);
 }
 
-/*void moveIntake() {
+void moveDistance(double dist) {
+	double tick = dist/DEGREE_TO_CM;
+	allMotors[FR].move_absolute(tick, AUTO_SPEED);
+	allMotors[BR].move_absolute(tick, AUTO_SPEED);
+	allMotors[FL].move_absolute(tick, AUTO_SPEED);
+	allMotors[BL].move_absolute(tick, AUTO_SPEED);
+		
+}
+
+void moveIntake() {
 	
 	if (MasterController.ButtonR2.pressing()) {
 			allMotors[M1].move(50);
@@ -32,7 +42,7 @@ void chassisSet(float leftSpeed, float rightSpeed) {
 			allMotors[M1].move(0);
 			allMotors[M2].move(0);
 		}
-}*/
+}
 
 std::vector<double> getEncoders(std::vector<int> ports) {
     std::vector<double> returnVec;
