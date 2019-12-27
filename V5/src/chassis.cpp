@@ -1,5 +1,4 @@
 #include "chassis.h"
-#include "tracking.h"
 #include <vector>
 
 pros::Motor allMotors[] = {
@@ -7,10 +6,10 @@ pros::Motor allMotors[] = {
     pros::Motor(BR_PORT),
     pros::Motor(FL_PORT),
     pros::Motor(BL_PORT),
-    pros::Motor(M1_PORT),
-    pros::Motor(M2_PORT),
-    pros::Motor(M3_PORT),
-    pros::Motor(M4_PORT)};
+    pros::Motor(LINTAKE_PORT),
+    pros::Motor(RINTAKE_PORT),
+    pros::Motor(TRAY_PORT),
+    pros::Motor(LIFT_PORT)};
 
 void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[FR].move(rightSpeed);
@@ -19,16 +18,13 @@ void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[BL].move(leftSpeed);
 }
 
-void moveDistance(double dist) {
-	double tick = dist/DEGREE_TO_CM;
-	allMotors[FR].move_absolute(tick, AUTO_SPEED);
-	allMotors[BR].move_absolute(tick, AUTO_SPEED);
-	allMotors[FL].move_absolute(tick, AUTO_SPEED);
-	allMotors[BL].move_absolute(tick, AUTO_SPEED);
-		
+void move(std::vector<int> ports, float speed) {
+    for(auto i : ports) {
+        allMotors[i].move(speed);
+    }
 }
 
-void moveIntake() {
+/*void moveIntake() {
 	
 	if (MasterController.ButtonR2.pressing()) {
 			allMotors[M1].move(50);
@@ -42,7 +38,7 @@ void moveIntake() {
 			allMotors[M1].move(0);
 			allMotors[M2].move(0);
 		}
-}
+}*/
 
 std::vector<double> getEncoders(std::vector<int> ports) {
     std::vector<double> returnVec;

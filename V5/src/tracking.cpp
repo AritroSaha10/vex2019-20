@@ -1,5 +1,7 @@
 #include "tracking.h"
 #include "chassis.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 	//cm per tick
 
