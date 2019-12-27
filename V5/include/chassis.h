@@ -3,31 +3,32 @@
 #include "vector"
 
 // allMotors array index --- Drive Motors
-#define FL 0
-#define FR 1
-#define BL 2
-#define BR 3
+#define FL 1
+#define FR 2
+#define BL 3
+#define BR 4
 
 // Physical motor port connections -- Drive Motors
-#define FL_PORT 1
-#define FR_PORT 2
-#define BL_PORT 9
-#define BR_PORT 10
+#define FL_PORT 19
+#define FR_PORT 11
+#define BL_PORT 20
+#define BR_PORT 12
 
 // ---------------- PLACEHOLDERS --------------------//
 // allMotors array index --- Misc. Motors
-#define M1 4
-#define M2 5
-#define M3 6
-#define M4 7
+#define LINTAKE 4
+#define RINTAKE 5
+#define TRAY 6
+#define LIFT 7
 
 // Physical motor port connections -- Misc. Motors
-#define M1_PORT 3
-#define M2_PORT 4
-#define M3_PORT 7
-#define M4_PORT 8
+#define LINTAKE_PORT 5
+#define RINTAKE_PORT 6
+#define TRAY_PORT 4
+#define LIFT_PORT 3
 // ---------------- PLACEHOLDERS --------------------//
 
 double joystickSlew(double input);
 std::vector<double> getEncoders(std::vector<int> ports);
+void move(std::vector<int> ports, float speed);
 

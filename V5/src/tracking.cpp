@@ -1,5 +1,7 @@
 #include "tracking.h"
 #include "chassis.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #define DEGREE_TO_CM (M_PI*8.255/360) 	//cm per tick
 

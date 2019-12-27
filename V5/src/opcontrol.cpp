@@ -25,55 +25,50 @@ using namespace okapi;
 okapi::Controller master;
 
 auto drive = ChassisControllerFactory::create(
-	{+FL, +BL}, {-FR, -BR},
+	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
 	AbstractMotor::gearset::green,
 	{4_in, 11.5_in}
 );
 
 void opcontrol() {
 	//pros::vision_signature_s_t PURPLE[3];
+	float speed = 1.0f;
 	while (1) {	
-	//TRADITIONAL CONTROLLER
-	//pros::Controller master(pros::E_CONTROLLER_MASTER);
 	
-	
-	/*Traditional
-	int left = master.get_analog(ANALOG_LEFT_Y);
-	int right = master.get_analog(ANALOG_RIGHT_Y);
+	//INTAKE
+	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
+		move({LINTAKE}, -117);
+		move({RINTAKE}, 117);
+	}
 
-	backLeftMtr = left;
-	frontLeftMtr = left;
-	frontRightMtr = right;
-	backRightMtr = right;
+	//OUTTAKE
+	else if(master.getDigital(ControllerDigital::R1)) {
+		move({LINTAKE}, 117);
+		move({RINTAKE}, -117);
+	}
+	else {
+		move({LINTAKE, RINTAKE}, 0);
+	}
 
-	pros::delay(20);
-	*/
+	//LIFT
+	if(master.getDigital(ControllerDigital::X)) {
+		move({LIFT}, 127);
+		speed = 0.5f;
+	}
+	else {
+		move({LIFT}, 0);
+	}
 
-	//OkapiLib
-	/*frontLeftMtr.move(100);
-	pros::delay(5000);
-	frontLeftMtr.move(0);
-	backLeftMtr.move(100);
-	pros::delay(5000);
-	backLeftMtr.move(0);
-	frontRightMtr.move(100);
-	pros::delay(5000);
-	frontRightMtr.move(0
-	backRightMtr.move(100);
-	pros::delay(5000);
-	backRightMtr.move(0);*/
-		drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY)),
-				   joystickSlew(master.getAnalog(ControllerAnalog::rightY)),0.05);
+	//TRAY
 
-	/*OkapiLib Arcade
-	drive.arcade(master.getAnalog(ControllerAnalog::leftY),
-				master.getAnalog(ControllerAnalog::rightY));
-	*/
-		pros::lcd::set_text(2, "I'm working and printing fool");
-		pros::delay(10);
+	drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
+				   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
+
+	pros::lcd::set_text(2, "I'm working and printing fool");
+	pros::delay(10);
 	//}
-		pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
-		pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
+		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
+		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
 	}
 }
 

@@ -6,16 +6,22 @@ pros::Motor allMotors[] = {
     pros::Motor(BR_PORT),
     pros::Motor(FL_PORT),
     pros::Motor(BL_PORT),
-    pros::Motor(M1_PORT),
-    pros::Motor(M2_PORT),
-    pros::Motor(M3_PORT),
-    pros::Motor(M4_PORT)};
+    pros::Motor(LINTAKE_PORT),
+    pros::Motor(RINTAKE_PORT),
+    pros::Motor(TRAY_PORT),
+    pros::Motor(LIFT_PORT)};
 
 void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[FR].move(rightSpeed);
     allMotors[BR].move(rightSpeed);
     allMotors[FL].move(leftSpeed);
     allMotors[BL].move(leftSpeed);
+}
+
+void move(std::vector<int> ports, float speed) {
+    for(auto i : ports) {
+        allMotors[i].move(speed);
+    }
 }
 
 /*void moveIntake() {
