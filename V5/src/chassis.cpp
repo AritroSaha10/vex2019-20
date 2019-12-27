@@ -24,21 +24,16 @@ void move(std::vector<int> ports, float speed) {
     }
 }
 
-/*void moveIntake() {
-	
-	if (MasterController.ButtonR2.pressing()) {
-			allMotors[M1].move(50);
-			allMotors[M2].move(-50);
-		}
-	else if (MasterController.ButtonR1.pressing()) {
-			allMotors[M1].move(-50);
-			allMotors[M2].move(50);
-		}
-	else {
-			allMotors[M1].move(0);
-			allMotors[M2].move(0);
-		}
-}*/
+void auton() {
+}
+
+void moveIntake(int cond) {
+	if (cond == 1) {
+		move({LINTAKE}, -117);
+		move({RINTAKE}, 117);
+	} else if (cond == 0)
+		move({LINTAKE,RINTAKE}, 0);
+}
 
 std::vector<double> getEncoders(std::vector<int> ports) {
     std::vector<double> returnVec;

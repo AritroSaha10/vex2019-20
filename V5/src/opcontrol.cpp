@@ -37,8 +37,7 @@ void opcontrol() {
 	float speed = 1.0f;
 	pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
-	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
-	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);
+	pros::delay(2000);
 	while (1) {	
 	
 	//INTAKE

@@ -16,13 +16,18 @@ using namespace pros;
 using namespace okapi;
 
 
-/*auto drive = ChassisControllerFactory::create(
+auto autoDrive = ChassisControllerFactory::create(
 	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
 	AbstractMotor::gearset::green,
 	{ 4_in, 11.5_in }
-);*/
+);
 
 void autonomous() {
+
+	autoDrive.moveDistanceAsync(1_m);
+	moveIntake(1);	
+	pros::delay(2000);
+	moveIntake(0);
 		/*
 	*Possible auton path number 1
 	chassis.moveDistance(2_ft);

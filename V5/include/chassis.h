@@ -31,7 +31,8 @@
 #define AUTO_SPEED 80
 
 double joystickSlew(double input);
-void moveDistance(double dist);
 std::vector<double> getEncoders(std::vector<int> ports);
+void auton();
+void moveIntake(int cond);
 void move(std::vector<int> ports, float speed);
 
