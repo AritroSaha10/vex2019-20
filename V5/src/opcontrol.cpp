@@ -35,24 +35,40 @@ auto drive = ChassisControllerFactory::create(
 
 void opcontrol() {
 	float speed = 1.0f;
-	pros::Vision andyVision(VISION_PORT);
+	bool intakeHigh = false;
+	bool intakeHeld = false;
+	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
-	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);
+	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	while (1) {	
 	
 	//INTAKE
 	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
-		move({LINTAKE}, -117);
-		move({RINTAKE}, 117);
+		if(intakeHeld == false) {
+		if(intakeHigh) {
+		move({LINTAKE}, 0);
+		move({RINTAKE}, 0);
+		intakeHigh = false;
+		}
+		else {
+		move({LINTAKE}, -127);
+		move({RINTAKE}, 127);
+		intakeHigh = true;
+		}
+		}
+		intakeHeld = true;
+	}
+	else {
+		intakeHeld = false;
 	}
 
 	//OUTTAKE
-	else if(master.getDigital(ControllerDigital::R1)) {
-		move({LINTAKE}, 117);
-		move({RINTAKE}, -117);
+	if(master.getDigital(ControllerDigital::R1)) {
+		move({LINTAKE}, 127);
+		move({RINTAKE}, -127);
 	}
-	else {
+	else if(!intakeHigh){
 		move({LINTAKE, RINTAKE}, 0);
 	}
 
