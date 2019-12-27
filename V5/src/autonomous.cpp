@@ -15,6 +15,7 @@
 using namespace pros;
 using namespace okapi;
 
+<<<<<<< HEAD
 /*const int { +FL, +BL } = 1;
 const int { -FR, -BR } = 2;
 const auto WHEEL_DIAMETER = 4_in;
@@ -25,6 +26,13 @@ const auto CHASSIS_WIDTH = 11.5_in;
 /*auto autoDrive = ChassisControllerFactory::create(
 =======
 /*auto drive = ChassisControllerFactory::create(
+=======
+
+/*auto drive = ChassisControllerFactory::create(
+	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
+	AbstractMotor::gearset::green,
+	{ 4_in, 11.5_in }
+>>>>>>> 8d063f415d2633a3fe1ab38e90f9008051a0ed69
 );*/
 void autonomous() {
 		/*
