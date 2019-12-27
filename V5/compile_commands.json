@@ -28,11 +28,19 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
+<<<<<<< HEAD
             "bin/tracking.cpp.o",
             "src\\tracking.cpp"
         ],
         "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
         "file": "src\\tracking.cpp"
+=======
+            "bin/autonomous.cpp.o",
+            "src\\autonomous.cpp"
+        ],
+        "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
+        "file": "src\\autonomous.cpp"
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
     },
     {
         "arguments": [
@@ -66,8 +74,55 @@
             "bin/initialize.cpp.o",
             "src\\initialize.cpp"
         ],
+<<<<<<< HEAD
         "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
+=======
+        "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
         "file": "src\\initialize.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-target",
+            "armv7ar-none-none-eabi",
+            "-fno-ms-extensions",
+            "-fno-ms-compatibility",
+            "-fno-delayed-template-parsing",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-iquote./include",
+            "-iquote./include/./",
+            "-mcpu=cortex-a9",
+            "-mfpu=neon-fp16",
+            "-mfloat-abi=softfp",
+            "-D_POSIX_THREADS",
+            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
+            "-Os",
+            "-funwind-tables",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-fdiagnostics-color",
+            "--std=gnu++17",
+            "-o",
+<<<<<<< HEAD
+            "bin/visionSensor.cpp.o",
+            "src\\visionSensor.cpp"
+        ],
+        "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
+        "file": "src\\visionSensor.cpp"
+=======
+            "bin/chassis.cpp.o",
+            "src\\chassis.cpp"
+        ],
+        "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
+        "file": "src\\chassis.cpp"
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
     },
     {
         "arguments": [
@@ -101,43 +156,13 @@
             "bin/visionSensor.cpp.o",
             "src\\visionSensor.cpp"
         ],
-        "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
-        "file": "src\\visionSensor.cpp"
-    },
-    {
-        "arguments": [
-            "clang++",
-            "-c",
-            "-target",
-            "armv7ar-none-none-eabi",
-            "-fno-ms-extensions",
-            "-fno-ms-compatibility",
-            "-fno-delayed-template-parsing",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
-            "-iquote./include",
-            "-iquote./include/./",
-            "-mcpu=cortex-a9",
-            "-mfpu=neon-fp16",
-            "-mfloat-abi=softfp",
-            "-D_POSIX_THREADS",
-            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
-            "-Os",
-            "-funwind-tables",
-            "-ffunction-sections",
-            "-fdata-sections",
-            "-fdiagnostics-color",
-            "--std=gnu++17",
-            "-o",
-            "bin/autonomous.cpp.o",
-            "src\\autonomous.cpp"
-        ],
+<<<<<<< HEAD
         "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
         "file": "src\\autonomous.cpp"
+=======
+        "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
+        "file": "src\\visionSensor.cpp"
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
     },
     {
         "arguments": [
@@ -273,9 +298,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/initialize.cpp.o",
-            "src\\initialize.cpp"
+            "bin/tracking.cpp.o",
+            "src\\tracking.cpp"
         ],
+<<<<<<< HEAD
         "directory": "C:\\Users\\Rayhaan\\Documents\\github\\VEX2019-20\\v5",
         "file": "src\\initialize.cpp"
     },
@@ -313,5 +339,9 @@
         ],
         "directory": "C:\\Users\\Rayhaan\\Documents\\github\\VEX2019-20\\v5",
         "file": "src\\opcontrol.cpp"
+=======
+        "directory": "C:\\Users\\Aruns\\Documents\\jaguarv5\\V5",
+        "file": "src\\tracking.cpp"
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
     }
 ]

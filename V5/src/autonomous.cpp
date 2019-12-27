@@ -15,13 +15,23 @@
 using namespace pros;
 using namespace okapi;
 
+<<<<<<< HEAD
 //const int { +FL, +BL } = 1;
 //const int { -FR, -BR } = 2;
+=======
+/*const int { +FL, +BL } = 1;
+const int { -FR, -BR } = 2;
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
 const auto WHEEL_DIAMETER = 4_in;
 const auto CHASSIS_WIDTH = 11.5_in;
+*/
 
+<<<<<<< HEAD
 
 /*auto autoDrive = ChassisControllerFactory::create(
+=======
+/*auto drive = ChassisControllerFactory::create(
+>>>>>>> d05d6dccc0c209c5224bcf427ee678f3127985ac
 	{ +FL, +BL }, { -FR, -BR },
 	AbstractMotor::gearset::green,
 	{ 4_in, 11.5_in }

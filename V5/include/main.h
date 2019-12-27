@@ -71,6 +71,9 @@ void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
 
+
+//pros::Vision vision_sensor(VISION_PORT);
+
 #ifdef __cplusplus
 }
 #endif
