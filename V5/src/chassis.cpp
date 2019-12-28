@@ -24,6 +24,12 @@ void move(std::vector<int> ports, float speed) {
     }
 }
 
+void moveAbsolute(std::vector<int> ports, float distance) {
+    for(auto i : ports) {
+        allMotors[i].move_absolute(distance, 100);
+    }
+}
+
 /*void moveIntake() {
 	
 	if (MasterController.ButtonR2.pressing()) {

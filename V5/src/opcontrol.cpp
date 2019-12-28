@@ -33,6 +33,21 @@ auto drive = ChassisControllerFactory::create(
 	{4_in, 11.5_in}
 );
 
+void layStack() {
+	while(master.getDigital(ControllerDigital::L1)) {
+		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+		move({TRAY}, traySpeed);
+
+		float driveSpeed = master.getAnalog(ControllerAnalog::leftY);
+		drive.tank(driveSpeed*0.5f, driveSpeed*0.5f, 0.05f);
+
+		if(driveSpeed < 0) {
+			move({LINTAKE}, driveSpeed*0.75);
+			move({RINTAKE}, -driveSpeed*0.75);
+		}
+	}
+}
+
 void opcontrol() {
 	float speed = 1.0f;
 	bool intakeHigh = false;
@@ -45,17 +60,17 @@ void opcontrol() {
 	
 	//INTAKE
 	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
-		if(intakeHeld == false) {
-		if(intakeHigh) {
-		move({LINTAKE}, 0);
-		move({RINTAKE}, 0);
-		intakeHigh = false;
-		}
-		else {
-		move({LINTAKE}, -127);
-		move({RINTAKE}, 127);
-		intakeHigh = true;
-		}
+		if(!intakeHeld) {
+			if(intakeHigh) {
+				move({LINTAKE}, 0);
+				move({RINTAKE}, 0);
+				intakeHigh = false;
+			}
+			else {
+				move({LINTAKE}, -127);
+				move({RINTAKE}, 127);
+				intakeHigh = true;
+			}
 		}
 		intakeHeld = true;
 	}
@@ -65,8 +80,11 @@ void opcontrol() {
 
 	//OUTTAKE
 	if(master.getDigital(ControllerDigital::R1)) {
-		move({LINTAKE}, 127);
-		move({RINTAKE}, -127);
+		float controlledIntakeSpeed;
+		controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
+		
+		move({LINTAKE}, controlledIntakeSpeed);
+		move({RINTAKE}, -controlledIntakeSpeed);
 	}
 	else if(!intakeHigh){
 		move({LINTAKE, RINTAKE}, 0);
@@ -79,12 +97,19 @@ void opcontrol() {
 	}
 	else {
 		move({LIFT}, 0);
+		speed = 1.0f;
 	}
 
 	//TRAY
+	if(master.getDigital(ControllerDigital::L1)) {
+		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+		move({TRAY}, traySpeed);
+	}
 
-	drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
-				   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
+	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
+	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
+
+	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
 	pros::lcd::set_text(2, "I'm working and printing fool");
 	pros::delay(10);

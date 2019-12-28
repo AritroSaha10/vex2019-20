@@ -24,7 +24,7 @@
 // Physical motor port connections -- Misc. Motors
 #define LINTAKE_PORT 5
 #define RINTAKE_PORT 6
-#define TRAY_PORT 4
+#define TRAY_PORT 2
 #define LIFT_PORT 3
 // ---------------- PLACEHOLDERS --------------------//
 
@@ -34,4 +34,5 @@ double joystickSlew(double input);
 void moveDistance(double dist);
 std::vector<double> getEncoders(std::vector<int> ports);
 void move(std::vector<int> ports, float speed);
+void moveAbsolute(std::vector<int> ports, float distance);
 
