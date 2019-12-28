@@ -35,9 +35,5 @@ std::vector<double> getEncoders(std::vector<int> ports);
 void auton();
 void moveIntake(int cond);
 void move(std::vector<int> ports, float speed);
-<<<<<<< HEAD
 void motorTemp(void* param);
-=======
 void moveAbsolute(std::vector<int> ports, float distance);
-
->>>>>>> a58308b81c1e5bf2ae66ce5a6803525e9fa44075
