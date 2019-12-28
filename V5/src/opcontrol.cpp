@@ -74,6 +74,7 @@ void opcontrol() {
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
+	pros::lcd::print(5, "loc x  %f; loc y %f", x, y);
 	}
 }
 

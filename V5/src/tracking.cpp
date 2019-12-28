@@ -22,9 +22,9 @@ void tracking(void* param) {
 		dist = (rCycle+lCycle)/2;
 		theta = (rCycle-lCycle)/distOfWheels; 
 		changeInTheta = (theta - lastTheta);
-		if (abs((theta)-(lastTheta)) >= 0.01) {
-			x += dist*cos(theta-lastTheta);
-			y += dist*sin(theta-lastTheta);
+		if (abs((theta)-(lastTheta)) >= 0.001) {
+			x += dist*cos(theta);
+			y += dist*sin(theta);
 		}	
 
 		theta += theta-lastTheta;
