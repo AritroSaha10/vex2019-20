@@ -33,25 +33,64 @@ auto drive = ChassisControllerFactory::create(
 	{4_in, 11.5_in}
 );
 
+void layStack() {
+	while(master.getDigital(ControllerDigital::L1)) {
+		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+		move({TRAY}, traySpeed);
+
+		float driveSpeed = master.getAnalog(ControllerAnalog::leftY);
+		drive.tank(driveSpeed*0.5f, driveSpeed*0.5f, 0.05f);
+
+		if(driveSpeed < 0) {
+			move({LINTAKE}, driveSpeed*0.75);
+			move({RINTAKE}, -driveSpeed*0.75);
+		}
+	}
+}
+
 void opcontrol() {
 	float speed = 1.0f;
-	pros::Vision andyVision(VISION_PORT);
+	bool intakeHigh = false;
+	bool intakeHeld = false;
+	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
+<<<<<<< HEAD
 	pros::delay(2000);
+=======
+	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
+	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
+>>>>>>> a58308b81c1e5bf2ae66ce5a6803525e9fa44075
 	while (1) {	
 	
 	//INTAKE
 	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
-		move({LINTAKE}, -117);
-		move({RINTAKE}, 117);
+		if(!intakeHeld) {
+			if(intakeHigh) {
+				move({LINTAKE}, 0);
+				move({RINTAKE}, 0);
+				intakeHigh = false;
+			}
+			else {
+				move({LINTAKE}, -127);
+				move({RINTAKE}, 127);
+				intakeHigh = true;
+			}
+		}
+		intakeHeld = true;
+	}
+	else {
+		intakeHeld = false;
 	}
 
 	//OUTTAKE
-	else if(master.getDigital(ControllerDigital::R1)) {
-		move({LINTAKE}, 117);
-		move({RINTAKE}, -117);
+	if(master.getDigital(ControllerDigital::R1)) {
+		float controlledIntakeSpeed;
+		controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
+		
+		move({LINTAKE}, controlledIntakeSpeed);
+		move({RINTAKE}, -controlledIntakeSpeed);
 	}
-	else {
+	else if(!intakeHigh){
 		move({LINTAKE, RINTAKE}, 0);
 	}
 
@@ -62,12 +101,19 @@ void opcontrol() {
 	}
 	else {
 		move({LIFT}, 0);
+		speed = 1.0f;
 	}
 
 	//TRAY
+	if(master.getDigital(ControllerDigital::L1)) {
+		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+		move({TRAY}, traySpeed);
+	}
 
-	drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
-				   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
+	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
+	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
+
+	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
 	pros::lcd::set_text(2, "I'm working and printing fool");
 	pros::delay(10);

@@ -3,10 +3,10 @@
 #include "vector"
 
 // allMotors array index --- Drive Motors
-#define FL 0
-#define FR 1
-#define BL 2
-#define BR 3
+#define FL 1
+#define FR 2
+#define BL 3
+#define BR 4
 
 // Physical motor port connections -- Drive Motors
 #define FL_PORT 19
@@ -31,13 +31,8 @@
 #define AUTO_SPEED 80
 
 double joystickSlew(double input);
+void moveDistance(double dist);
 std::vector<double> getEncoders(std::vector<int> ports);
-void auton();
-void moveIntake(int cond);
 void move(std::vector<int> ports, float speed);
-<<<<<<< HEAD
-void motorTemp(void* param);
-=======
 void moveAbsolute(std::vector<int> ports, float distance);
 
->>>>>>> a58308b81c1e5bf2ae66ce5a6803525e9fa44075

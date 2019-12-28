@@ -15,13 +15,23 @@
 using namespace pros;
 using namespace okapi;
 
+/*const int { +FL, +BL } = 1;
+const int { -FR, -BR } = 2;
+const auto WHEEL_DIAMETER = 4_in;
+const auto CHASSIS_WIDTH = 11.5_in;
+*/
 
+<<<<<<< HEAD
 auto autoDrive = ChassisControllerFactory::create(
 	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
 	AbstractMotor::gearset::green,
 	{ 4_in, 11.5_in }
 );
+=======
+>>>>>>> a58308b81c1e5bf2ae66ce5a6803525e9fa44075
 
+/*auto autoDrive = ChassisControllerFactory::create(
+);*/
 void autonomous() {
 
 	autoDrive.moveDistanceAsync(1_m);
