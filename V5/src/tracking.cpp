@@ -17,18 +17,17 @@ void tracking(void* param) {
 		encoders = getEncoders({FL, FR});
 		lCycle = ((encoders[0])*DEGREE_TO_CM)-lDist;
 		rCycle = ((encoders[1])*DEGREE_TO_CM)-rDist;
-		
+		rDist+= rCycle;
+		lDist += lCycle;	
 		
 		dist = (rCycle+lCycle)/2;
-		theta = (rCycle-lCycle)/distOfWheels; 
+		theta = (rDist-lDist)/distOfWheels; 
 		changeInTheta = (theta - lastTheta);
 		if (abs((theta)-(lastTheta)) >= 0.001) {
-			x += dist*cos(theta);
-			y += dist*sin(theta);
+			x += dist*cos(changeInTheta);
+			y += dist*sin(changeInTheta);
 		}	
 
-		theta += theta-lastTheta;
-	
 		pros::lcd::print(2, "x: %f, y: %f, theta: %f", x, y, theta);
 		pros::lcd::print(3, "theta: %f, lastTheta: %f", theta, lastTheta);
 		pros::lcd::print(4, "change in theta: %f", (theta-lastTheta));
