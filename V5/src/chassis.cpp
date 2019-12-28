@@ -24,7 +24,6 @@ void move(std::vector<int> ports, float speed) {
     }
 }
 
-<<<<<<< HEAD
 void auton() {
 }
 
@@ -35,7 +34,6 @@ void moveIntake(int cond) {
 	} else if (cond == 0)
 		move({LINTAKE,RINTAKE}, 0);
 }
-=======
 void moveAbsolute(std::vector<int> ports, float distance) {
     for(auto i : ports) {
         allMotors[i].move_absolute(distance, 100);
@@ -57,7 +55,6 @@ void moveAbsolute(std::vector<int> ports, float distance) {
 			allMotors[M2].move(0);
 		}
 }*/
->>>>>>> a58308b81c1e5bf2ae66ce5a6803525e9fa44075
 
 std::vector<double> getEncoders(std::vector<int> ports) {
     std::vector<double> returnVec;
