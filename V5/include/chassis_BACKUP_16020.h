@@ -24,7 +24,7 @@
 // Physical motor port connections -- Misc. Motors
 #define LINTAKE_PORT 5
 #define RINTAKE_PORT 6
-#define TRAY_PORT 4
+#define TRAY_PORT 2
 #define LIFT_PORT 3
 // ---------------- PLACEHOLDERS --------------------//
 
@@ -36,3 +36,8 @@ void auton();
 void moveIntake(int cond);
 void move(std::vector<int> ports, float speed);
 void motorTemp(void* param);
+void moveAbsolute(std::vector<int> ports, float distance);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6206d6e2472a9e9570e698bcdf144733a7f59c6b

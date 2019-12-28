@@ -54,12 +54,8 @@ void opcontrol() {
 	bool intakeHeld = false;
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
-<<<<<<< HEAD
-	pros::delay(2000);
-=======
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
->>>>>>> a58308b81c1e5bf2ae66ce5a6803525e9fa44075
 	while (1) {	
 	
 	//INTAKE
