@@ -29,6 +29,7 @@
 // ---------------- PLACEHOLDERS --------------------//
 
 #define AUTO_SPEED 80
+#define INTAKE_SPEED 117
 
 double joystickSlew(double input);
 std::vector<double> getEncoders(std::vector<int> ports);

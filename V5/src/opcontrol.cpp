@@ -67,8 +67,8 @@ void opcontrol() {
 				intakeHigh = false;
 			}
 			else {
-				move({LINTAKE}, -127);
-				move({RINTAKE}, 127);
+				move({LINTAKE}, INTAKE_SPEED);
+				move({RINTAKE}, INTAKE_SPEED);
 				intakeHigh = true;
 			}
 		}
@@ -81,7 +81,7 @@ void opcontrol() {
 	//OUTTAKE
 	if(master.getDigital(ControllerDigital::R1)) {
 		float controlledIntakeSpeed;
-		controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
+		controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY))*127;
 		
 		move({LINTAKE}, controlledIntakeSpeed);
 		move({RINTAKE}, -controlledIntakeSpeed);
