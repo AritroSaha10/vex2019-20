@@ -9,7 +9,7 @@ float x, y, angle;
 float rDelta, lDelta, bDelta;
 std::vector<double> encoders;
 //Temp
-float rDist, lDist, aDelta, rLast, lLast;
+float rDist, lDist, aDelta, rLast, lLast, halfA;
 //constants
 const float lrOffset = 13/2*2.54; //13 inch wheel base, halved and converted to cm
 const float bOffset = 0; /*PLACEHOLDER*/
@@ -34,30 +34,31 @@ void tracking(void* param) {
 		rDist = rDelta * DEGREE_TO_CM;
 		encoders.resize(0);
 
-		if(lDelta == rDelta && rDelta == 0) {
-			pros::delay(3);
-			continue;
+		aDelta = (lDist - rDist)/(lrOffset*2);
+		if(aDelta) {
+			float radius = rDist / aDelta;
+			halfA = aDelta/2;
+			float sinHalf = sin(halfA);
+			localCoord[1] = ((radius+lrOffset)*sinHalf)*2;
 		}
-
-		if(rDelta == lDelta) {
+		else {
 			aDelta = 0;
 			localCoord[1] = rDist;
 		}
-		else if(abs(lDelta) > abs(rDelta)) {
-			aDelta = (lDist-rDist)/(lrOffset*2);
-			localCoord[1] = (2*sin(aDelta/2))*(rDist/aDelta+lrOffset);
-		}
-		else {
-			aDelta = -(rDist-lDist)/(lrOffset*2);
-			localCoord[1] = (2*sin(aDelta/2))*(lDist/aDelta+lrOffset);
-		}
-		float localOffset = angle + (aDelta/2);
-		x += localCoord[0]*cos(localOffset) - localCoord[1]*sin(localOffset);
-		y += localCoord[0]*sin(localOffset) + localCoord[1]*cos(localOffset);
 
+		float p = halfA + angle; // The global ending angle of the robot
+		float cosP = cos(p);
+		float sinP = sin(p);
+
+		// Update the global position
+		y += localCoord[1] * cosP;
+		x += localCoord[1] * sinP;
+
+		//Update angle
 		angle += aDelta;
-		pros::lcd::print(2, "x: %f, y: %f, angle: %f", x, y, angle);
+
+		pros::lcd::print(2, "x: %f, y: %f, angle: %f", x, y, angle*180/M_PI);
 		pros::lcd::print(3, "LC: %f", localCoord[1]);
-		pros::delay(30);
+		pros::delay(5);
 	}
 }
