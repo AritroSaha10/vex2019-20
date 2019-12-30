@@ -115,12 +115,11 @@ void opcontrol() {
 
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
-	pros::lcd::set_text(2, "I'm working and printing fool");
 	pros::delay(10);
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
-	pros::lcd::print(5, "loc x  %f; loc y %f", x, y);
+		//pros::lcd::print(5, "loc x  %f; loc y %f", x, y);
 	}
 }
 
