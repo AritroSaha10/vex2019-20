@@ -36,14 +36,17 @@ auto drive = ChassisControllerFactory::create(
 void layStack() {
 	while(master.getDigital(ControllerDigital::L1)) {
 		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
-		move({TRAY}, traySpeed);
+		move({TRAY}, traySpeed*127);
 
 		float driveSpeed = master.getAnalog(ControllerAnalog::leftY);
 		drive.tank(driveSpeed*0.5f, driveSpeed*0.5f, 0.05f);
 
 		if(driveSpeed < 0) {
-			move({LINTAKE}, driveSpeed*0.75);
-			move({RINTAKE}, -driveSpeed*0.75);
+			move({LINTAKE}, driveSpeed*0.75*127);
+			move({RINTAKE}, -driveSpeed*0.75*127);
+		}
+		else {
+			move({LINTAKE, RINTAKE}, 0);
 		}
 	}
 }
@@ -102,8 +105,9 @@ void opcontrol() {
 
 	//TRAY
 	if(master.getDigital(ControllerDigital::L1)) {
-		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
-		move({TRAY}, traySpeed);
+		//float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+		//move({TRAY}, traySpeed);
+		layStack();
 	}
 	
 	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,

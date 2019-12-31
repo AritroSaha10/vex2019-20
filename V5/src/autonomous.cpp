@@ -24,7 +24,7 @@ const auto CHASSIS_WIDTH = 11.5_in;
 auto autoDrive = ChassisControllerFactory::create(
 	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
 	AbstractMotor::gearset::green,
-	{ 4_in, 11.5_in }
+	{ 3.25_in, 11.5_in }
 );
 
 /*auto autoDrive = ChassisControllerFactory::create(
