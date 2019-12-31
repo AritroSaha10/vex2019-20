@@ -105,7 +105,7 @@ void opcontrol() {
 		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
 		move({TRAY}, traySpeed);
 	}
-
+	
 	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
 	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
 
