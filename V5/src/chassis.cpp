@@ -2,10 +2,10 @@
 #include <vector>
 
 pros::Motor allMotors[] = {
-    pros::Motor(FR_PORT),
-    pros::Motor(BR_PORT),
-    pros::Motor(FL_PORT),
-    pros::Motor(BL_PORT),
+    pros::Motor(FR_PORT, pros::E_MOTOR_GEARSET_18),
+    pros::Motor(BR_PORT, pros::E_MOTOR_GEARSET_18),
+    pros::Motor(FL_PORT, pros::E_MOTOR_GEARSET_18),
+    pros::Motor(BL_PORT, pros::E_MOTOR_GEARSET_18),
     pros::Motor(LINTAKE_PORT),
     pros::Motor(RINTAKE_PORT),
     pros::Motor(TRAY_PORT),

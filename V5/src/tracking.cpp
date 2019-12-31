@@ -11,7 +11,7 @@ std::vector<double> encoders;
 //Temp
 float rDist, lDist, aDelta, rLast, lLast, halfA;
 //constants
-const float lrOffset = 13/2*2.54; //13 inch wheel base, halved and converted to cm
+const float lrOffset = 13.0f/2.0f*2.54f; //13 inch wheel base, halved and converted to cm
 const float bOffset = 0; /*PLACEHOLDER*/
 
 void tracking(void* param) {
@@ -19,27 +19,32 @@ void tracking(void* param) {
 	rLast = 0;
 	x = 0;
 	y = 0;
+	float left = 0;
+	float right = 0;
 	angle = 0;
 	while(1) {
 		float localCoord[2];
-		std::vector<double> rawEncoders = getEncoders({FL, BL, FR, BR});
-		encoders.push_back((rawEncoders[1] + rawEncoders[0])/2);
-		encoders.push_back((rawEncoders[2] + rawEncoders[3])/2);
+		// std::vector<double> rawEncoders = getEncoders({FL, BL, FR, BR});
+		// encoders.push_back((rawEncoders[1] + rawEncoders[0])/2);
+		// encoders.push_back((rawEncoders[2] + rawEncoders[3])/2);
 
+		encoders = getEncoders({FL, FR});
 		lDelta = encoders[0]-lLast;
 		rDelta = encoders[1]-rLast;
 		lLast = encoders[0];
 		rLast = encoders[1];
 		lDist = lDelta * DEGREE_TO_CM;
 		rDist = rDelta * DEGREE_TO_CM;
+		left+=lDist;
+		right+=rDist;
 		encoders.resize(0);
 
-		aDelta = (lDist - rDist)/(lrOffset*2);
+		aDelta = (lDist - rDist)/(lrOffset*2.0f);
 		if(aDelta) {
 			float radius = rDist / aDelta;
-			halfA = aDelta/2;
+			halfA = aDelta/2.0f;
 			float sinHalf = sin(halfA);
-			localCoord[1] = ((radius+lrOffset)*sinHalf)*2;
+			localCoord[1] = ((radius+lrOffset)*sinHalf)*2.0f;
 		}
 		else {
 			aDelta = 0;
@@ -59,6 +64,7 @@ void tracking(void* param) {
 
 		pros::lcd::print(2, "x: %f, y: %f, angle: %f", x, y, angle*180/M_PI);
 		pros::lcd::print(3, "LC: %f", localCoord[1]);
+		pros::lcd::print(3, "L: %f R: %f", left, right);
 		pros::delay(5);
 	}
 }

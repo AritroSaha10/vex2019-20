@@ -31,8 +31,9 @@ auto autoDrive = ChassisControllerFactory::create(
 );*/
 void autonomous() {
 
-	autoDrive.moveDistanceAsync(1_m);
-	moveIntake(1);	
+	//autoDrive.moveDistanceAsync(1_m);
+	autoDrive.turnAngleAsync(90_deg);
+	moveIntake(0);	
 	pros::delay(2000);
 	moveIntake(0);
 		/*
