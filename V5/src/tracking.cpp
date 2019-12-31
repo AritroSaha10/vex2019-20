@@ -28,7 +28,7 @@ void tracking(void* param) {
 			y += dist*sin(changeInTheta);
 		}	
 
-		pros::lcd::print(2, "x: %f, y: %f, theta: %f", x, y, theta);
+		//pros::lcd::print(2, "x: %f, y: %f, theta: %f", x, y, theta);
 		pros::lcd::print(3, "theta: %f, lastTheta: %f", theta, lastTheta);
 		pros::lcd::print(4, "change in theta: %f", (theta-lastTheta));
 		lastTheta = theta;

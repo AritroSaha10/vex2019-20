@@ -30,6 +30,7 @@
 
 #define AUTO_SPEED 80
 #define INTAKE_SPEED 117
+#define LIFT_LIMIT 2506
 
 double joystickSlew(double input);
 std::vector<double> getEncoders(std::vector<int> ports);
