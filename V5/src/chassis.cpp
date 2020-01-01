@@ -18,6 +18,12 @@ void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[BL].move(leftSpeed);
 }
 
+void resetChassis() {
+	for(auto i : allMotors) {
+		i.tare_position();
+	}
+}
+
 void move(std::vector<int> ports, float speed) {
     for(auto i : ports) {
         allMotors[i].move(speed);

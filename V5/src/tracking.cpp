@@ -15,6 +15,7 @@ const float lrOffset = 13.0f/2.0f*2.54f; //13 inch wheel base, halved and conver
 const float bOffset = 0; /*PLACEHOLDER*/
 
 void tracking(void* param) {
+	//resetChassis();
 	lLast = 0;
 	rLast = 0;
 	x = 0;
@@ -37,7 +38,6 @@ void tracking(void* param) {
 		rDist = rDelta * DEGREE_TO_CM;
 		left+=lDist;
 		right+=rDist;
-		encoders.resize(0);
 
 		aDelta = (lDist - rDist)/(lrOffset*2.0f);
 		if(aDelta) {
@@ -48,7 +48,7 @@ void tracking(void* param) {
 		}
 		else {
 			aDelta = 0;
-			localCoord[1] = rDist;
+			localCoord[1] = (rDist+lDist)/2;
 		}
 
 		float p = halfA + angle; // The global ending angle of the robot
@@ -63,8 +63,8 @@ void tracking(void* param) {
 		angle += aDelta;
 
 		pros::lcd::print(2, "x: %f, y: %f, angle: %f", x, y, angle*180/M_PI);
-		pros::lcd::print(3, "LC: %f", localCoord[1]);
 		pros::lcd::print(3, "L: %f R: %f", left, right);
+		pros::lcd::print(4, "size: %i", encoders.size());
 		pros::delay(5);
 	}
 }
