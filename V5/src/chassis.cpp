@@ -2,10 +2,10 @@
 #include <vector>
 
 pros::Motor allMotors[] = {
-    pros::Motor(FR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_COUNTS),
-    pros::Motor(BR_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_COUNTS),
-    pros::Motor(FL_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_COUNTS),
-    pros::Motor(BL_PORT, pros::E_MOTOR_GEARSET_18, 0, pros::E_MOTOR_ENCODER_COUNTS),
+    pros::Motor(FR_PORT, pros::E_MOTOR_GEARSET_18),
+    pros::Motor(BR_PORT, pros::E_MOTOR_GEARSET_18),
+    pros::Motor(FL_PORT, pros::E_MOTOR_GEARSET_18),
+    pros::Motor(BL_PORT, pros::E_MOTOR_GEARSET_18),
     pros::Motor(LINTAKE_PORT),
     pros::Motor(RINTAKE_PORT),
     pros::Motor(TRAY_PORT),
@@ -16,6 +16,12 @@ void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[BR].move(rightSpeed);
     allMotors[FL].move(leftSpeed);
     allMotors[BL].move(leftSpeed);
+}
+
+void resetChassis() {
+	for(auto i : allMotors) {
+		i.tare_position();
+	}
 }
 
 void move(std::vector<int> ports, float speed) {

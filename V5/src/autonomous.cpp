@@ -24,15 +24,16 @@ const auto CHASSIS_WIDTH = 11.5_in;
 auto autoDrive = ChassisControllerFactory::create(
 	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
 	AbstractMotor::gearset::green,
-	{ 3.25_in, 11.5_in }
+	{ 3.25_in, 13_in }
 );
 
 /*auto autoDrive = ChassisControllerFactory::create(
 );*/
 void autonomous() {
 
-	autoDrive.moveDistanceAsync(1_m);
-	moveIntake(1);	
+	//autoDrive.moveDistanceAsync(1_m);
+	autoDrive.turnAngleAsync(90_deg);
+	moveIntake(0);	
 	pros::delay(2000);
 	moveIntake(0);
 		/*

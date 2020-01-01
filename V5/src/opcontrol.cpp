@@ -23,8 +23,6 @@ extern float x;
 extern float y;
 extern float theta;
 
-std::vector<double> trayEncoder;
-
 //Controller master;
 
 okapi::Controller master;
@@ -32,7 +30,7 @@ okapi::Controller master;
 auto drive = ChassisControllerFactory::create(
 	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
 	AbstractMotor::gearset::green,
-	{3.25_in, 11.5_in}
+	{4_in, 11.5_in}
 );
 
 void layStack() {
@@ -62,8 +60,7 @@ void opcontrol() {
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	while (1) {	
-			
-		trayEncoder = getEncoders({LIFT});
+	
 	//INTAKE
 	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
 		if(!intakeHeld) {
@@ -97,7 +94,7 @@ void opcontrol() {
 	}
 
 	//LIFT
-	if(master.getDigital(ControllerDigital::X) && trayEncoder[0] < LIFT_LIMIT) {
+	if(master.getDigital(ControllerDigital::X)) {
 		move({LIFT}, 127);
 		speed = 0.5f;
 	}
@@ -112,17 +109,17 @@ void opcontrol() {
 		//move({TRAY}, traySpeed);
 		layStack();
 	}
-	
+
 	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
 	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
 
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
-	pros::lcd::print(2, "Encoder: %f", trayEncoder[0]);
+
 	pros::delay(10);
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
-	pros::lcd::print(5, "loc x  %f; loc y %f", x, y);
+		//pros::lcd::print(5, "loc x  %f; loc y %f", x, y);
 	}
 }
 
