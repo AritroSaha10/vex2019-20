@@ -48,6 +48,7 @@ void Intake::update() {
             break;
         case CONTROL_STATE: {
             float newIntakeSpeed = joystickSlew(this->controller.getAnalog(okapi::ControllerAnalog::rightY)) * 127;
+            this->power = -newIntakeSpeed;
             this->setPower(-newIntakeSpeed);
             break; }
         case HOLD_STATE:

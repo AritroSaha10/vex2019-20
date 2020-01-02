@@ -58,6 +58,7 @@ void opcontrol() {
 	bool intakeHigh = false;
 	bool intakeHeld = false;
 	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master, false);
+	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, false);
 	Intake intake = Intake(0x10, master);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
@@ -74,25 +75,14 @@ void opcontrol() {
 	else if(in == 0) {
 		intake.stop();
 	}
-	// if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
-	// 	if(!intakeHeld) {
-	// 		if(intakeHigh) {
-	// 			move({LINTAKE}, 0);
-	// 			move({RINTAKE}, 0);
-	// 			intakeHigh = false;
-	// 		}
-	// 		else {
-	// 			move({LINTAKE}, INTAKE_SPEED);
-	// 			move({RINTAKE}, INTAKE_SPEED);
-	// 			intakeHigh = true;
-	// 		}
-	// 	}
-	// 	intakeHeld = true;
-	// }
-	// else {
-	// 	intakeHeld = false;
-	// }
 
+	int control = controlIntake.checkState();
+	if(control == 1) {
+		intake.control();
+	}
+	else if(control == 0) {
+		intake.stop();
+	}
 	//OUTTAKE
 	/*if(master.getDigital(ControllerDigital::R1)) {
 		float controlledIntakeSpeed;
