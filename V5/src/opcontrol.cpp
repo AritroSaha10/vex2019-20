@@ -66,7 +66,7 @@ void opcontrol() {
 	//INTAKE
 	bool in = fullIntake.checkState();
 	if(in) {
-		move({LINTAKE}, INTAKE_SPEED);
+		move({LINTAKE}, -INTAKE_SPEED);
 		move({RINTAKE}, INTAKE_SPEED);
 	}
 	else {

@@ -2,9 +2,10 @@
 #include "systemManager.h"
 
 // Constructor
-SystemManager::SystemManager(uint8_t defaultState) {
-    this->state = defaultState;
-    this->lastState = defaultState;
+SystemManager::SystemManager(uint8_t _defaultState) {
+    this->state = _defaultState;
+    this->lastState = _defaultState;
+    this->defaultState = _defaultState;
 }
 
 // Fixed public functions
@@ -34,6 +35,12 @@ void SystemManager::disable() {
 // Fixed protected functions
 bool SystemManager::timedOut(uint32_t timeout) {
     return this->timeOfLastChange + timeout < pros::millis();
+}
+
+void SystemManager::enable() {
+    this->lastState = DISABLED_STATE;
+    this->state = this->defaultState;
+    this->timeOfLastChange = pros::millis();
 }
 
 // Virtual functions

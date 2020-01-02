@@ -4,7 +4,7 @@
 
 class SystemManager {
     public:
-    SystemManager(uint8_t defaultState);
+    SystemManager(uint8_t _defaultState);
 
     // Get Functions
     double getTarget();
@@ -17,7 +17,7 @@ class SystemManager {
     bool enabled();
     void disable();
     // Enables machine, allowing state to be changed
-    virtual void enable();
+    void enable();
     
     // Called every loop
     virtual void update();
@@ -33,6 +33,7 @@ class SystemManager {
     static const uint8_t RESET_STATE = 0x01;
     uint8_t lastState = DISABLED_STATE;
     uint8_t state = DISABLED_STATE;
+    uint8_t defaultState;
     
     virtual bool changeState(uint8_t newState);
     bool timedOut(uint32_t timeout);

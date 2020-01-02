@@ -4,6 +4,8 @@
 #include "systemManager.h"
 #include "chassis.h"
 
+#define INTAKE_HOLD_SPEED 20
+
 class Intake : public SystemManager {
     public:
     static const uint8_t IDLE_STATE = 0x10;
@@ -18,9 +20,15 @@ class Intake : public SystemManager {
     void control();
     void lay();
 
+    void update() override;
+
+    Intake(uint8_t _defaultState, okapi::Controller _controller);
+
     private:
 
-
+    void setPower(int power);
+    bool changeState(uint8_t newState) override;
     pros::Motor leftIntakeMotor = pros::Motor(LINTAKE_PORT);
     pros::Motor rightIntakeMotor = pros::Motor(RINTAKE_PORT);
+    okapi::Controller controller;
 };
