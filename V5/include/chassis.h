@@ -29,8 +29,9 @@
 // ---------------- PLACEHOLDERS --------------------//
 
 #define AUTO_SPEED 80
-#define INTAKE_SPEED 117
-#define LIFT_LIMIT 2506
+#define INTAKE_SPEED 107
+#define LIFT_LIMIT 2500
+#define LIFT_SPEED 107
 
 double joystickSlew(double input);
 std::vector<double> getEncoders(std::vector<int> ports);
@@ -40,3 +41,5 @@ void moveIntake(int cond);
 void move(std::vector<int> ports, float speed);
 void motorTemp(void* param);
 void moveAbsolute(std::vector<int> ports, float distance);
+void hold(int motor);
+void release(int motor);

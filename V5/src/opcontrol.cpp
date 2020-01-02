@@ -19,6 +19,7 @@
 using namespace pros;
 using namespace okapi;
 
+std::vector<double> encoder;
 extern float x;
 extern float y;
 extern float theta;
@@ -60,7 +61,7 @@ void opcontrol() {
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	while (1) {	
-	
+		encoder = getEncoders({LIFT});	
 	//INTAKE
 	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
 		if(!intakeHeld) {
@@ -94,11 +95,15 @@ void opcontrol() {
 	}
 
 	//LIFT
-	if(master.getDigital(ControllerDigital::X)) {
+	if(master.getDigital(ControllerDigital::X) && encoder[0] < (LIFT_LIMIT-10)) {
 		move({LIFT}, 127);
 		speed = 0.5f;
 	}
-	else {
+	else if (master.getDigital(ControllerDigital::X) && encoder[0] > (LIFT_LIMIT-10)) {
+		hold(LIFT);
+		move({LIFT}, 0);
+	} else {
+		release(LIFT);
 		move({LIFT}, 0);
 		speed = 1.0f;
 	}
@@ -116,6 +121,7 @@ void opcontrol() {
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
 	pros::delay(10);
+	pros::lcd::print(4, "Encoder: %f", encoder[0]);
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

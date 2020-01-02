@@ -30,11 +30,10 @@ auto autoDrive = ChassisControllerFactory::create(
 /*auto autoDrive = ChassisControllerFactory::create(
 );*/
 void autonomous() {
-
-	//autoDrive.moveDistanceAsync(1_m);
-	autoDrive.turnAngleAsync(90_deg);
-	moveIntake(0);	
-	pros::delay(2000);
+	autoDrive.setMaxVelocity(170);
+	autoDrive.moveDistanceAsync(2_m);
+	moveIntake(1);	
+	pros::delay(3500);
 	moveIntake(0);
 		/*
 	*Possible auton path number 1

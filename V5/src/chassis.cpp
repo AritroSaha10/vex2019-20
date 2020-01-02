@@ -18,6 +18,14 @@ void chassisSet(float leftSpeed, float rightSpeed) {
     allMotors[BL].move(leftSpeed);
 }
 
+void hold(int port) {
+	allMotors[port].set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+}
+
+void release(int port) {
+	allMotors[port].set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+}
+
 void resetChassis() {
 	for(auto i : allMotors) {
 		i.tare_position();
