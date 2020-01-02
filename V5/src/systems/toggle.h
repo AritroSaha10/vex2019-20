@@ -11,6 +11,6 @@ class Toggle {
     bool held = false;
 
     public:
-    bool checkState();
+    int checkState();
     Toggle(std::vector<okapi::ControllerDigital> _buttons, okapi::Controller _controller, bool defaultState);
 };

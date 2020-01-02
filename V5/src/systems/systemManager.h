@@ -3,7 +3,7 @@
 #include "main.h"
 
 class SystemManager {
-    public:
+public:
     SystemManager(uint8_t _defaultState);
 
     // Get Functions
@@ -20,9 +20,9 @@ class SystemManager {
     void enable();
     
     // Called every loop
-    virtual void update();
+    virtual void update() {};
 
-    protected:
+protected:
     double target;
     double error;
     double position;

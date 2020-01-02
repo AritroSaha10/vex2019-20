@@ -4,7 +4,7 @@
 #include "systemManager.h"
 #include "chassis.h"
 
-#define INTAKE_HOLD_SPEED 20
+#define INTAKE_HOLD_SPEED 60
 
 class Intake : public SystemManager {
     public:
@@ -15,10 +15,11 @@ class Intake : public SystemManager {
     static const uint8_t HOLD_STATE = 0x14;
     static const uint8_t LAY_STATE = 0x15;
 
-    void intake();
-    void out();
+    void intake(double _power);
+    void out(double _power);
     void control();
     void lay();
+    void stop();
 
     void update() override;
 

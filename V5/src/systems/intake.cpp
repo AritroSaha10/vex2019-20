@@ -8,7 +8,31 @@ void Intake::setPower(int power) {
     this->rightIntakeMotor.move(power);
 }
 
-Intake::Intake(uint8_t _defaultState, okapi::Controller _controller) : SystemManager(_defaultState), controller(_controller) {}
+void Intake::intake(double _power) {
+    this->power = _power;
+    this->changeState(IN_STATE);
+}
+
+void Intake::out(double _power) {
+    this->power = _power;
+    this->changeState(OUT_STATE);
+}
+
+void Intake::lay() {
+
+}
+
+void Intake::control() {
+    this->changeState(CONTROL_STATE);
+}
+
+void Intake::stop() {
+    this->changeState(HOLD_STATE);
+}
+
+Intake::Intake(uint8_t _defaultState, okapi::Controller _controller) : SystemManager(_defaultState) {
+    this->controller = _controller;
+}
 
 // Overrides
 void Intake::update() {
@@ -27,6 +51,10 @@ void Intake::update() {
             this->setPower(-newIntakeSpeed);
             break; }
         case HOLD_STATE:
+            if(abs(this->position) >= 10) {
+                this->leftIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
+                this->rightIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
+            }
             break;
         case LAY_STATE:
             break;
@@ -57,6 +85,8 @@ bool Intake::changeState(uint8_t newState) {
             this->setPower(0);
             break;
         case HOLD_STATE:
+            leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             this->leftIntakeMotor.tare_position();
             this->rightIntakeMotor.tare_position();
             this->target = 0;

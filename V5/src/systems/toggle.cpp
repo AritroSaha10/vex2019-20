@@ -6,11 +6,11 @@ Toggle::Toggle(std::vector<okapi::ControllerDigital> _buttons, okapi::Controller
     this->state = defaultState;
 }
 
-bool Toggle::checkState() {
+int Toggle::checkState() {
     for(int i = 0; i < buttons.size(); i++) {
         if(!controller.getDigital(buttons[i])) {
             held = false;
-            return state;
+            return -1;
         }
     }
 
@@ -18,5 +18,5 @@ bool Toggle::checkState() {
         state = !state;
     }
     held = true;
-    return state;
+    return state ? 1 : 0;
 }
