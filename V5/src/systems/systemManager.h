@@ -14,7 +14,7 @@ class SystemManager {
 
     // Public state check functions
     void reset();
-    void enabled();
+    bool enabled();
     void disable();
     // Enables machine, allowing state to be changed
     virtual void enable();

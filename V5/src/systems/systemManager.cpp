@@ -24,7 +24,7 @@ double SystemManager::getTarget() {
 void SystemManager::reset() {
     this->changeState(RESET_STATE);
 }
-void SystemManager::enabled() {
+bool SystemManager::enabled() {
     return this->state != DISABLED_STATE;
 }
 void SystemManager::disable() {

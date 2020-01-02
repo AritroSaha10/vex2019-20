@@ -1,6 +1,6 @@
 #include "main.h"
 #include "tracking.h"
-#include "toggle.h"
+#include "systems/toggle.h"
 #include <initializer_list>
 
 /**
@@ -56,7 +56,7 @@ void opcontrol() {
 	float speed = 1.0f;
 	bool intakeHigh = false;
 	bool intakeHeld = false;
-	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
+	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master, false);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
