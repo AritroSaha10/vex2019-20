@@ -1,5 +1,7 @@
 #include "main.h"
 #include "tracking.h"
+#include "systems/toggle.h"
+#include "systems/intake.h"
 #include <initializer_list>
 
 /**
@@ -56,34 +58,35 @@ void opcontrol() {
 	float speed = 1.0f;
 	bool intakeHigh = false;
 	bool intakeHeld = false;
+	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master, false);
+	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, false);
+	Intake intake = Intake(0x10, master);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	while (1) {	
-		encoder = getEncoders({LIFT});	
+	encoder = getEncoders({LIFT});	
+	intake.update();
+	
 	//INTAKE
-	if(master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2)) {
-		if(!intakeHeld) {
-			if(intakeHigh) {
-				move({LINTAKE}, 0);
-				move({RINTAKE}, 0);
-				intakeHigh = false;
-			}
-			else {
-				move({LINTAKE}, INTAKE_SPEED);
-				move({RINTAKE}, INTAKE_SPEED);
-				intakeHigh = true;
-			}
-		}
-		intakeHeld = true;
+	int in = fullIntake.checkState();
+	if(in == 1) {
+		intake.intake(INTAKE_SPEED);
 	}
-	else {
-		intakeHeld = false;
+	else if(in == 0) {
+		intake.stop();
 	}
 
+	int control = controlIntake.checkState();
+	if(control == 1) {
+		intake.control();
+	}
+	else if(control == 0) {
+		intake.stop();
+	}
 	//OUTTAKE
-	if(master.getDigital(ControllerDigital::R1)) {
+	/*if(master.getDigital(ControllerDigital::R1)) {
 		float controlledIntakeSpeed;
 		controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY))*127;
 		
@@ -92,7 +95,7 @@ void opcontrol() {
 	}
 	else if(!intakeHigh){
 		move({LINTAKE, RINTAKE}, 0);
-	}
+	}*/
 
 	//LIFT
 	if(master.getDigital(ControllerDigital::X) && encoder[0] < (LIFT_LIMIT-10)) {
