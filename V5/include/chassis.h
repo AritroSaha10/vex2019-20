@@ -29,7 +29,7 @@
 // ---------------- PLACEHOLDERS --------------------//
 
 #define AUTO_SPEED 80
-#define INTAKE_SPEED 107
+#define INTAKE_SPEED 97
 #define LIFT_LIMIT 2500
 #define LIFT_SPEED 107
 

@@ -1,3 +1,4 @@
+#include "systems/intake.h"
 #include "main.h"
 
 /**
@@ -14,6 +15,7 @@
 
 using namespace pros;
 using namespace okapi;
+okapi::Controller fuckyou;
 
 /*const int { +FL, +BL } = 1;
 const int { -FR, -BR } = 2;
@@ -30,11 +32,14 @@ auto autoDrive = ChassisControllerFactory::create(
 /*auto autoDrive = ChassisControllerFactory::create(
 );*/
 void autonomous() {
-	autoDrive.setMaxVelocity(170);
-	autoDrive.moveDistanceAsync(2_m);
-	moveIntake(1);	
+	Intake autoIntake(IDLE_STATE, fuckyou);
+	autoDrive.setMaxVelocity(160);
+	autoDrive.moveDistanceAsync(1.72_m);
+	autoIntake.intake(INTAKE_SPEED);
 	pros::delay(3500);
-	moveIntake(0);
+	autoIntake.intake(0);
+	autoDrive.waitUntilSettled();
+	autoDrive.turnAngle(-145_deg);
 		/*
 	*Possible auton path number 1
 	chassis.moveDistance(2_ft);
