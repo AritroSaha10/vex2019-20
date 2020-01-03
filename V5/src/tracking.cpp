@@ -64,7 +64,6 @@ void tracking(void* param) {
 
 		pros::lcd::print(2, "x: %f, y: %f, angle: %f", x, y, angle*180/M_PI);
 		pros::lcd::print(3, "L: %f R: %f", left, right);
-		pros::lcd::print(4, "size: %i", encoders.size());
 		pros::delay(5);
 	}
 }

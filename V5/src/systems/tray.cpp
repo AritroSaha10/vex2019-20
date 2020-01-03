@@ -1,22 +1,24 @@
 #include "main.h"
 #include "tray.h"
 
+#define MAX_TRAY 2600
+
 // Constructor
 Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake) : SystemManager(_defaultState), controller(_controller), intake(_intake) {}
 
 // Sub-class specific functions
 
 void Tray::setSpeed(double _speed) {
-    this->power = _speed;
+    this->power = -_speed;
     this->trayMotor.move(this->power);
 }
 
 void Tray::setPower(double _power) {
-    this->power = _power;
+    this->power = -_power;
 }
 
 void Tray::setTarget(double _target) {
-    this->target = _target;
+    this->target = -_target;
     this->trayMotor.move_absolute(this->target, this->power);
 }
 
@@ -28,11 +30,11 @@ void Tray::lower() {
     this->changeState(LOWER_STATE);
 }
 
-double Tray::getPowerFunction(uint32_t time) {
-    return 60 * pow(2, -0.003*time) + 15;
+double Tray::getPowerFunction(double time) {
+    return 100 * pow(2, -0.003*time) + 5;
 }
 
-double Tray::getReversePowerFunction(uint32_t time) {
+double Tray::getReversePowerFunction(double time) {
     return 70 * pow(2, 0.003*(time-1000)) + 15;
 }
 
@@ -88,14 +90,16 @@ void Tray::update() {
             this->changeState(HOLD_STATE);
             intake.reset();
         }
-        this->setPower(getPowerFunction(pros::millis()-this->timeOfLastChange));
+        pros::lcd::print(5, "%f", getPowerFunction(pros::millis()-this->timeOfLastChange));
+        this->setPower(getPowerFunction(-this->position));
         this->setTarget(MAX_TRAY);
         break;
     case LOWER_STATE:
         if(this->timedOut(LOWER_TIMEOUT)) {
             this->changeState(IDLE_STATE);
         }
-        this->setPower(getReversePowerFunction(pros::millis())-this->timeOfLastChange);
+        pros::lcd::print(5, "%f", getReversePowerFunction(pros::millis()-this->timeOfLastChange));
+        this->setPower(-getReversePowerFunction(-this->position));
         this->setTarget(0);
         break;
     case HOLD_STATE:

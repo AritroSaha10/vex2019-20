@@ -4,6 +4,8 @@
 #include "systems/intake.h"
 #include "systems/tray.h"
 #include <initializer_list>
+#include <string>
+#include <sstream>
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -36,9 +38,10 @@ auto drive = ChassisControllerFactory::create(
 	{4_in, 11.5_in}
 );
 
-void layStack(Intake intake, Tray tray, Toggle t) {
+void layStack(Intake intake, Tray& tray, Toggle& t) {
 	tray.layCubes();
 	while(t.checkState() != 0) {
+		tray.update();
 		// float traySpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
 		// move({TRAY}, traySpeed*127);
 
@@ -52,8 +55,15 @@ void layStack(Intake intake, Tray tray, Toggle t) {
 		else {
 			move({LINTAKE, RINTAKE}, 0);
 		}
+		pros::delay(5);
 	}
-	tray.lower();
+}
+
+std::string IntToStr(double i)
+{
+	std::ostringstream out;
+	out << i;
+	return out.str();
 }
 
 void opcontrol() {
@@ -69,10 +79,16 @@ void opcontrol() {
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
+	int lastEncoder = getEncoders({TRAY})[0];
 	while (1) {	
 	intake.update();
 	tray.update();
 	
+	if(abs(getEncoders({TRAY})[0]-lastEncoder) > 5) {
+		master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
+		lastEncoder = getEncoders({TRAY})[0];
+	}
+
 	//INTAKE
 	int in = fullIntake.checkState();
 	if(in == 1) {
@@ -105,6 +121,7 @@ void opcontrol() {
 	int stack = engageTray.checkState();
 	if(stack == 1) {
 		layStack(intake, tray, engageTray);
+		tray.lower();
 	}
 
 	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,

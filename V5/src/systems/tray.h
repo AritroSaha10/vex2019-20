@@ -5,7 +5,6 @@
 #include "intake.h"
 #include "chassis.h"
 
-#define MAX_TRAY 140
 #define LIFT_TIMEOUT 2000
 #define LOWER_TIMEOUT 2000
 
@@ -23,8 +22,8 @@ public:
     Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake);
 
 private:
-    double getPowerFunction(uint32_t time);
-    double getReversePowerFunction(uint32_t time);
+    double getPowerFunction(double time);
+    double getReversePowerFunction(double time);
     void setSpeed(double _speed);
     void setPower(double _power);
     void setTarget(double target);
