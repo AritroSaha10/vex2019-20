@@ -2,6 +2,7 @@
 #include "tracking.h"
 #include "systems/toggle.h"
 #include "systems/intake.h"
+#include "systems/tray.h"
 #include <initializer_list>
 
 /**
@@ -35,10 +36,11 @@ auto drive = ChassisControllerFactory::create(
 	{4_in, 11.5_in}
 );
 
-void layStack() {
-	while(master.getDigital(ControllerDigital::L1)) {
-		float traySpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
-		move({TRAY}, traySpeed*127);
+void layStack(Intake intake, Tray tray, Toggle t) {
+	tray.layCubes();
+	while(t.checkState() != 0) {
+		// float traySpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
+		// move({TRAY}, traySpeed*127);
 
 		float driveSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftY));
 		drive.tank(driveSpeed*0.5f, driveSpeed*0.5f, 0.05f);
@@ -51,21 +53,25 @@ void layStack() {
 			move({LINTAKE, RINTAKE}, 0);
 		}
 	}
+	tray.lower();
 }
 
 void opcontrol() {
 	float speed = 1.0f;
 	bool intakeHigh = false;
 	bool intakeHeld = false;
-	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master, false);
-	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, false);
+	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
+	Toggle controlIntake = Toggle({ControllerDigital::R1}, master);
+	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Intake intake = Intake(0x10, master);
+	Tray tray = Tray(0x10, master, intake);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	while (1) {	
 	intake.update();
+	tray.update();
 	
 	//INTAKE
 	int in = fullIntake.checkState();
@@ -76,6 +82,7 @@ void opcontrol() {
 		intake.stop();
 	}
 
+	//OUTTAKE
 	int control = controlIntake.checkState();
 	if(control == 1) {
 		intake.control();
@@ -83,17 +90,6 @@ void opcontrol() {
 	else if(control == 0) {
 		intake.stop();
 	}
-	//OUTTAKE
-	/*if(master.getDigital(ControllerDigital::R1)) {
-		float controlledIntakeSpeed;
-		controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY))*127;
-		
-		move({LINTAKE}, controlledIntakeSpeed);
-		move({RINTAKE}, -controlledIntakeSpeed);
-	}
-	else if(!intakeHigh){
-		move({LINTAKE, RINTAKE}, 0);
-	}*/
 
 	//LIFT
 	if(master.getDigital(ControllerDigital::X)) {
@@ -106,10 +102,9 @@ void opcontrol() {
 	}
 
 	//TRAY
-	if(master.getDigital(ControllerDigital::L1)) {
-		//float traySpeed = master.getAnalog(ControllerAnalog::rightY);
-		//move({TRAY}, traySpeed);
-		layStack();
+	int stack = engageTray.checkState();
+	if(stack == 1) {
+		layStack(intake, tray, engageTray);
 	}
 
 	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,

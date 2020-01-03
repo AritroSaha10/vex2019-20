@@ -1,11 +1,12 @@
 #include "intake.h"
-#include "api.h"
+#include "main.h"
 
 // Subclass-specific functions
 
-void Intake::setPower(int power) {
-    this->leftIntakeMotor.move(-power);
-    this->rightIntakeMotor.move(power);
+void Intake::setPower(double _power) {
+    this->power = _power;
+    this->leftIntakeMotor.move(-this->power);
+    this->rightIntakeMotor.move(this->power);
 }
 
 void Intake::intake(double _power) {
@@ -48,7 +49,6 @@ void Intake::update() {
             break;
         case CONTROL_STATE: {
             float newIntakeSpeed = joystickSlew(this->controller.getAnalog(okapi::ControllerAnalog::rightY)) * 127;
-            this->power = -newIntakeSpeed;
             this->setPower(-newIntakeSpeed);
             break; }
         case HOLD_STATE:
@@ -74,6 +74,8 @@ bool Intake::changeState(uint8_t newState) {
 
     switch(newState) {
         case IDLE_STATE:
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             this->setPower(0);
             break;
         case IN_STATE:
@@ -86,13 +88,14 @@ bool Intake::changeState(uint8_t newState) {
             this->setPower(0);
             break;
         case HOLD_STATE:
-            leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-            rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            this->rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
             this->leftIntakeMotor.tare_position();
             this->rightIntakeMotor.tare_position();
             this->target = 0;
             this->leftIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
             this->rightIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
+            this->target = 0;
             break;
         case LAY_STATE:
             this->setPower(0);

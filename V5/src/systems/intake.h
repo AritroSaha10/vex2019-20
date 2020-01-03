@@ -27,7 +27,7 @@ class Intake : public SystemManager {
 
     private:
 
-    void setPower(int power);
+    void setPower(double _power);
     bool changeState(uint8_t newState) override;
     pros::Motor leftIntakeMotor = pros::Motor(LINTAKE_PORT);
     pros::Motor rightIntakeMotor = pros::Motor(RINTAKE_PORT);
