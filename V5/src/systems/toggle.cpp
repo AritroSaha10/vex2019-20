@@ -1,6 +1,6 @@
 #include "toggle.h"
 
-Toggle::Toggle(std::vector<okapi::ControllerDigital> _buttons, okapi::Controller _controller, bool defaultState = false) {
+Toggle::Toggle(std::vector<okapi::ControllerDigital> _buttons, okapi::Controller _controller, bool defaultState) {
     this->controller = _controller;
     this->buttons = _buttons;
     this->state = defaultState;
