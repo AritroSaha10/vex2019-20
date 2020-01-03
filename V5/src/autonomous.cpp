@@ -29,17 +29,19 @@ auto autoDrive = ChassisControllerFactory::create(
 	{ 3.25_in, 13_in }
 );
 
-/*auto autoDrive = ChassisControllerFactory::create(
+/*auto autoDrive = ChassisControllerFactory::create
 );*/
 void autonomous() {
 	Intake autoIntake(IDLE_STATE, fuckyou);
+	
 	autoDrive.setMaxVelocity(160);
-	autoDrive.moveDistanceAsync(1.72_m);
+	
+	/*autoDrive.moveDistanceAsync(1.72_m);
 	autoIntake.intake(INTAKE_SPEED);
 	pros::delay(3500);
-	autoIntake.intake(0);
+	autoIntake.stop();
 	autoDrive.waitUntilSettled();
-	autoDrive.turnAngle(-145_deg);
+	autoDrive.turnAngle(-145_deg);*/
 		/*
 	*Possible auton path number 1
 	chassis.moveDistance(2_ft);
