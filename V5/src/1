@@ -1,6 +1,5 @@
 #include "systems/intake.h"
 #include "main.h"
-#include "systems/tray.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -18,9 +17,6 @@ using namespace pros;
 using namespace okapi;
 okapi::Controller fuckyou;
 
-Intake autoIntake(IDLE_STATE, fuckyou);
-Tray autoTray = Tray(IDLE_STATE, fuckyou, autoIntake);
-
 /*const int { +FL, +BL } = 1;
 const int { -FR, -BR } = 2;
 const auto WHEEL_DIAMETER = 4_in;
@@ -35,18 +31,20 @@ auto autoDrive = ChassisControllerFactory::create(
 
 /*auto autoDrive = ChassisControllerFactory::create
 );*/
-void updateSysMan(void* param) {
+void updateSysMan() {
 	while(1) {
 		autoIntake.update();
-		autoTray.update();
+		tray.update();
 		pros::delay(2);
 	}
 }
 
 void autonomous() {
-	pros::Task update(updateSysMan, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
+	Intake autoIntake(IDLE_STATE, fuckyou);
+	Tray tray = Tray(IDLE_STATE, fuckyou, intake);
+	pros::Task update(updateSysMan, TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	autoDrive.setMaxVelocity(160);
-	autoTray.layCubes();	
+	tray.layCubes();	
 	/*autoDrive.moveDistanceAsync(1.72_m);
 	autoIntake.intake(INTAKE_SPEED);
 	pros::delay(3500);
