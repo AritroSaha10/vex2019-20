@@ -68,6 +68,8 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
+	int lift = 0;
+	int holdLift = 0;
 	float speed = 1.0f;
 	bool intakeHigh = false;
 	bool intakeHeld = false;
@@ -85,7 +87,15 @@ void opcontrol() {
 	encoder = getEncoders({LIFT});	
 	intake.update();
 	tray.update();
-	
+
+	if(master.getDigital(ControllerDigital::X))
+		lift = 1;
+	else {
+		lift = 0;
+		holdLift = 0;
+		release(LIFT);
+	}
+
 	if(abs(getEncoders({TRAY})[0]-lastEncoder) > 5) {
 		master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
 		lastEncoder = getEncoders({TRAY})[0];
@@ -110,19 +120,16 @@ void opcontrol() {
 	}
 
 	//LIFT
-	if(master.getDigital(ControllerDigital::X) && encoder[0] < (LIFT_LIMIT-10)) {
-		move({LIFT}, 127);
-		speed = 0.5f;
-	}
-	else if (master.getDigital(ControllerDigital::X) && encoder[0] > (LIFT_LIMIT-10)) {
+	if (holdLift && encoder[0] > (LIFT_LIMIT-30))
 		hold(LIFT);
-		move({LIFT}, 0);
-	} else {
-		release(LIFT);
-		move({LIFT}, 0);
-		speed = 1.0f;
+	else if (holdLift) {
+		holdLift = 0;
+		lift = 1;
+	} else if (lift) {
+		move({LIFT}, 127);
+		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
 	}
-
+	
 	//TRAY
 	int stack = engageTray.checkState();
 	if(stack == 1) {

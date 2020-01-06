@@ -47,6 +47,9 @@ void autonomous() {
 	pros::Task update(updateSysMan, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	autoDrive.setMaxVelocity(160);
 	autoTray.layCubes();	
+	while(autoTray.getState() != 0x13)
+		pros::delay(2);
+	autoTray.lower();
 	/*autoDrive.moveDistanceAsync(1.72_m);
 	autoIntake.intake(INTAKE_SPEED);
 	pros::delay(3500);
