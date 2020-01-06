@@ -50,10 +50,10 @@ void layStack(Intake intake, Tray& tray, Toggle& t) {
 		drive.tank(driveSpeed*0.5f, driveSpeed*0.5f, 0.05f);
 
 		if(driveSpeed < 0) {
-			move({LINTAKE}, -driveSpeed*0.75*127);
-			move({RINTAKE}, driveSpeed*0.75*127);
+			intake.out(driveSpeed * 127 /2);
 		}
 		else {
+			intake.reset();
 			move({LINTAKE, RINTAKE}, 0);
 		}
 		pros::delay(5);

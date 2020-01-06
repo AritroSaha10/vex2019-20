@@ -1,7 +1,7 @@
 #include "main.h"
 #include "tray.h"
 
-#define MAX_TRAY 2600
+#define MAX_TRAY 2400
 
 // Constructor
 Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake) : SystemManager(_defaultState), controller(_controller), intake(_intake) {}
@@ -31,11 +31,11 @@ void Tray::lower() {
 }
 
 double Tray::getPowerFunction(double time) {
-    return 100 * pow(2, -0.003*time) + 5;
+    return 80 * pow(2, -0.0015*time) + 47;
 }
 
 double Tray::getReversePowerFunction(double time) {
-    return 70 * pow(2, 0.003*(time-1000)) + 15;
+    return 70 * pow(2, 0.003*(time-1000)) + 60;
 }
 
 // Overrides
@@ -85,21 +85,21 @@ void Tray::update() {
     case IDLE_STATE:
         break;
     case LIFT_STATE:
-        if(this->timedOut(LIFT_TIMEOUT)) {
+        if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
             this->changeState(HOLD_STATE);
             intake.reset();
         }
         pros::lcd::print(5, "%f", getPowerFunction(pros::millis()-this->timeOfLastChange));
         this->setPower(getPowerFunction(-this->position));
-        this->setTarget(MAX_TRAY);
+        this->trayMotor.modify_profiled_velocity(this->power);
         break;
     case LOWER_STATE:
-        if(this->timedOut(LOWER_TIMEOUT)) {
+        if(this->timedOut(LOWER_TIMEOUT) || abs(this->error)<20) {
             this->changeState(IDLE_STATE);
         }
         pros::lcd::print(5, "%f", getReversePowerFunction(pros::millis()-this->timeOfLastChange));
         this->setPower(-getReversePowerFunction(-this->position));
-        this->setTarget(0);
+        this->trayMotor.modify_profiled_velocity(this->power);
         break;
     case HOLD_STATE:
         break;
