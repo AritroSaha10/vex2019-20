@@ -11,6 +11,7 @@ public:
     double getError();
     double getPosition();
     double getPower();
+    double getState();
 
     // Public state check functions
     void reset();

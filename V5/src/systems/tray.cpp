@@ -39,7 +39,6 @@ double Tray::getReversePowerFunction(double time) {
 }
 
 // Overrides
-
 bool Tray::changeState(uint8_t newState) {
     bool processed = SystemManager::changeState(newState);
     if(!processed) {

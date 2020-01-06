@@ -32,6 +32,10 @@ void SystemManager::disable() {
     this->changeState(DISABLED_STATE);
 }
 
+double SystemManager::getState() {
+	return this-> state;
+}
+
 // Fixed protected functions
 bool SystemManager::timedOut(uint32_t timeout) {
     return this->timeOfLastChange + timeout < pros::millis();
