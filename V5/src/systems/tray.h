@@ -18,7 +18,8 @@ public:
     void layCubes();
     void lower();
     void update() override;
-
+    void setTargetPowerControl(double target, double power);
+	uint8_t getTrayState();
     Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake);
 
 private:

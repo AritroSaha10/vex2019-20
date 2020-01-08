@@ -11,7 +11,7 @@ public:
     double getError();
     double getPosition();
     double getPower();
-    double getState();
+    uint8_t getState();
 
     // Public state check functions
     void reset();

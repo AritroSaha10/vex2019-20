@@ -32,8 +32,8 @@ void SystemManager::disable() {
     this->changeState(DISABLED_STATE);
 }
 
-double SystemManager::getState() {
-	return this-> state;
+uint8_t SystemManager::getState() {
+	return this->state;
 }
 
 // Fixed protected functions

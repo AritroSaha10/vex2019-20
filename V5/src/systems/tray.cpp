@@ -17,6 +17,10 @@ void Tray::setPower(double _power) {
     this->power = -_power;
 }
 
+void Tray::setTargetPowerControl(double target, double power) {
+	this->trayMotor.move_absolute(this->target, this->power);
+}
+
 void Tray::setTarget(double _target) {
     this->target = -_target;
     this->trayMotor.move_absolute(this->target, this->power);
@@ -71,6 +75,10 @@ bool Tray::changeState(uint8_t newState) {
     }
 
     return true;
+}
+
+uint8_t Tray::getTrayState() {
+	return this->state;
 }
 
 void Tray::update() {

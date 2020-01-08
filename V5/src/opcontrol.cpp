@@ -84,7 +84,8 @@ void opcontrol() {
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	int lastEncoder = getEncoders({TRAY})[0];
 	while (1) {	
-	encoder = getEncoders({LIFT});	
+	encoder = getEncoders({LIFT, TRAY});	
+	
 	intake.update();
 	tray.update();
 
@@ -119,31 +120,38 @@ void opcontrol() {
 		intake.stop();
 	}
 
+		
 	//LIFT
-	if (holdLift && encoder[0] > (LIFT_LIMIT-30))
+	if (holdLift && encoder[0] > (LIFT_LIMIT-30)) {
+		move({LIFT}, 0);
 		hold(LIFT);
-	else if (holdLift) {
+	} else if (holdLift) {
+		move({LIFT}, 0);
 		holdLift = 0;
 		lift = 1;
 	} else if (lift) {
-		move({LIFT}, 127);
+		tray.setTargetPowerControl(-(encoder[1]-2000), 10);
+		move({LIFT}, 117);
 		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
-	}
-	
+	} else if (!lift && encoder[0] > 100) {
+		move({LIFT}, -(LIFT_SPEED-50));
+		tray.setTargetPowerControl(0, 10);
+	}	
 	//TRAY
 	int stack = engageTray.checkState();
 	if(stack == 1) {
 		layStack(intake, tray, engageTray);
 		tray.lower();
 	}
-
+		//tray.setTarget(-900);
 	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
 	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
 
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
 	pros::delay(10);
-	pros::lcd::print(4, "Encoder: %f", encoder[0]);
+	pros::lcd::print(4, "Encoder: %f, Encoder 2: %f", encoder[0], encoder[1]);
+	pros::lcd::print(1, "tray getstate %u", tray.getTrayState());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

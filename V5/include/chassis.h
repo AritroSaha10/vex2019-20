@@ -30,7 +30,7 @@
 
 #define AUTO_SPEED 80
 #define INTAKE_SPEED 97
-#define LIFT_LIMIT 1952
+#define LIFT_LIMIT 2900
 #define LIFT_SPEED 107
 
 double joystickSlew(double input);
