@@ -150,8 +150,7 @@ void opcontrol() {
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
 	pros::delay(10);
-	pros::lcd::print(4, "Encoder: %f, Encoder 2: %f", encoder[0], encoder[1]);
-	pros::lcd::print(1, "tray getstate %u", tray.getTrayState());
+	// pros::lcd::print(1, "tray getstate %u", tray.getTrayState());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

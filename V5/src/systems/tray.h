@@ -25,7 +25,7 @@ public:
 private:
     double getPowerFunction(double time);
     double getReversePowerFunction(double time);
-    void setSpeed(double _speed);
+    void stop();
     void setPower(double _power);
     void setTarget(double target);
     bool changeState(uint8_t newState) override;

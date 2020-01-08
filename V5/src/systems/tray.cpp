@@ -8,9 +8,11 @@ Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake)
 
 // Sub-class specific functions
 
-void Tray::setSpeed(double _speed) {
-    this->power = -_speed;
-    this->trayMotor.move(this->power);
+void Tray::stop() {
+    this->setPower(0);
+    this->target = this->position;
+    this->trayMotor.modify_profiled_velocity(0);
+    this->trayMotor.move(0);
 }
 
 void Tray::setPower(double _power) {
@@ -51,14 +53,13 @@ bool Tray::changeState(uint8_t newState) {
 
     switch(newState) {
         case DISABLED_STATE:
-            this->setSpeed(0);
+            this->stop();
             break;
         case RESET_STATE:
             this->changeState(IDLE_STATE);
             break;
         case IDLE_STATE:
-            this->setPower(0);
-            this->setTarget(0);
+            this->stop();
             break;
         case LIFT_STATE:
             this->setPower(75);
@@ -83,6 +84,7 @@ uint8_t Tray::getTrayState() {
 
 void Tray::update() {
     this->position = this->trayMotor.get_position();
+    pros::lcd::print(5, "%f, %u, %f", this->position, this->state, this->trayMotor.get_power());
     this->error = this->target - this->position;
 
     switch(this->state) {
@@ -94,18 +96,23 @@ void Tray::update() {
         break;
     case LIFT_STATE:
         if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
-            this->changeState(HOLD_STATE);
+            pros::lcd::print(2, "HOLD, %f", this->timedOut(LIFT_TIMEOUT) ? 1.0f : 0.0f);
+            this->stop();
             intake.reset();
+            this->changeState(HOLD_STATE);
+            break;
         }
-        pros::lcd::print(5, "%f", getPowerFunction(pros::millis()-this->timeOfLastChange));
         this->setPower(getPowerFunction(-this->position));
         this->trayMotor.modify_profiled_velocity(this->power);
         break;
     case LOWER_STATE:
         if(this->timedOut(LOWER_TIMEOUT) || abs(this->error)<20) {
+            pros::lcd::print(4, "E: %f, TO: %f", this->error, this->timedOut(LOWER_TIMEOUT) ? 1.0f : 0.0f);
+            this->trayMotor.tare_position();
+            this->stop();
             this->changeState(IDLE_STATE);
+            break;
         }
-        pros::lcd::print(5, "%f", getReversePowerFunction(pros::millis()-this->timeOfLastChange));
         this->setPower(-getReversePowerFunction(-this->position));
         this->trayMotor.modify_profiled_velocity(this->power);
         break;

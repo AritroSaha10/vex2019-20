@@ -16,10 +16,10 @@
 
 using namespace pros;
 using namespace okapi;
-okapi::Controller fuckyou;
+okapi::Controller autoCon;
 
-Intake autoIntake(IDLE_STATE, fuckyou);
-Tray autoTray = Tray(IDLE_STATE, fuckyou, autoIntake);
+Intake autoIntake(IDLE_STATE, autoCon);
+Tray autoTray = Tray(IDLE_STATE, autoCon, autoIntake);
 
 /*const int { +FL, +BL } = 1;
 const int { -FR, -BR } = 2;
@@ -37,6 +37,7 @@ auto autoDrive = ChassisControllerFactory::create(
 );*/
 void updateSysMan(void* param) {
 	while(1) {
+		pros::lcd::print(1, "updating");
 		autoIntake.update();
 		autoTray.update();
 		pros::delay(2);
@@ -46,7 +47,7 @@ void updateSysMan(void* param) {
 void autonomous() {
 	pros::Task update(updateSysMan, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	autoDrive.setMaxVelocity(160);
-	autoTray.layCubes();	
+	autoTray.layCubes();
 	while(autoTray.getTrayState() == 0x11) {
 		pros::lcd::print(1, "Hello");
 		pros::delay(2);
