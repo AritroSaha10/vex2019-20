@@ -5,8 +5,8 @@
 #include "intake.h"
 #include "chassis.h"
 
-#define LIFT_TIMEOUT 2000
-#define LOWER_TIMEOUT 2000
+#define LIFT_TIMEOUT 7000
+#define LOWER_TIMEOUT 7000
 
 class Tray : public SystemManager {
 public:
@@ -30,7 +30,7 @@ private:
     void setTarget(double target);
     bool changeState(uint8_t newState) override;
 
-    pros::Motor trayMotor = pros::Motor(TRAY_PORT);
+    pros::Motor trayMotor = pros::Motor(TRAY_PORT, true);
     okapi::Controller controller;
     Intake intake;
 };
