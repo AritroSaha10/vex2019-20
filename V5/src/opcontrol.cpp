@@ -147,7 +147,10 @@ void opcontrol() {
 		release(LIFT);
 		move({LIFT}, -(LIFT_SPEED-50));
 		tray.setTargetPowerControl(0, 10);
-	}	
+	} else if (master.getDigital::down) {
+		release(LIFT);
+		move({LIFT}, -(LIFT_SPEED-50));
+	}
 	//TRAY
 	int stack = engageTray.checkState();
 	if(stack == 1) {
