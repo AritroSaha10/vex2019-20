@@ -69,6 +69,8 @@ std::string IntToStr(double i)
 
 void opcontrol() {
 	int lift = 0;
+	bool heldY{};
+	int timeoutY{ };
 	int holdLift = 0;
 	float speed = 1.0f;
 	bool intakeHigh = false;
@@ -120,9 +122,16 @@ void opcontrol() {
 		intake.stop();
 	}
 
-		
+	if (master.getDigital(ControllerDigital::Y) && pros::millis() > timeoutY) {
+		heldY = !heldY;
+		timeoutY = pros::millis() + 200;
+	}
 	//LIFT
-	if (holdLift && encoder[0] > (LIFT_LIMIT-30)) {
+	if (lift && master.getDigital(ControllerDigital::down)) {		//OVERRIDES LIFT_LIMIT IF X AND DOWN PRESSED
+		move({LIFT}, LIFT_SPEED);	
+	} else if (heldY) 					//HOLD LIFT IF Y is pressed
+		hold(LIFT);
+	else if (holdLift && encoder[0] > (LIFT_LIMIT-30)) {
 		move({LIFT}, 0);
 		hold(LIFT);
 	} else if (holdLift) {
@@ -130,10 +139,12 @@ void opcontrol() {
 		holdLift = 0;
 		lift = 1;
 	} else if (lift) {
+		release(LIFT);
 		tray.setTargetPowerControl(-(encoder[1]-2000), 10);
 		move({LIFT}, 117);
 		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
 	} else if (!lift && encoder[0] > 100) {
+		release(LIFT);
 		move({LIFT}, -(LIFT_SPEED-50));
 		tray.setTargetPowerControl(0, 10);
 	}	
