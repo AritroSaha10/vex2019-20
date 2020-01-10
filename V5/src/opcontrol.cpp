@@ -80,6 +80,7 @@ void opcontrol() {
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Intake intake = Intake(0x10, master);
 	Tray tray = Tray(0x10, master, intake);
+	tray.reset();
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
@@ -164,8 +165,7 @@ void opcontrol() {
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 
 	pros::delay(10);
-	pros::lcd::print(4, "Encoder: %f, Encoder 2: %f", encoder[0], encoder[1]);
-	pros::lcd::print(1, "tray getstate %u", tray.getTrayState());
+	// pros::lcd::print(1, "tray getstate %u", tray.getTrayState());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

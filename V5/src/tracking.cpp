@@ -62,8 +62,6 @@ void tracking(void* param) {
 		//Update angle
 		angle += aDelta;
 
-		pros::lcd::print(2, "x: %f, y: %f, angle: %f", x, y, angle*180/M_PI);
-		pros::lcd::print(3, "L: %f R: %f", left, right);
 		pros::delay(5);
 	}
 }
