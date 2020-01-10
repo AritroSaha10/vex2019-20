@@ -146,8 +146,8 @@ void opcontrol() {
 	} else if (!lift && encoder[0] > 100) {
 		release(LIFT);
 		move({LIFT}, -(LIFT_SPEED-50));
-		tray.setTargetPowerControl(0, 10);
-	} else if (master.getDigital::down) {
+		tray.lower();
+	} else if (master.getDigital(ControllerDigital::down)) {
 		release(LIFT);
 		move({LIFT}, -(LIFT_SPEED-50));
 	}
