@@ -61,6 +61,7 @@ bool Tray::changeState(uint8_t newState) {
             break;
         case IDLE_STATE:
             this->stop();
+	    trayMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             break;
         case LIFT_STATE:
             // this->setPower(75);
