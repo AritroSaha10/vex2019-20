@@ -138,7 +138,7 @@ void opcontrol() {
 		lift = 1;
 		release(LIFT);
 	} else if (lift) {
-		tray.setTargetPowerControl(-(encoder[1]-1800), 10);
+		tray.setTargetPowerControl((float)encoder[0]*2, 50);
 		move({LIFT}, 127);
 		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
 	} else if ((!lift || !liftControl) && encoder[0] > 100) {
@@ -161,7 +161,7 @@ void opcontrol() {
 	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
 
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
-
+	//566, 1157
 	pros::delay(10);
 	pros::lcd::print(1, "encoder value used 0: %f", encoder[1]);
 	pros::lcd::print(2,"encoder1: %f", encoder[0]);

@@ -20,8 +20,8 @@ void Tray::setPower(double _power) {
     this->power = _power;
 }
 
-void Tray::setTargetPowerControl(double target, double power) {
-	this->trayMotor.move_absolute(this->target, this->power);
+void Tray::setTargetPowerControl(double _target, double _power) {
+	this->trayMotor.move_absolute(_target, _power);
 }
 
 void Tray::setTarget(double _target) {
