@@ -138,7 +138,7 @@ void opcontrol() {
 		lift = 1;
 		release(LIFT);
 	} else if (lift) {
-		tray.setTargetPowerControl((float)encoder[0]*2, 50);
+		tray.setTargetPowerControl((float)encoder[0]*566/1157, 50);
 		move({LIFT}, 127);
 		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
 	} else if ((!lift || !liftControl) && encoder[0] > 100) {
