@@ -1,11 +1,6 @@
 #include "main.h"
 #include "tracking.h"
-#include "systems/toggle.h"
-#include "systems/intake.h"
-#include "systems/tray.h"
 #include <initializer_list>
-#include <string>
-#include <sstream>
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -24,7 +19,6 @@
 using namespace pros;
 using namespace okapi;
 
-std::vector<double> encoder;
 extern float x;
 extern float y;
 extern float theta;
@@ -36,143 +30,117 @@ okapi::Controller master;
 auto drive = ChassisControllerFactory::create(
 	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
 	AbstractMotor::gearset::green,
-	{4_in, 11.5_in}
-);
+	{4_in, 11.5_in});
 
-void layStack(Intake intake, Tray& tray, Toggle& t) {
-	tray.layCubes();
-	while(t.checkState() != 0) {
-		tray.update();
-		// float traySpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
-		// move({TRAY}, traySpeed*127);
+void layStack()
+{
+	while (master.getDigital(ControllerDigital::L1))
+	{
+		float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+		move({TRAY}, traySpeed * 127);
 
-		float driveSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftY));
-		drive.tank(driveSpeed*0.5f, driveSpeed*0.5f, 0.05f);
+		float driveSpeed = master.getAnalog(ControllerAnalog::leftY);
+		drive.tank(driveSpeed * 0.5f, driveSpeed * 0.5f, 0.05f);
 
-		if(driveSpeed < 0) {
-			intake.out(driveSpeed * 127 /2);
+		if (driveSpeed < 0)
+		{
+			move({LINTAKE}, driveSpeed * 0.75 * 127);
+			move({RINTAKE}, -driveSpeed * 0.75 * 127);
 		}
-		else {
-			intake.reset();
+		else
+		{
 			move({LINTAKE, RINTAKE}, 0);
 		}
-		pros::delay(5);
 	}
 }
 
-std::string IntToStr(double i)
+void opcontrol()
 {
-	std::ostringstream out;
-	out << i;
-	return out.str();
-}
-
-void opcontrol() {
-	int lift = 0;
-	int holdLift = 0;
-	int liftControl = 0;
+	pros::Motor m = pros::Motor(TRAY_PORT);
+	m.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	float speed = 1.0f;
 	bool intakeHigh = false;
 	bool intakeHeld = false;
-	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
-	Toggle controlIntake = Toggle({ControllerDigital::R1}, master);
-	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
-	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
-	Intake intake = Intake(0x10, master);
-	Tray tray = Tray(0x10, master, intake);
-	tray.reset();
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
-	int lastEncoder = getEncoders({TRAY})[0];
-	while (1) {	
-	encoder = getEncoders({LIFT, TRAY});	
-	
-	intake.update();
-	tray.update();
+	while (1)
+	{
 
-	if(master.getDigital(ControllerDigital::X))
-		lift = 1;
-	else {
-		lift = 0;
-		holdLift = 0;
-		release(LIFT);
-	}
+		//INTAKE
+		if (master.getDigital(ControllerDigital::L2) && master.getDigital(ControllerDigital::R2))
+		{
+			if (!intakeHeld)
+			{
+				if (intakeHigh)
+				{
+					move({LINTAKE}, 0);
+					move({RINTAKE}, 0);
+					intakeHigh = false;
+				}
+				else
+				{
+					move({LINTAKE}, INTAKE_SPEED);
+					move({RINTAKE}, INTAKE_SPEED);
+					intakeHigh = true;
+				}
+			}
+			intakeHeld = true;
+		}
+		else
+		{
+			intakeHeld = false;
+		}
 
-	if(abs(getEncoders({TRAY})[0]-lastEncoder) > 5) {
-		master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
-		lastEncoder = getEncoders({TRAY})[0];
-	}
+		//OUTTAKE
+		if (master.getDigital(ControllerDigital::R1))
+		{
+			float controlledIntakeSpeed;
+			controlledIntakeSpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY)) * 127;
 
-	//INTAKE
-	int in = fullIntake.checkState();
-	if(in == 1) {
-		intake.intake(INTAKE_SPEED);
-	}
-	else if(in == 0) {
-		intake.stop();
-	}
+			move({LINTAKE}, controlledIntakeSpeed);
+			move({RINTAKE}, -controlledIntakeSpeed);
+		}
+		else if (!intakeHigh)
+		{
+			move({LINTAKE, RINTAKE}, 0);
+		}
 
-	//OUTTAKE
-	int control = controlIntake.checkState();
-	if(control == 1) {
-		intake.control();
-	}
-	else if(control == 0) {
-		intake.stop();
-	}
+		//LIFT
+		if (master.getDigital(ControllerDigital::X))
+		{
+			move({LIFT}, 127);
+			speed = 0.5f;
+		}
+		else
+		{
+			move({LIFT}, 0);
+			speed = 1.0f;
+		}
 
-	liftControl = liftButton.checkState();
-	//LIFT
-	if (lift && master.getDigital(ControllerDigital::down)) {		//OVERRIDES LIFT_LIMIT IF X AND DOWN PRESSED
-		move({LIFT}, LIFT_SPEED);	
-	} else if (liftControl == 1) 					//HOLD LIFT IF Y is pressed
-		hold(LIFT);
-	else if (holdLift && encoder[0] > (LIFT_LIMIT-30)) {
-		move({LIFT}, 0);
-		hold(LIFT);
-	} else if (holdLift) {
-		move({LIFT}, 0);
-		holdLift = 0;
-		lift = 1;
-		release(LIFT);
-	} else if (lift) {
-		tray.setTargetPowerControl(-(encoder[1]-1800), 10);
-		move({LIFT}, 127);
-		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
-	} else if ((!lift || !liftControl) && encoder[0] > 100) {
-		release(LIFT);
-		move({LIFT}, -(LIFT_SPEED-50));
-		tray.lower();
-	} else if (master.getDigital(ControllerDigital::down)) {
-		release(LIFT);
-		move({LIFT}, -(LIFT_SPEED-50));
-	} else if (encoder[0] <= 0)
-		move({LIFT}, 0);
-	//TRAY
-	int stack = engageTray.checkState();
-	if(stack == 1) {
-		layStack(intake, tray, engageTray);
-		tray.lower();
-	}
-		//tray.setTarget(-900);
-	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
-	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
+		//TRAY
+		if (master.getDigital(ControllerDigital::L1))
+		{
+			//float traySpeed = master.getAnalog(ControllerAnalog::rightY);
+			//move({TRAY}, traySpeed);
+			layStack();
+		}
 
-	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
+		//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
+		//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
 
-	pros::delay(10);
-	pros::lcd::print(1, "encoder value used 0: %f", encoder[1]);
-	pros::lcd::print(2,"encoder1: %f", encoder[0]);
-	pros::lcd::print(3, "lift: %d, holdLift: %d, liftControl: %d", lift, holdLift, liftControl);
-	//}
+		drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
+
+		pros::delay(10);
+		//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
 		//pros::lcd::print(5, "loc x  %f; loc y %f", x, y);
 	}
 }
 
-double joystickSlew(double input) {
+double joystickSlew(double input)
+{
 	return pow(input, 3);
 }
