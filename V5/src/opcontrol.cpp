@@ -79,6 +79,7 @@ void opcontrol() {
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
 	Intake intake = Intake(0x10, master);
+	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
 	Tray tray = Tray(0x10, master, intake);
 	tray.reset();
 	/*pros::Vision andyVision(VISION_PORT);
@@ -124,31 +125,51 @@ void opcontrol() {
 	}
 
 	liftControl = liftButton.checkState();
-	//LIFT
-	if (lift && master.getDigital(ControllerDigital::down)) {		//OVERRIDES LIFT_LIMIT IF X AND DOWN PRESSED
+	// LIFT
+	// Override lift limits
+	if (lift && master.getDigital(ControllerDigital::up)) {
 		move({LIFT}, LIFT_SPEED);	
-	} else if (liftControl == 1) 					//HOLD LIFT IF Y is pressed
+	} 
+	// Hold lift in place if Y is pressed
+ 	else if (liftControl == 1) {
 		hold(LIFT);
-	else if (holdLift && encoder[0] > (LIFT_LIMIT-30)) {
+	}
+	// Hold in place if limit reached?
+	else if (holdLift == 1 && encoder[0] > (LIFT_LIMIT-30)) {
 		move({LIFT}, 0);
 		hold(LIFT);
-	} else if (holdLift) {
+	}
+	// What is this Arun
+	else if (holdLift == 1) {
 		move({LIFT}, 0);
 		holdLift = 0;
 		lift = 1;
 		release(LIFT);
-	} else if (lift) {
-		tray.setTargetPowerControl((float)encoder[0]*566/1157, 50);
+	}
+	// Lifting (if X is held down) 
+	else if (lift) {
+		if(encoder[0] > 1000) {
+			tray.setTargetPowerControl(1000.0f, 100);
+		}
+		else {
+			tray.setTargetPowerControl((float)encoder[0]/*566/1157*/, 100);
+		}
 		move({LIFT}, 127);
 		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
-	} else if ((!lift || !liftControl) && encoder[0] > 100) {
+	}
+	// If nothing is pressed and the lift is till up, drop it 
+	else if ((!lift || !liftControl) && encoder[0] > 100) {
 		release(LIFT);
 		move({LIFT}, -(LIFT_SPEED-50));
 		tray.lower();
-	} else if (master.getDigital(ControllerDigital::down)) {
+	}
+	//Force drop 
+	if (master.getDigital(ControllerDigital::down)) {
 		release(LIFT);
 		move({LIFT}, -(LIFT_SPEED-50));
-	} else if (encoder[0] <= 0)
+	}
+	//Prevent negatives 
+	if (encoder[0] <= 0)
 		move({LIFT}, 0);
 	//TRAY
 	int stack = engageTray.checkState();
