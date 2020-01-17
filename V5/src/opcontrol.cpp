@@ -82,7 +82,9 @@ void opcontrol() {
 	Intake intake = Intake(0x10, master);
 	Tray tray = Tray(0x10, master, intake);
 	Lift liftSystem = Lift(0x10, intake, tray);
-	tray.reset();
+	//tray.reset();
+	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
+	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
