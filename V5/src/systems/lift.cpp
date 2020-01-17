@@ -104,7 +104,8 @@ void Lift::update()
         }
         break;
     case HOLD_STATE:
-        if((this->position - this->target) > 40) {
+        if(abs(this->position - this->target) > 40) {
+            pros::lcd::print(3, "BRUH");
             this->liftMotor.move_absolute(this->target, 100);
         }
         break;
@@ -112,7 +113,6 @@ void Lift::update()
 }
 
 void Lift::raise() {
-    this->intake.stop();
     if(this->state == LIFT_STATE) {
         return;
     }
@@ -120,7 +120,6 @@ void Lift::raise() {
 }
 
 void Lift::lower() {
-    this->intake.stop();
     if(this->state == LOWER_STATE) {
         return;
     }
@@ -132,6 +131,8 @@ void Lift::drop() {
 }
 
 void Lift::lock() {
-    this->intake.control();
+    if(this->state == HOLD_STATE) {
+        return;
+    }
     this->changeState(HOLD_STATE);
 }
