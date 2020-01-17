@@ -20,8 +20,8 @@ void Tray::setPower(double _power) {
     this->power = _power;
 }
 
-void Tray::setTargetPowerControl(double target, double power) {
-	this->trayMotor.move_absolute(this->target, this->power);
+void Tray::setTargetPowerControl(double _target, double _power) {
+	this->trayMotor.move_absolute(_target, _power);
 }
 
 void Tray::setTarget(double _target) {
@@ -61,9 +61,10 @@ bool Tray::changeState(uint8_t newState) {
             break;
         case IDLE_STATE:
             this->stop();
-	    trayMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+            this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
             break;
         case LIFT_STATE:
+            this->intake.reset();
             // this->setPower(75);
             this->setTarget(MAX_TRAY);
             break;
@@ -72,6 +73,7 @@ bool Tray::changeState(uint8_t newState) {
             this->setTarget(0);
             break;
         case HOLD_STATE:
+            this->intake.reset();
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
             break;
     }
@@ -99,7 +101,6 @@ void Tray::update() {
         if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
             pros::lcd::print(2, "HOLD, %f", this->timedOut(LIFT_TIMEOUT) ? 1.0f : 0.0f);
             this->stop();
-            intake.reset();
             this->changeState(HOLD_STATE);
             break;
         }
