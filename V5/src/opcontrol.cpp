@@ -3,6 +3,7 @@
 #include "systems/toggle.h"
 #include "systems/intake.h"
 #include "systems/tray.h"
+#include "systems/lift.h"
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -79,8 +80,8 @@ void opcontrol() {
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
 	Intake intake = Intake(0x10, master);
-	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
 	Tray tray = Tray(0x10, master, intake);
+	Lift liftSystem = Lift(0x10, intake, tray);
 	tray.reset();
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
@@ -92,6 +93,7 @@ void opcontrol() {
 	
 	intake.update();
 	tray.update();
+	liftSystem.update();
 
 	if(master.getDigital(ControllerDigital::X))
 		lift = 1;
@@ -124,69 +126,77 @@ void opcontrol() {
 		intake.stop();
 	}
 
-	liftControl = liftButton.checkState();
-	// LIFT
-	// Override lift limits
-	if (lift && master.getDigital(ControllerDigital::up)) {
-		move({LIFT}, LIFT_SPEED);	
-	} 
-	// Hold lift in place if Y is pressed
- 	else if (liftControl == 1) {
-		hold(LIFT);
+	if(master.getDigital(ControllerDigital::X)) {
+		liftSystem.raise();
 	}
-	// Hold in place if limit reached?
-	else if (holdLift == 1 && encoder[0] > (LIFT_LIMIT-30)) {
-		move({LIFT}, 0);
-		hold(LIFT);
+	else if(master.getDigital(ControllerDigital::B)) {
+		liftSystem.lower();
 	}
-	// What is this Arun
-	else if (holdLift == 1) {
-		move({LIFT}, 0);
-		holdLift = 0;
-		lift = 1;
-		release(LIFT);
+	else {
+		liftSystem.lock();
 	}
-	// Lifting (if X is held down) 
-	else if (lift) {
-		if(encoder[0] > 1000) {
-			tray.setTargetPowerControl(1000.0f, 100);
-		}
-		else {
-			tray.setTargetPowerControl((float)encoder[0]/*566/1157*/, 100);
-		}
-		move({LIFT}, 127);
-		holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
+
+	if(master.getDigital(ControllerDigital::down)) {
+		liftSystem.drop();
 	}
-	// If nothing is pressed and the lift is till up, drop it 
-	else if ((!lift || !liftControl) && encoder[0] > 100) {
-		release(LIFT);
-		move({LIFT}, -(LIFT_SPEED-50));
-		tray.lower();
-	}
-	//Force drop 
-	if (master.getDigital(ControllerDigital::down)) {
-		release(LIFT);
-		move({LIFT}, -(LIFT_SPEED-50));
-	}
-	//Prevent negatives 
-	if (encoder[0] <= 0)
-		move({LIFT}, 0);
+	// ARUN'S LIFT
+	// // Override lift limits
+	// if (lift && master.getDigital(ControllerDigital::up)) {
+	// 	move({LIFT}, LIFT_SPEED);	
+	// } 
+	// // Hold lift in place if Y is pressed
+ 	// else if (liftControl == 1) {
+	// 	hold(LIFT);
+	// }
+	// // Hold in place if limit reached?
+	// else if (holdLift == 1 && encoder[0] > (LIFT_LIMIT-30)) {
+	// 	move({LIFT}, 0);
+	// 	hold(LIFT);
+	// }
+	// // What is this Arun
+	// else if (holdLift == 1) {
+	// 	move({LIFT}, 0);
+	// 	holdLift = 0;
+	// 	lift = 1;
+	// 	release(LIFT);
+	// }
+	// // Lifting (if X is held down) 
+	// else if (lift) {
+	// 	if(encoder[0] > 1000) {
+	// 		tray.setTargetPowerControl(1000.0f, 100);
+	// 	}
+	// 	else {
+	// 		tray.setTargetPowerControl((float)encoder[0]/*566/1157*/, 100);
+	// 	}
+	// 	move({LIFT}, 127);
+	// 	holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
+	// }
+	// // If nothing is pressed and the lift is till up, drop it 
+	// else if ((!lift || !liftControl) && encoder[0] > 100) {
+	// 	release(LIFT);
+	// 	move({LIFT}, -(LIFT_SPEED-50));
+	// 	tray.lower();
+	// }
+	// //Force drop 
+	// if (master.getDigital(ControllerDigital::down)) {
+	// 	release(LIFT);
+	// 	move({LIFT}, -(LIFT_SPEED-50));
+	// }
+	// //Prevent negatives 
+	// if (encoder[0] <= 0)
+	// 	move({LIFT}, 0);
 	//TRAY
 	int stack = engageTray.checkState();
 	if(stack == 1) {
 		layStack(intake, tray, engageTray);
 		tray.lower();
 	}
-		//tray.setTarget(-900);
-	//drive.tank(joystickSlew(master.getAnalog(ControllerAnalog::leftY))*speed,
-	//			   joystickSlew(master.getAnalog(ControllerAnalog::rightY))*speed,0.05);
 
 	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
 	//566, 1157
 	pros::delay(10);
-	pros::lcd::print(1, "encoder value used 0: %f", encoder[1]);
-	pros::lcd::print(2,"encoder1: %f", encoder[0]);
-	pros::lcd::print(3, "lift: %d, holdLift: %d, liftControl: %d", lift, holdLift, liftControl);
+	pros::lcd::print(1, "Tray: %f", encoder[1]);
+	pros::lcd::print(2,"Lift: %f", liftSystem.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

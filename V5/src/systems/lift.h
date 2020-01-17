@@ -15,6 +15,9 @@ public:
     static const uint8_t HOLD_STATE = 0x13;
 
     void drop();
+    void raise();
+    void lock();
+    void lower();
     void raiseToMid();
     void raiseToLow();
     void update() override;

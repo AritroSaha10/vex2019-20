@@ -3,7 +3,7 @@
 
 #define MID_HEIGHT 2900
 #define LOW_HEIGHT 1450
-#define LIFT_SPEED 110
+#define LIFT_SPEED 107
 
 // Constructor
 Lift::Lift(uint8_t _defaultState, Intake _intake, Tray _tray) : SystemManager(_defaultState), intake(_intake), tray(_tray) {}
@@ -35,11 +35,6 @@ void Lift::setTarget(double _target)
     this->liftMotor.move_absolute(this->target, this->power);
 }
 
-void Lift::drop()
-{
-    this->changeState(LOWER_STATE);
-}
-
 // Overrides
 bool Lift::changeState(uint8_t newState)
 {
@@ -62,11 +57,13 @@ bool Lift::changeState(uint8_t newState)
         liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         break;
     case LIFT_STATE:
+        this->tray.setTargetPowerControl(1000, 100);
         break;
     case LOWER_STATE:
-        this->setTarget(0);
         break;
     case HOLD_STATE:
+        this->target = this->liftMotor.get_position();
+        this->stop();
         this->liftMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
         break;
     }
@@ -94,10 +91,47 @@ void Lift::update()
     case IDLE_STATE:
         break;
     case LIFT_STATE:
+        this->liftMotor.move(127);
+        if(this->position > MID_HEIGHT-10) {
+            this->lock();
+        }
         break;
     case LOWER_STATE:
+        this->liftMotor.move(-100);
+        if(this->position < 250) {
+            this->tray.setTargetPowerControl(0, 127);
+            this->reset();
+        }
         break;
     case HOLD_STATE:
+        if((this->position - this->target) > 40) {
+            this->liftMotor.move_absolute(this->target, 100);
+        }
         break;
     }
+}
+
+void Lift::raise() {
+    this->intake.stop();
+    if(this->state == LIFT_STATE) {
+        return;
+    }
+    this->changeState(LIFT_STATE);
+}
+
+void Lift::lower() {
+    this->intake.stop();
+    if(this->state == LOWER_STATE) {
+        return;
+    }
+    this->changeState(LOWER_STATE);
+}
+
+void Lift::drop() {
+    this->changeState(LOWER_STATE);
+}
+
+void Lift::lock() {
+    this->intake.control();
+    this->changeState(HOLD_STATE);
 }
