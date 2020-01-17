@@ -104,7 +104,7 @@ void Lift::update()
         }
         break;
     case HOLD_STATE:
-        if((this->position - this->target) > 40) {
+        if(abs(this->position - this->target) > 40) {
             this->liftMotor.move_absolute(this->target, 100);
         }
         break;

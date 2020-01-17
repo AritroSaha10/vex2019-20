@@ -12,7 +12,6 @@ void Tray::stop() {
     pros::lcd::print(4, "STOP");
     this->power = 0;
     this->target = this->trayMotor.get_position();
-    this->trayMotor.modify_profiled_velocity(0);
     this->trayMotor.move(0);
 }
 
@@ -85,6 +84,14 @@ uint8_t Tray::getTrayState() {
 	return this->state;
 }
 
+void Tray::resetTray() {
+	this->trayMotor.tare_position();
+	this->target = 0;
+	this->error = 0;
+	this->position = 0;
+	this->power = 0;
+}
+
 void Tray::update() {
     this->position = this->trayMotor.get_position();
     pros::lcd::print(5, "%f, %u, %f, %f", this->position, this->state, this->trayMotor.get_target_position(), this->trayMotor.get_target_velocity());
@@ -117,7 +124,6 @@ void Tray::update() {
             break;
         }
         this->setPower(getReversePowerFunction(this->position));
-        pros::lcd::print(1, "%f", this->power);
         this->trayMotor.modify_profiled_velocity(this->power);
         break;
     case HOLD_STATE:

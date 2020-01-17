@@ -16,6 +16,7 @@ public:
     static const uint8_t HOLD_STATE = 0x13;
 
     void layCubes();
+    void resetTray();
     void lower();
     void update() override;
     void setTargetPowerControl(double target, double power);
