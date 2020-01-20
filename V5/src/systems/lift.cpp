@@ -1,8 +1,8 @@
 #include "main.h"
 #include "lift.h"
 
-#define MID_HEIGHT 2900
-#define LOW_HEIGHT 1450
+#define MID_HEIGHT 3100
+#define LOW_HEIGHT 2250
 #define LIFT_SPEED 107
 
 // Constructor
@@ -92,7 +92,10 @@ void Lift::update()
         break;
     case LIFT_STATE:
         this->liftMotor.move(127);
-        if(this->position > MID_HEIGHT-10) {
+        if(this->position > MID_HEIGHT-10 && mid) {
+            this->lock();
+        }
+        else if(this->position > LOW_HEIGHT-10 && !mid) {
             this->lock();
         }
         break;
@@ -112,7 +115,8 @@ void Lift::update()
     }
 }
 
-void Lift::raise() {
+void Lift::raise(bool _mid) {
+    this->mid = _mid;
     if(this->state == LIFT_STATE) {
         return;
     }

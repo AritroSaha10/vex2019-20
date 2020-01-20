@@ -15,7 +15,7 @@ public:
     static const uint8_t HOLD_STATE = 0x13;
 
     void drop();
-    void raise();
+    void raise(bool mid);
     void lock();
     void lower();
     void raiseToMid();
@@ -34,4 +34,5 @@ private:
     pros::Motor liftMotor = pros::Motor(LIFT_PORT);
     Intake intake;
     Tray tray;
+    bool mid = false;
 };

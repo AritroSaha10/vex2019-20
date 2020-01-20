@@ -129,7 +129,10 @@ void opcontrol() {
 	}
 
 	if(master.getDigital(ControllerDigital::X)) {
-		liftSystem.raise();
+		liftSystem.raise(true);
+	}
+	else if(master.getDigital(ControllerDigital::Y)) {
+		liftSystem.raise(false);
 	}
 	else if(master.getDigital(ControllerDigital::B)) {
 		liftSystem.lower();
