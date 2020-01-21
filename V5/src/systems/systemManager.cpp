@@ -57,3 +57,10 @@ bool SystemManager::changeState(uint8_t newState) {
     this->timeOfLastChange = pros::millis();
     return true;
 }
+
+void SystemManager::fullReset() {
+    this->target = 0;
+    this->error = 0;
+    this->position = 0;
+    this->power = 0;
+}

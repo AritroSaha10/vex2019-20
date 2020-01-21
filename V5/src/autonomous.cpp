@@ -2,6 +2,7 @@
 #include "main.h"
 #include "systems/tray.h"
 #include "systems/lift.h"
+#include "systems.h"
 
 
 #define BLUE 0
@@ -29,8 +30,9 @@ okapi::Controller autoCon;
 
 int autonSet = BLUE;
 
-Intake autoIntake(0x10, autoCon);
-Tray autoTray = Tray(0x10, autoCon, autoIntake);
+Intake intake = Intake(0x10, autoCon);
+Tray tray = Tray(0x10, autoCon, intake);
+Lift lift = Lift(0x10, intake, tray);
 
 /*const int { +FL, +BL } = 1;
 const int { -FR, -BR } = 2;
@@ -48,8 +50,9 @@ auto autoDrive = ChassisControllerFactory::create(
 );*/
 void updateSysMan(void* param) {
 	while(1) {
-		autoIntake.update();
-		autoTray.update();
+		intake.update();
+		tray.update();
+		lift.update();
 		pros::delay(5);
 	}
 }
@@ -73,47 +76,47 @@ void flipout(Intake intake, Lift lift) {
 }
 
 void autonomous() {
-	autoTray.resetTray();
-	Lift autoLift = Lift(0x10, autoIntake, autoTray);
-	flipout(autoIntake, autoLift);
+	tray.fullReset();
+
+	flipout(intake, lift);
 	pros::Task update(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
 		autoDrive.setMaxVelocity(130);
 		
 		autoDrive.moveDistanceAsync(1.1_m);
-		autoIntake.intake(120);
+		intake.intake(120);
 		pros::delay(3500);
-		autoIntake.stop();
+		intake.stop();
 		autoDrive.waitUntilSettled();
 		autoDrive.turnAngle(-138_deg);
 		autoDrive.moveDistance(0.81_m);
-		autoIntake.reset();
-		autoTray.layCubes();
-		while(autoTray.getTrayState() == 0x11) {
+		intake.reset();
+		tray.layCubes();
+		while(tray.getTrayState() == 0x11) {
 			pros::lcd::print(1, "Hello");
 			pros::delay(2);
 		}
 		pros::lcd::print(1, "Hello again");
-		autoTray.lower();
+		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
 	} else if(autonSet==RED) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
-		autoIntake.intake(120);
+		intake.intake(120);
 		pros::delay(3000);
-		autoIntake.stop();
+		intake.stop();
 		autoDrive.waitUntilSettled();
 		autoDrive.turnAngle(138_deg);
 		autoDrive.moveDistance(0.81_m);
-		autoIntake.reset();
-		autoTray.layCubes();
-		while (autoTray.getTrayState() == 0x11)
+		intake.reset();
+		tray.layCubes();
+		while (tray.getTrayState() == 0x11)
 		{
 			pros::lcd::print(1, "Hello");
 			pros::delay(2);
 		}
 		pros::lcd::print(1, "Hello again");
-		autoTray.lower();
+		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
 	} else if (autonSet == SIMPLE) {
 		autoDrive.setMaxVelocity(140);
@@ -122,35 +125,35 @@ void autonomous() {
 	} else if (autonSet == EXPERIMENTAL_BLUE) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
-		autoIntake.intake(120);
+		intake.intake(120);
 		pros::delay(3000);
-		autoIntake.stop();
+		intake.stop();
 		autoDrive.waitUntilSettled();
 		autoDrive.turnAngle(120_deg);
 		autoDrive.moveDistance(1.5_m);
-		autoIntake.reset();
-		autoTray.layCubes();
-		while (autoTray.getTrayState() == 0x11)
+		intake.reset();
+		tray.layCubes();
+		while (tray.getTrayState() == 0x11)
 		{
 			pros::lcd::print(1, "Hello");
 			pros::delay(2);
 		}
 		pros::lcd::print(1, "Hello again");
-		autoTray.lower();
+		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
 	} else if (autonSet == EXPERIMENTAL_RED) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
-		autoIntake.intake(120);
+		intake.intake(120);
 		pros::delay(3000);
-		autoIntake.stop();
+		intake.stop();
 		autoDrive.waitUntilSettled();
 		autoDrive.turnAngle(-120_deg);
 		autoDrive.moveDistance(1.5_m);
-		autoIntake.reset();
-		autoTray.layCubes();
+		intake.reset();
+		tray.layCubes();
 	}
-	autoIntake.reset();
+	intake.reset();
 	pros::Task task_delete(update);
 	///
 		/*

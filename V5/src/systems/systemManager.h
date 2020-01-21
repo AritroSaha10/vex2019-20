@@ -22,6 +22,7 @@ public:
     
     // Called every loop
     virtual void update() {};
+    virtual void fullReset();
 
 protected:
     double target;

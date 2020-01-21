@@ -84,12 +84,9 @@ uint8_t Tray::getTrayState() {
 	return this->state;
 }
 
-void Tray::resetTray() {
+void Tray::fullReset() {
 	this->trayMotor.tare_position();
-	this->target = 0;
-	this->error = 0;
-	this->position = 0;
-	this->power = 0;
+	SystemManager::fullReset();
 }
 
 void Tray::update() {

@@ -16,9 +16,9 @@ public:
     static const uint8_t HOLD_STATE = 0x13;
 
     void layCubes();
-    void resetTray();
     void lower();
     void update() override;
+    void fullReset() override;
     void setTargetPowerControl(double target, double power);
 	uint8_t getTrayState();
     Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake);

@@ -140,3 +140,8 @@ void Lift::lock() {
     }
     this->changeState(HOLD_STATE);
 }
+
+void Lift::fullReset() {
+    this->liftMotor.tare_position();
+    SystemManager::fullReset();
+}

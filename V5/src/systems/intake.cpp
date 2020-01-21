@@ -110,3 +110,9 @@ bool Intake::changeState(uint8_t newState) {
 
     return true;
 }
+
+void Intake::fullReset() {
+    this->leftIntakeMotor.tare_position();
+    this->rightIntakeMotor.tare_position();
+    SystemManager::fullReset();
+}

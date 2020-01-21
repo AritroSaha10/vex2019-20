@@ -21,6 +21,7 @@ public:
     void raiseToMid();
     void raiseToLow();
     void update() override;
+    void fullReset() override;
     void overridePower(double power);
     uint8_t getState();
     Lift(uint8_t _defaultState, Intake _intake, Tray _tray);

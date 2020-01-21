@@ -4,6 +4,7 @@
 #include "systems/intake.h"
 #include "systems/tray.h"
 #include "systems/lift.h"
+#include "systems.h"
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -69,7 +70,6 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
-	int lift = 0;
 	int holdLift = 0;
 	int liftControl = 0;
 	float speed = 1.0f;
@@ -79,9 +79,6 @@ void opcontrol() {
 	Toggle controlIntake = Toggle({ControllerDigital::R1}, master);
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
-	Intake intake = Intake(0x10, master);
-	Tray tray = Tray(0x10, master, intake);
-	Lift liftSystem = Lift(0x10, intake, tray);
 	//tray.reset();
 	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
 	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
@@ -91,19 +88,7 @@ void opcontrol() {
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	int lastEncoder = getEncoders({TRAY})[0];
 	while (1) {	
-	encoder = getEncoders({LIFT, TRAY});	
-	
-	intake.update();
-	tray.update();
-	liftSystem.update();
-
-	if(master.getDigital(ControllerDigital::X))
-		lift = 1;
-	else {
-		lift = 0;
-		holdLift = 0;
-		release(LIFT);
-	}
+	encoder = getEncoders({LIFT, TRAY});
 
 	if(abs(getEncoders({TRAY})[0]-lastEncoder) > 5) {
 		master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
@@ -129,20 +114,20 @@ void opcontrol() {
 	}
 
 	if(master.getDigital(ControllerDigital::X)) {
-		liftSystem.raise(true);
+		lift.raise(true);
 	}
 	else if(master.getDigital(ControllerDigital::Y)) {
-		liftSystem.raise(false);
+		lift.raise(false);
 	}
 	else if(master.getDigital(ControllerDigital::B)) {
-		liftSystem.lower();
+		lift.lower();
 	}
 	else {
-		liftSystem.lock();
+		lift.lock();
 	}
 
 	if(master.getDigital(ControllerDigital::down)) {
-		liftSystem.drop();
+		lift.drop();
 	}
 	// ARUN'S LIFT
 	// // Override lift limits
@@ -201,7 +186,7 @@ void opcontrol() {
 	//566, 1157
 	pros::delay(10);
 	pros::lcd::print(1, "Tray: %f", encoder[1]);
-	pros::lcd::print(2,"Lift: %f", liftSystem.getPosition());
+	pros::lcd::print(2,"Lift: %f", lift.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
