@@ -12,7 +12,6 @@ Lift::Lift(uint8_t _defaultState, Intake _intake, Tray _tray) : SystemManager(_d
 
 void Lift::stop()
 {
-    pros::lcd::print(4, "STOP");
     this->power = 0;
     this->target = this->liftMotor.get_position();
     this->liftMotor.modify_profiled_velocity(0);
@@ -108,7 +107,6 @@ void Lift::update()
         break;
     case HOLD_STATE:
         if(abs(this->position - this->target) > 40) {
-            pros::lcd::print(3, "BRUH");
             this->liftMotor.move_absolute(this->target, 100);
         }
         break;

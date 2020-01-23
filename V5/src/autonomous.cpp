@@ -30,9 +30,14 @@ okapi::Controller autoCon;
 
 int autonSet = BLUE;
 
+void nullTask(void* param) {
+	pros::delay(10);
+}
+
 Intake intake = Intake(0x10, autoCon);
 Tray tray = Tray(0x10, autoCon, intake);
 Lift lift = Lift(0x10, intake, tray);
+Task update(nullTask, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "null");
 
 /*const int { +FL, +BL } = 1;
 const int { -FR, -BR } = 2;
@@ -79,7 +84,7 @@ void autonomous() {
 	tray.fullReset();
 
 	flipout(intake, lift);
-	pros::Task update(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
+	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
 		autoDrive.setMaxVelocity(130);
 		

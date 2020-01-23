@@ -1,0 +1,28 @@
+pros.conductor.project.find_project:INFO - 2020-01-23 15:17:42,586 - Found Project Path: C:\Users\Rayhaan\Documents\GitHub\VEX2019-20\V5\project.pros
+pros.conductor.project.find_project:INFO - 2020-01-23 15:17:42,593 - Found Project Path: C:\Users\Rayhaan\Documents\GitHub\VEX2019-20\V5\project.pros
+pros.cli.common.resolve_v5_port:INFO - 2020-01-23 15:17:42,707 - Automatically selected COM10
+pros.serial.devices.vex.v5_device.__enter__:INFO - 2020-01-23 15:17:46,262 - V5 should been transferred to higher bandwidth download channel
+pros.serial.devices.vex.v5_device.generate_ini_file:INFO - 2020-01-23 15:17:46,275 - Created ini: [program]
+version = 0.0.0
+name = UniversalState
+slot = 1
+icon = USER902x.bmp
+description = Created with PROS
+date = 2020-01-23T15:17:46.274184
+
+
+pros.serial.devices.vex.v5_device.write_program:INFO - 2020-01-23 15:17:46,278 - Created ini: [program]
+version = 0.0.0
+name = UniversalState
+slot = 1
+icon = USER902x.bmp
+description = Created with PROS
+date = 2020-01-23T15:17:46.274184
+
+
+pros.serial.devices.vex.v5_device.upload_library:WARNING - 2020-01-23 15:17:48,157 - Library onboard doesn't match! Length was 493169 but expected 493169 CRC: was d0d97582 but expected 6eaf5933
+pros.serial.devices.vex.v5_device.ensure_library_space:WARNING - 2020-01-23 15:17:48,647 - Removing 2 orphaned file(s) (['slot_2.bin', 'slot_1.bin'])
+pros.serial.devices.vex.v5_device.write_file:INFO - 2020-01-23 15:17:52,859 - Transferring iY1sFpPhdzADZykUjbr6MA (493169 bytes) to the V5 from <_io.BytesIO object at 0x00000156B73A7678>
+pros.serial.devices.vex.v5_device.write_file:INFO - 2020-01-23 15:20:36,322 - Transferring slot_2.ini (144 bytes) to the V5 from <_io.BytesIO object at 0x00000156B73A7678>
+pros.serial.devices.vex.v5_device.write_file:INFO - 2020-01-23 15:20:37,346 - Transferring slot_2.bin (12508 bytes) to the V5 from <_io.BytesIO object at 0x00000156B73A7D58>
+pros.serial.devices.vex.v5_device.write_file:INFO - 2020-01-23 15:20:41,993 - Closing gzip file

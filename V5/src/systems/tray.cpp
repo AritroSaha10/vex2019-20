@@ -1,7 +1,7 @@
 #include "main.h"
 #include "tray.h"
 
-#define MAX_TRAY 2400
+#define MAX_TRAY 2300
 
 // Constructor
 Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake) : SystemManager(_defaultState), controller(_controller), intake(_intake) {}
@@ -9,7 +9,6 @@ Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake)
 // Sub-class specific functions
 
 void Tray::stop() {
-    pros::lcd::print(4, "STOP");
     this->power = 0;
     this->target = this->trayMotor.get_position();
     this->trayMotor.move(0);
@@ -103,7 +102,6 @@ void Tray::update() {
         break;
     case LIFT_STATE:
         if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
-            pros::lcd::print(2, "HOLD, %f", this->timedOut(LIFT_TIMEOUT) ? 1.0f : 0.0f);
             this->stop();
             this->changeState(HOLD_STATE);
             break;
@@ -114,7 +112,6 @@ void Tray::update() {
         break;
     case LOWER_STATE:
         if(this->timedOut(LOWER_TIMEOUT) || abs(this->error)<20) {
-            pros::lcd::print(4, "E: %f, TO: %f", this->error, this->timedOut(LOWER_TIMEOUT) ? 1.0f : 0.0f);
             this->trayMotor.tare_position();
             this->stop();
             this->changeState(IDLE_STATE);

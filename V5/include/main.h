@@ -70,7 +70,7 @@ void initialize(void);
 void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
-
+void updateSysMan(void *param);
 
 //pros::Vision vision_sensor(VISION_PORT);
 

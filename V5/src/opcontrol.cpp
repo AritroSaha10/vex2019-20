@@ -70,6 +70,8 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
+	pros::lcd::print(4, "%i", pros::Task::get_count());
+	update.remove();
 	int holdLift = 0;
 	int liftControl = 0;
 	float speed = 1.0f;
@@ -87,7 +89,10 @@ void opcontrol() {
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	int lastEncoder = getEncoders({TRAY})[0];
-	while (1) {	
+	while (1) {
+	tray.update();
+	intake.update();
+	lift.update();
 	encoder = getEncoders({LIFT, TRAY});
 
 	if(abs(getEncoders({TRAY})[0]-lastEncoder) > 5) {
