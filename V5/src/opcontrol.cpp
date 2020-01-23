@@ -77,8 +77,10 @@ void opcontrol() {
 	float speed = 1.0f;
 	bool intakeHigh = false;
 	bool intakeHeld = false;
+	bool dropping = false;
+	intake.control();
 	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
-	Toggle controlIntake = Toggle({ControllerDigital::R1}, master);
+	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, true);
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
 	//tray.reset();
@@ -127,12 +129,18 @@ void opcontrol() {
 	else if(master.getDigital(ControllerDigital::B)) {
 		lift.lower();
 	}
-	else {
+	else if(!dropping){
 		lift.lock();
 	}
 
 	if(master.getDigital(ControllerDigital::down)) {
+		dropping = true;
 		lift.drop();
+	}
+	if(dropping) {
+		if(lift.getState() == 0x10) {
+			dropping = false;
+		}
 	}
 	// ARUN'S LIFT
 	// // Override lift limits
