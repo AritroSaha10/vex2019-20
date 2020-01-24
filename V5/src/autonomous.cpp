@@ -3,6 +3,7 @@
 #include "systems/tray.h"
 #include "systems/lift.h"
 #include "systems.h"
+#include "autonSelector.h"
 
 
 #define BLUE 0
@@ -28,7 +29,7 @@ using namespace pros;
 using namespace okapi;
 okapi::Controller autoCon;
 
-int autonSet = BLUE;
+int autonSet = 2;
 
 void nullTask(void* param) {
 	pros::delay(10);
@@ -81,9 +82,11 @@ void flipout(Intake intake, Lift lift) {
 }
 
 void autonomous() {
+	autonSelector();
+	pros::delay(2000);
 	tray.fullReset();
 
-	flipout(intake, lift);
+	//flipout(intake, lift);
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
 		autoDrive.setMaxVelocity(130);

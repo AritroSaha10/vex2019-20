@@ -9,6 +9,7 @@
 #include <string>
 #include <sstream>
 
+double const accel = 0.01;
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -70,6 +71,10 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
+	double lSpeed =0;
+	double rSpeed = 0;
+	double reqRSpeed = 0;
+	double reqLSpeed = 0;
 	pros::lcd::print(4, "%i", pros::Task::get_count());
 	update.remove();
 	int holdLift = 0;
@@ -194,11 +199,25 @@ void opcontrol() {
 		layStack(intake, tray, engageTray);
 		tray.lower();
 	}
-
-	drive.arcade(joystickSlew(master.getAnalog(ControllerAnalog::leftY)), joystickSlew(master.getAnalog(ControllerAnalog::leftX)), 0.05f);
+	reqLSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftY));
+	reqRSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftX));
+	if (reqRSpeed > (rSpeed+accel))
+		rSpeed+=accel;
+	else if (reqRSpeed < (rSpeed-accel))
+		rSpeed -= accel;
+	else
+		rSpeed = reqRSpeed;
+	if (reqLSpeed > (lSpeed+accel))
+		lSpeed+=accel;
+	else if (reqLSpeed < (lSpeed-accel))
+		lSpeed -= accel;
+	else
+		lSpeed = reqLSpeed;
+	drive.arcade(lSpeed, rSpeed, 0.05f);
+	
 	//566, 1157
 	pros::delay(10);
-	pros::lcd::print(1, "Tray: %f", encoder[1]);
+	pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
 	pros::lcd::print(2,"Lift: %f", lift.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);

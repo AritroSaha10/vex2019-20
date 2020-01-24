@@ -26,7 +26,6 @@ void initialize() {
 
 	pros::lcd::initialize();
 
-	pros::lcd::register_btn1_cb(on_center_button);
 	pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
 	pros::Task tempTask(motorTemp, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Temperature tracking");
 
