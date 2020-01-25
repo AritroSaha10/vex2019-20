@@ -9,7 +9,7 @@
 #include <string>
 #include <sstream>
 
-double const accel = 0.01;
+double const accel = 0.04;
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
