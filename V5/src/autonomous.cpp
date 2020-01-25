@@ -5,14 +5,6 @@
 #include "systems.h"
 #include "autonSelector.h"
 
-
-#define BLUE 0
-#define RED 1
-#define EXPERIMENTAL_BLUE 4
-#define EXPERIMENTAL_RED 5
-#define SIMPLE 3
-#define FLIPOUT 2
-
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -28,8 +20,6 @@
 using namespace pros;
 using namespace okapi;
 okapi::Controller autoCon;
-
-int autonSet = 2;
 
 void nullTask(void* param) {
 	pros::delay(10);
@@ -82,11 +72,11 @@ void flipout(Intake intake, Lift lift) {
 }
 
 void autonomous() {
-	autonSelector();
+	deleteSelector();
 	pros::delay(2000);
 	tray.fullReset();
 
-	//flipout(intake, lift);
+	flipout(intake, lift);
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
 		autoDrive.setMaxVelocity(130);

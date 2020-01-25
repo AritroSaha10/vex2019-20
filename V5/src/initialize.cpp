@@ -1,6 +1,7 @@
 #include "motorTemp.h"
 #include "main.h"
 #include "tracking.h"
+#include "autonSelector.h"
 
 void on_center_button() {
 	static bool pressed = false;
@@ -19,6 +20,7 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	autonSelector();
 	// pros::Motor frontLeftMtr (FL);
 	// pros::Motor backLeftMtr (BL);
 	// pros::Motor frontRightMtr (FR);
