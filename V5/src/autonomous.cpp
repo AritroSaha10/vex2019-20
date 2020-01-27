@@ -29,7 +29,7 @@ using namespace pros;
 using namespace okapi;
 okapi::Controller autoCon;
 
-int autonSet = 2;
+int autonSet = SIMPLE;
 
 void nullTask(void* param) {
 	pros::delay(10);
@@ -82,27 +82,35 @@ void flipout(Intake intake, Lift lift) {
 }
 
 void autonomous() {
-	autonSelector();
-	pros::delay(2000);
+	//autonSelector();
 	tray.fullReset();
 
-	//flipout(intake, lift);
+	flipout(intake, lift);
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
 		autoDrive.setMaxVelocity(130);
 		
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
-		pros::delay(3500);
-		intake.stop();
 		autoDrive.waitUntilSettled();
-		autoDrive.turnAngle(-138_deg);
-		autoDrive.moveDistance(0.81_m);
+		pros::delay(500);
+		intake.stop();
+		autoDrive.turnAngle(-90_deg);
+		autoDrive.moveDistance(0.45_m);
+		autoDrive.turnAngle(-90_deg);
+		autoDrive.moveDistance(0.65_m);
 		intake.reset();
 		tray.layCubes();
 		while(tray.getTrayState() == 0x11) {
-			pros::lcd::print(1, "Hello");
-			pros::delay(2);
+			if (pros::millis() <= 14800)
+			{
+				pros::lcd::print(1, "Hello");
+				pros::delay(2);
+			}
+			else
+			{
+				autoDrive.moveDistance(-0.3_m);
+			}
 		}
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
@@ -111,30 +119,42 @@ void autonomous() {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
-		pros::delay(3000);
-		intake.stop();
 		autoDrive.waitUntilSettled();
-		autoDrive.turnAngle(138_deg);
-		autoDrive.moveDistance(0.81_m);
+		pros::delay(400);
+		intake.stop();
+		autoDrive.turnAngle(90_deg);
+		autoDrive.moveDistance(0.45_m);
+		autoDrive.turnAngle(90_deg);
+		autoDrive.moveDistance(0.65_m);
 		intake.reset();
 		tray.layCubes();
 		while (tray.getTrayState() == 0x11)
 		{
-			pros::lcd::print(1, "Hello");
-			pros::delay(2);
+			if (pros::millis() <= 14800)
+			{
+				pros::lcd::print(1, "Hello");
+				pros::delay(2);
+			}
+			else
+			{
+				autoDrive.moveDistance(-0.3_m);
+			}
 		}
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
 	} else if (autonSet == SIMPLE) {
 		autoDrive.setMaxVelocity(140);
-		autoDrive.moveDistance(1_m);
-		autoDrive.moveDistance(-0.3_m);
+		autoDrive.moveDistance(0.4_m);
+		intake.intake(-120);
+		autoDrive.moveDistance(-0.4_m);
+		autoDrive.waitUntilSettled();
+		intake.stop();
 	} else if (autonSet == EXPERIMENTAL_BLUE) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
-		pros::delay(3000);
+		pros::delay(2000);
 		intake.stop();
 		autoDrive.waitUntilSettled();
 		autoDrive.turnAngle(120_deg);
@@ -143,8 +163,12 @@ void autonomous() {
 		tray.layCubes();
 		while (tray.getTrayState() == 0x11)
 		{
-			pros::lcd::print(1, "Hello");
-			pros::delay(2);
+			if (pros::millis() <= 14000) {
+				pros::lcd::print(1, "Hello");
+				pros::delay(2);
+			} else {
+				autoDrive.moveDistance(-0.3_m);
+			}
 		}
 		pros::lcd::print(1, "Hello again");
 		tray.lower();

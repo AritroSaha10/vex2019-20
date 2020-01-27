@@ -1,7 +1,7 @@
 #include "main.h"
 #include "tray.h"
 
-#define MAX_TRAY 2350
+#define MAX_TRAY 2250
 
 // Constructor
 Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake) : SystemManager(_defaultState), controller(_controller), intake(_intake) {}

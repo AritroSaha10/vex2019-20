@@ -4,7 +4,6 @@
 #include "systems/intake.h"
 #include "systems/tray.h"
 #include "systems/lift.h"
-#include "systems.h"
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -32,9 +31,13 @@ extern float x;
 extern float y;
 extern float theta;
 
-//Controller master;
-
 okapi::Controller master;
+
+void nullTask1(void *param)
+{
+	pros::delay(10);
+}
+
 
 auto drive = ChassisControllerFactory::create(
 	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
@@ -82,12 +85,15 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
+	Intake intake = Intake(0x10, master);
+	Tray tray = Tray(0x10, master, intake);
+	Lift lift = Lift(0x10, intake, tray);
 	double lSpeed =0;
 	double rSpeed = 0;
 	double reqRSpeed = 0;
 	double reqLSpeed = 0;
 	pros::lcd::print(4, "%i", pros::Task::get_count());
-	update.remove();
+	//update.remove();
 	int holdLift = 0;
 	int liftControl = 0;
 	float speed = 1.0f;
