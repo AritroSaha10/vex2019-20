@@ -14,8 +14,10 @@ public:
     static const uint8_t LIFT_STATE = 0x11;
     static const uint8_t LOWER_STATE = 0x12;
     static const uint8_t HOLD_STATE = 0x13;
+    static const uint8_t AUTON_LIFT = 0X14;
 
     void layCubes();
+    void layCubesAuton();
     void lower();
     void update() override;
     void fullReset() override;

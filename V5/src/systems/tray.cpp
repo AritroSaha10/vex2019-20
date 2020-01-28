@@ -31,6 +31,10 @@ void Tray::layCubes() {
     this->changeState(LIFT_STATE);
 }
 
+void Tray::layCubesAuton() {
+	this->changeState(AUTON_LIFT);
+}
+
 void Tray::lower() {
     this->changeState(LOWER_STATE);
 }
@@ -61,6 +65,11 @@ bool Tray::changeState(uint8_t newState) {
             this->stop();
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
             break;
+	case AUTON_LIFT:
+	    this->intake.reset();
+	    this->target = MAX_TRAY;
+	    this->trayMotor.move_velocity(getPowerFunction(0));
+	    break;
         case LIFT_STATE:
             this->intake.stop();
             this->target = MAX_TRAY;
@@ -100,6 +109,20 @@ void Tray::update() {
         break;
     case IDLE_STATE:
         break;
+	case AUTON_LIFT:
+		if(abs(this->error) < 100) {
+            		intake.intake(-60);
+		}
+        	if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
+            		this->stop();
+			intake.stop();
+            		this->changeState(HOLD_STATE);
+            		break;
+        	}
+        this->setPower(getPowerFunction(this->position));
+        this->trayMotor.move_velocity(this->power);
+        break;
+
     case LIFT_STATE:
         if(abs(this->error) < 100) {
             intake.reset();

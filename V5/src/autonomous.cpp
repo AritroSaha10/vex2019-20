@@ -72,7 +72,7 @@ void flipout(Intake intake, Lift lift) {
 }
 
 void autonomous() {
-	autonSet = SIMPLE;
+	autonSet = BLUE;
 	//autonSelector();
 	//deleteSelector();
 	tray.fullReset();
@@ -80,20 +80,18 @@ void autonomous() {
 	flipout(intake, lift);
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
-		autoDrive.setMaxVelocity(130);
-		
+		autoDrive.setMaxVelocity(130);	
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
 		autoDrive.waitUntilSettled();
 		pros::delay(500);
 		intake.stop();
 		autoDrive.turnAngle(-90_deg);
-		autoDrive.moveDistance(0.45_m);
+		autoDrive.moveDistance(0.42_m);
 		autoDrive.turnAngle(-90_deg);
-		autoDrive.moveDistance(0.65_m);
-		intake.reset();
-		tray.layCubes();
-		while(tray.getTrayState() == 0x11) {
+		autoDrive.moveDistance(0.75_m);
+		tray.layCubesAuton();
+		while(tray.getTrayState() == tray.AUTON_LIFT) {
 			if (pros::millis() <= 14800)
 			{
 				pros::lcd::print(1, "Hello");
@@ -101,7 +99,9 @@ void autonomous() {
 			}
 			else
 			{
+				intake.stop();
 				autoDrive.moveDistance(-0.3_m);
+				intake.reset();
 			}
 		}
 		pros::lcd::print(1, "Hello again");
