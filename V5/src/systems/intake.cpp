@@ -19,10 +19,6 @@ void Intake::out(double _power) {
     this->changeState(OUT_STATE);
 }
 
-void Intake::lay() {
-
-}
-
 void Intake::control() {
     this->changeState(CONTROL_STATE);
 }
@@ -52,12 +48,10 @@ void Intake::update() {
             this->setPower(-newIntakeSpeed);
             break; }
         case HOLD_STATE:
-            if(abs(this->position) >= 10) {
+            if(abs(this->error) >= 40) {
                 this->leftIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
                 this->rightIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
             }
-            break;
-        case LAY_STATE:
             break;
         case RESET_STATE:
             break;
@@ -96,9 +90,6 @@ bool Intake::changeState(uint8_t newState) {
             this->leftIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
             this->rightIntakeMotor.move_absolute(0, INTAKE_HOLD_SPEED);
             this->target = 0;
-            break;
-        case LAY_STATE:
-            this->setPower(0);
             break;
         case RESET_STATE:
             this->changeState(IDLE_STATE);

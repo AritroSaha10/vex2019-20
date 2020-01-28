@@ -27,7 +27,7 @@ void nullTask(void* param) {
 
 Intake intake = Intake(0x10, autoCon);
 Tray tray = Tray(0x10, autoCon, intake);
-Lift lift = Lift(0x10, intake, tray);
+Lift lift = Lift(0x10, tray);
 Task update(nullTask, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "null");
 
 /*const int { +FL, +BL } = 1;

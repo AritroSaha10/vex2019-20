@@ -24,16 +24,15 @@ public:
     void fullReset() override;
     void overridePower(double power);
     uint8_t getState();
-    Lift(uint8_t _defaultState, Intake _intake, Tray _tray);
+    Lift(uint8_t _defaultState, Tray _tray);
 
 private:
     void stop();
-    void setPower(double _power);
     void setTarget(double target);
     bool changeState(uint8_t newState) override;
 
+    bool lockState = false;
     pros::Motor liftMotor = pros::Motor(LIFT_PORT);
-    Intake intake;
     Tray tray;
     bool mid = false;
 };

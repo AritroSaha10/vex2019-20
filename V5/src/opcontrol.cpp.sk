@@ -87,7 +87,7 @@ std::string IntToStr(double i)
 void opcontrol() {
 	Intake intake = Intake(0x10, master);
 	Tray tray = Tray(0x10, master, intake);
-	Lift lift = Lift(0x10, intake, tray);
+	Lift lift = Lift(0x10, tray);
 	double lSpeed =0;
 	double rSpeed = 0;
 	double reqRSpeed = 0;

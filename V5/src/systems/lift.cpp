@@ -6,7 +6,7 @@
 #define LIFT_SPEED 107
 
 // Constructor
-Lift::Lift(uint8_t _defaultState, Intake _intake, Tray _tray) : SystemManager(_defaultState), intake(_intake), tray(_tray) {}
+Lift::Lift(uint8_t _defaultState, Tray _tray) : SystemManager(_defaultState), tray(_tray) {}
 
 // Sub-class specific functions
 
@@ -16,11 +16,6 @@ void Lift::stop()
     this->target = this->liftMotor.get_position();
     this->liftMotor.modify_profiled_velocity(0);
     this->liftMotor.move(0);
-}
-
-void Lift::setPower(double _power)
-{
-    this->power = _power;
 }
 
 void Lift::overridePower(double power)
@@ -37,6 +32,9 @@ void Lift::setTarget(double _target)
 // Overrides
 bool Lift::changeState(uint8_t newState)
 {
+    if(lockState && (newState != RESET_STATE || newState != HOLD_STATE)) {
+        return false;
+    }
     bool processed = SystemManager::changeState(newState);
     if (!processed)
     {
@@ -128,7 +126,21 @@ void Lift::lower() {
     this->changeState(LOWER_STATE);
 }
 
+void Lift::raiseToLow() {
+    lockState = true;
+    this->raise(false);
+}
+
+void Lift::raiseToMid() {
+    lockState = true;
+    this->raise(true);
+}
+
 void Lift::drop() {
+    lockState = true;
+    if(this->state == LOWER_STATE) {
+        return;
+    }
     this->changeState(LOWER_STATE);
 }
 
