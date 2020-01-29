@@ -65,11 +65,11 @@ bool Tray::changeState(uint8_t newState) {
             this->stop();
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
             break;
-	case AUTON_LIFT:
-	    this->intake.reset();
-	    this->target = MAX_TRAY;
-	    this->trayMotor.move_velocity(getPowerFunction(0));
-	    break;
+        case AUTON_LIFT:
+            this->intake.reset();
+            this->target = MAX_TRAY;
+            this->trayMotor.move_velocity(getPowerFunction(0));
+            break;
         case LIFT_STATE:
             this->intake.stop();
             this->target = MAX_TRAY;

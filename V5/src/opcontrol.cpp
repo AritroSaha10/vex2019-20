@@ -1,10 +1,7 @@
 #include "main.h"
 #include "tracking.h"
+#include "globals.h"
 #include "systems/toggle.h"
-#include "systems/intake.h"
-#include "systems/tray.h"
-#include "systems/lift.h"
-#include "systems.h"
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -31,10 +28,6 @@ std::vector<double> encoder;
 extern float x;
 extern float y;
 extern float theta;
-
-//Controller master;
-
-okapi::Controller master;
 
 auto drive = ChassisControllerFactory::create(
 	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
@@ -158,52 +151,7 @@ void opcontrol() {
 			dropping = false;
 		}
 	}
-	// ARUN'S LIFT
-	// // Override lift limits
-	// if (lift && master.getDigital(ControllerDigital::up)) {
-	// 	move({LIFT}, LIFT_SPEED);	
-	// } 
-	// // Hold lift in place if Y is pressed
- 	// else if (liftControl == 1) {
-	// 	hold(LIFT);
-	// }
-	// // Hold in place if limit reached?
-	// else if (holdLift == 1 && encoder[0] > (LIFT_LIMIT-30)) {
-	// 	move({LIFT}, 0);
-	// 	hold(LIFT);
-	// }
-	// // What is this Arun
-	// else if (holdLift == 1) {
-	// 	move({LIFT}, 0);
-	// 	holdLift = 0;
-	// 	lift = 1;
-	// 	release(LIFT);
-	// }
-	// // Lifting (if X is held down) 
-	// else if (lift) {
-	// 	if(encoder[0] > 1000) {
-	// 		tray.setTargetPowerControl(1000.0f, 100);
-	// 	}
-	// 	else {
-	// 		tray.setTargetPowerControl((float)encoder[0]/*566/1157*/, 100);
-	// 	}
-	// 	move({LIFT}, 127);
-	// 	holdLift = (encoder[0] > (LIFT_LIMIT-10)) ? 1 : 0;
-	// }
-	// // If nothing is pressed and the lift is till up, drop it 
-	// else if ((!lift || !liftControl) && encoder[0] > 100) {
-	// 	release(LIFT);
-	// 	move({LIFT}, -(LIFT_SPEED-50));
-	// 	tray.lower();
-	// }
-	// //Force drop 
-	// if (master.getDigital(ControllerDigital::down)) {
-	// 	release(LIFT);
-	// 	move({LIFT}, -(LIFT_SPEED-50));
-	// }
-	// //Prevent negatives 
-	// if (encoder[0] <= 0)
-	// 	move({LIFT}, 0);
+
 	//TRAY
 	if(master.getDigital(ControllerDigital::L2)) {
 		trayMotor.move_velocity(70);
