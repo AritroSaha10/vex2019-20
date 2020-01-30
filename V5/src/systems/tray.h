@@ -16,6 +16,7 @@ public:
     static const uint8_t HOLD_STATE = 0x13;
     static const uint8_t AUTON_LIFT = 0X14;
 
+    bool setOperatorPower(double power);
     void layCubes();
     void layCubesAuton();
     void lower();
@@ -36,4 +37,5 @@ private:
     pros::Motor trayMotor = pros::Motor(TRAY_PORT, true);
     okapi::Controller controller;
     Intake intake;
+    int opUp = 0;
 };

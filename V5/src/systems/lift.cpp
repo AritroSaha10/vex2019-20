@@ -18,9 +18,17 @@ void Lift::stop()
     this->liftMotor.move(0);
 }
 
-void Lift::overridePower(double power)
-{
-    this->liftMotor.move_absolute(this->target, this->power);
+void Lift::moveTo(double _target) {
+    bool success;
+    if(_target > this->position) {
+        success = this->changeState(LIFT_STATE);
+    } else {
+        success = this->changeState(LOWER_STATE);
+    }
+    if (!success) {
+        return;
+    }
+    this->target = _target;
 }
 
 void Lift::setTarget(double _target)
@@ -57,6 +65,7 @@ bool Lift::changeState(uint8_t newState)
         this->tray.setTargetPowerControl(1000, 100);
         break;
     case LOWER_STATE:
+        this->liftMotor.set_brake_mode(MOTOR_BRAKE_COAST);
         break;
     case HOLD_STATE:
         this->target = this->liftMotor.get_position();
@@ -89,10 +98,7 @@ void Lift::update()
         break;
     case LIFT_STATE:
         this->liftMotor.move(127);
-        if(this->position > MID_HEIGHT-10 && mid) {
-            this->lock();
-        }
-        else if(this->position > LOW_HEIGHT-10 && !mid) {
+        if(this->position > target-10) {
             this->lock();
         }
         break;
@@ -100,6 +106,8 @@ void Lift::update()
         this->liftMotor.move(-100);
         if(this->position < 250) {
             this->tray.setTargetPowerControl(0, 127);
+        }
+        if(this->position < target+10) {
             this->reset();
         }
         break;

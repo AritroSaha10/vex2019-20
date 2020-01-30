@@ -2,6 +2,7 @@
 #include "tray.h"
 
 #define MAX_TRAY 2250
+#define OPERATOR_TRAY_VELOCITY 50
 
 // Constructor
 Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake) : SystemManager(_defaultState), controller(_controller), intake(_intake) {}
@@ -76,13 +77,14 @@ bool Tray::changeState(uint8_t newState) {
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
         case LOWER_STATE:
-            // this->setPower(80);
             this->setTarget(0);
             break;
         case HOLD_STATE:
             this->intake.reset();
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
             break;
+        case OPERATOR_OVERRIDE:
+            this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
     }
 
     return true;
@@ -146,6 +148,13 @@ void Tray::update() {
         this->trayMotor.modify_profiled_velocity(this->power);
         break;
     case HOLD_STATE:
+        break;
+    case OPERATOR_OVERRIDE:
+        if(opUp == 0) {
+            this->stop();
+        } else {
+            this->trayMotor.move_velocity(opUp == 1 ? OPERATOR_TRAY_VELOCITY : -OPERATOR_TRAY_VELOCITY);
+        }
         break;
     }
 }

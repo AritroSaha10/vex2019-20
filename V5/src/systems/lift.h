@@ -18,13 +18,15 @@ public:
     void raise(bool mid);
     void lock();
     void lower();
-    void raiseToMid();
-    void raiseToLow();
+    void moveTo(double _target);
+
     void update() override;
     void fullReset() override;
-    void overridePower(double power);
     uint8_t getState();
     Lift(uint8_t _defaultState, Tray _tray);
+
+    void raiseToMid();
+    void raiseToLow();
 
 private:
     void stop();

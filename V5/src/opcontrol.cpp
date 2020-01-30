@@ -36,18 +36,17 @@ auto drive = ChassisControllerFactory::create(
 );
 
 void layStack(Intake intake, Tray& tray, Toggle& t) {
-	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
 	tray.layCubes();
 	while(t.checkState() != 0) {
 		tray.update();
 		if(master.getDigital(ControllerDigital::L2)) {
-			trayMotor.move_velocity(70);
+			tray_motor.move_velocity(70);
 		}
 		else if(master.getDigital(ControllerDigital::R2)) {
-			trayMotor.move_velocity(-70);
+			tray_motor.move_velocity(-70);
 		}
 		else if(tray.getState() != 0x12 && tray.getState() != 0x11) {
-			trayMotor.move_velocity(0);
+			tray_motor.move_velocity(0);
 		}
 
 		// float traySpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
@@ -75,26 +74,27 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
+	update.remove();
+	intake.control();
+
+	// Acceleration curving
 	double lSpeed =0;
 	double rSpeed = 0;
 	double reqRSpeed = 0;
 	double reqLSpeed = 0;
-	pros::lcd::print(4, "%i", pros::Task::get_count());
-	update.remove();
-	int holdLift = 0;
-	int liftControl = 0;
+
+	// Speed limit
 	float speed = 1.0f;
-	bool intakeHigh = false;
-	bool intakeHeld = false;
+
 	bool dropping = false;
-	intake.control();
+
+	// Toggle switches
 	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
 	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, true);
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
-	//tray.reset();
-	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
-	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
+
+	tray_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
@@ -154,19 +154,21 @@ void opcontrol() {
 
 	//TRAY
 	if(master.getDigital(ControllerDigital::L2)) {
-		trayMotor.move_velocity(70);
+		tray_motor.move_velocity(70);
 	}
 	else if(master.getDigital(ControllerDigital::R2)) {
-		trayMotor.move_velocity(-70);
+		tray_motor.move_velocity(-70);
 	}
 	else if(tray.getState() != 0x12 && lift.getState() == 0x10) {
-		trayMotor.move_velocity(0);
+		tray_motor.move_velocity(0);
 	}
 	int stack = engageTray.checkState();
 	if(stack == 1) {
 		layStack(intake, tray, engageTray);
 		tray.lower();
 	}
+
+	// Acceleration curve
 	reqLSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftY));
 	reqRSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftX));
 	if (reqRSpeed > (rSpeed+accel))
@@ -183,7 +185,7 @@ void opcontrol() {
 		lSpeed = reqLSpeed;
 	drive.arcade(lSpeed, rSpeed, 0.05f);
 	
-	//566, 1157
+	// Diagnostics
 	pros::delay(10);
 	pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
 	pros::lcd::print(2,"Lift: %f", lift.getPosition());

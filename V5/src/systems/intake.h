@@ -5,18 +5,18 @@
 #include "chassis.h"
 
 #define INTAKE_HOLD_SPEED 80
-static const uint8_t IDLE_STATE = 0x10;
-static const uint8_t IN_STATE = 0x11;
-static const uint8_t OUT_STATE = 0x12;
-static const uint8_t CONTROL_STATE = 0x13;
-static const uint8_t HOLD_STATE = 0x14;
 
 class Intake : public SystemManager {
 	public:
+		static const uint8_t IDLE_STATE = 0x10;
+		static const uint8_t IN_STATE = 0x11;
+		static const uint8_t OUT_STATE = 0x12;
+		static const uint8_t HOLD_STATE = 0x14;
+
 		void intake(double _power);
 		void out(double _power);
-		void control();
 		void stop();
+		void control();
 
 		void update() override;
 		void fullReset() override;

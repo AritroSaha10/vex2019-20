@@ -24,6 +24,8 @@ public:
     virtual void update() {};
     virtual void fullReset();
 
+    static const uint8_t OPERATOR_OVERRIDE = 0x20;
+
 protected:
     double target;
     double error;

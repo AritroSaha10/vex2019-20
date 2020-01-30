@@ -3,9 +3,9 @@
 
 okapi::Controller master;
 
-Intake intake(0x13, master);
-Tray tray(0x10, master, intake);
-Lift lift(0x10, tray);
+Intake intake(Intake::OPERATOR_OVERRIDE, master);
+Tray tray(Tray::IDLE_STATE, master, intake);
+Lift lift(Lift::IDLE_STATE, tray);
 
 pros::Motor frontLeftDrive(FL_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor backLeftDrive(BL_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
