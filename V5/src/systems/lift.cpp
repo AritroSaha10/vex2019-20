@@ -6,7 +6,7 @@
 #define LIFT_SPEED 107
 
 // Constructor
-Lift::Lift(uint8_t _defaultState, Tray _tray) : SystemManager(_defaultState), tray(_tray) {}
+Lift::Lift(uint8_t _defaultState) : SystemManager(_defaultState) {}
 
 // Sub-class specific functions
 
@@ -62,7 +62,7 @@ bool Lift::changeState(uint8_t newState)
         liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         break;
     case LIFT_STATE:
-        this->tray.setTargetPowerControl(1000, 100);
+        // this->tray.setTargetPowerControl(1000, 100);
         break;
     case LOWER_STATE:
         this->liftMotor.set_brake_mode(MOTOR_BRAKE_COAST);
@@ -105,7 +105,7 @@ void Lift::update()
     case LOWER_STATE:
         this->liftMotor.move(-100);
         if(this->position < 250) {
-            this->tray.setTargetPowerControl(0, 127);
+            // this->tray.setTargetPowerControl(0, 127);
         }
         if(this->position < target+10) {
             this->reset();

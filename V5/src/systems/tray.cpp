@@ -5,7 +5,7 @@
 #define OPERATOR_TRAY_VELOCITY 50
 
 // Constructor
-Tray::Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake) : SystemManager(_defaultState), controller(_controller), intake(_intake) {}
+Tray::Tray(uint8_t _defaultState, okapi::Controller _controller) : SystemManager(_defaultState), controller(_controller) {}
 
 // Sub-class specific functions
 
@@ -67,12 +67,10 @@ bool Tray::changeState(uint8_t newState) {
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
             break;
         case AUTON_LIFT:
-            this->intake.reset();
             this->target = MAX_TRAY;
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
         case LIFT_STATE:
-            this->intake.stop();
             this->target = MAX_TRAY;
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
@@ -80,7 +78,6 @@ bool Tray::changeState(uint8_t newState) {
             this->setTarget(0);
             break;
         case HOLD_STATE:
-            this->intake.reset();
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
             break;
         case OPERATOR_OVERRIDE:
@@ -113,21 +110,21 @@ void Tray::update() {
         break;
 	case AUTON_LIFT:
 		if(abs(this->error) < 100) {
-            		intake.intake(-60);
+            // intake.intake(-60);
 		}
-        	if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
-            		this->stop();
-			intake.stop();
-            		this->changeState(HOLD_STATE);
-            		break;
-        	}
+        if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
+        	this->stop();
+		    // intake.stop();
+           	this->changeState(HOLD_STATE);
+           	break;
+        }
         this->setPower(getPowerFunction(this->position));
         this->trayMotor.move_velocity(this->power);
         break;
 
     case LIFT_STATE:
         if(abs(this->error) < 100) {
-            intake.reset();
+            // intake.reset();
         }
         if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
             this->stop();

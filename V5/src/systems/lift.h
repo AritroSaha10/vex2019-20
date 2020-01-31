@@ -23,7 +23,7 @@ public:
     void update() override;
     void fullReset() override;
     uint8_t getState();
-    Lift(uint8_t _defaultState, Tray _tray);
+    Lift(uint8_t _defaultState);
 
     void raiseToMid();
     void raiseToLow();
@@ -35,6 +35,5 @@ private:
 
     bool lockState = false;
     pros::Motor liftMotor = pros::Motor(LIFT_PORT);
-    Tray tray;
     bool mid = false;
 };

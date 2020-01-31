@@ -24,7 +24,7 @@ public:
     void fullReset() override;
     void setTargetPowerControl(double target, double power);
 	uint8_t getTrayState();
-    Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake);
+    Tray(uint8_t _defaultState, okapi::Controller _controller);
 
 private:
     double getPowerFunction(double time);
@@ -36,6 +36,5 @@ private:
 
     pros::Motor trayMotor = pros::Motor(TRAY_PORT, true);
     okapi::Controller controller;
-    Intake intake;
     int opUp = 0;
 };
