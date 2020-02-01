@@ -27,17 +27,19 @@ void initialize() {
 	// pros::Motor frontRightMtr (FR);
 	// pros::Motor backRightMtr (BR);
 
-	pros::lcd::initialize();
+//	pros::lcd::initialize();
 
-	complete = false;
-	//pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
+	pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
 	pros::Task tempTask(motorTemp, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Temperature tracking");
 
 	pros::delay(500);
-	//autonSelector();
-	//while (!complete)
-	//	pros::delay(2);
+	pros::Task autonSel(autonSelector, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Auton Selector");
+	while (getComplete() == 0) {
+		pros::delay(2);
+		printf("this is auton id %d, & complete %d\n", getAutonId(), getComplete());
+	}
 	printf("THIS IS AUTON #: %d", getAutonId());
+	pros::delay(5000);
 }
 
 /**

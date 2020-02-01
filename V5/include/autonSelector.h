@@ -20,23 +20,21 @@ static lv_res_t changeBlue(lv_obj_t * btn);
 static lv_res_t changeRed(lv_obj_t * btn);
 static lv_res_t changePurple(lv_obj_t * btn);
 void deleteButtons();
-void autonSelector();
+void autonSelector(void* param);
 static int confirmChoice(char autonString[]);
 static lv_res_t click_action(lv_obj_t * m, const char* btn_txt);
 void endRun(int choice);
 void initMainTheme();
 void deleteScr();
 auton_options getAutonId();
+int getComplete();
 
 static lv_theme_t * th;
 static lv_theme_t * blueBack;
-static int count;
-static int confirmCounter;
 static lv_obj_t * scr;
 static lv_theme_t * actTheme;
 static lv_obj_t * mbox;
 static lv_style_t mboxStyle;
 static lv_style_t greyPreChosen;
-static bool complete;
 
 #endif

@@ -10,15 +10,16 @@ lv_color_t red = LV_COLOR_MAKE(234, 35, 58);
 lv_color_t blue = LV_COLOR_MAKE(41, 130, 198);
 lv_color_t purple = LV_COLOR_MAKE(35, 44, 101);
 static const char * btns[] = {"\221Confirm", "Decline", ""};
-static lv_obj_t * scr2;
 void setAutonId(auton_options x);
-extern bool complete;
+bool confirm = false;
+int count{};
+int confirmCounter{};
+int complete = 0;
 
 auton_options auton_id = 8;
 
-void autonSelector() 
+void autonSelector(void* param) 
 {
-	count = confirmCounter = 0;
 	static lv_style_t redPreChosen;
 	lv_style_copy(&redPreChosen, &lv_style_plain_color);
     	redPreChosen.body.main_color = red;
@@ -65,6 +66,9 @@ void autonSelector()
     	lv_page_set_sb_mode(scr, LV_SB_MODE_OFF);
 
     	initMainTheme();
+	blueBack->win.bg->body.border.color = purple;
+	blueBack->win.bg->body.main_color = LV_COLOR_WHITE;
+	blueBack->win.bg->body.grad_color = LV_COLOR_WHITE;
 
     	red1 = lv_btn_create(scr, NULL);
     	lv_obj_t * label = lv_label_create(red1, NULL);
@@ -207,6 +211,10 @@ static lv_res_t changePurple(lv_obj_t * btn)
     	}
 }
 
+int getComplete() {
+	return complete;
+}
+
 int confirmChoice(char autonString[])
 {
     char s[100];
@@ -228,15 +236,14 @@ static lv_res_t click_action(lv_obj_t * m, const char * btn_txt)
 {
     	++confirmCounter;
     	if (confirmCounter == 1) {
-    		if (strcmp(btn_txt, btns[0]))
+    		if (strcmp(btn_txt, btns[1]))
     		{
-        		setAutonId(-1);
-        		endRun(1);
-        		return LV_RES_OK;
-    		} else if (strcmp(btn_txt, btns[1]))
-		{
         		endRun(0);
-        		return LV_RES_OK;
+        		return LV_RES_INV;
+    		} else if (strcmp(btn_txt, btns[0]))
+		{
+        		endRun(1);
+        		return LV_RES_INV;
     		}
     	}
 }
@@ -245,15 +252,17 @@ void endRun(int choice) {
 	printf("This is auton #: %d", auton_id);
     	if (choice == 0)
     	{
-        	lv_obj_del(mbox);
+       	lv_obj_del(mbox);
+		complete = 1;
         	deleteScr();
-		complete = true;
     	} else if (choice == 1)
     	{
 		auton_id = -1;
-        	lv_obj_del(mbox);
-        	deleteScr();
-        	autonSelector();
+			count = 0;
+		confirmCounter = 0;
+        //	lv_obj_del(mbox);
+        //	deleteScr();
+        	autonSelector((void*) "PROS");
     	}
 }
 
@@ -263,7 +272,11 @@ auton_options getAutonId() {
 
 void deleteScr()
 {
-    lv_obj_set_hidden(scr, true);
+	lv_obj_clean(scr);
+//    lv_obj_set_hidden(scr, false);
+//    lv_obj_t * scr2 = lv_page_create(NULL, NULL);
+//    lv_scr_load(scr2);
+//    deleteButtons();
 }
 
 void deleteButtons()

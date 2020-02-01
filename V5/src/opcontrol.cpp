@@ -87,7 +87,7 @@ void opcontrol() {
 	double rSpeed = 0;
 	double reqRSpeed = 0;
 	double reqLSpeed = 0;
-//	pros::lcd::print(4, "%i", pros::Task::get_count());
+	//pros::lcd::print(4, "%i", pros::Task::get_count());
 	update.remove();
 	int holdLift = 0;
 	int liftControl = 0;
@@ -101,16 +101,16 @@ void opcontrol() {
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
 	//tray.reset();
-	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
-	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
+	/*pros::Motor trayMotor = pros::Motor(TRAY_PORT);
+	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);*/
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
-	int lastEncoder = getEncoders({TRAY})[0];
+	//int lastEncoder = getEncoders({TRAY})[0];
 	while (1) {
-//		printf("This is my auton: %d", getAutonId());
-	tray.update();
+	//	printf("This is my auton: %d", getAutonId());
+	/*tray.update();
 	intake.update();
 	lift.update();
 	encoder = getEncoders({LIFT, TRAY});
@@ -159,7 +159,7 @@ void opcontrol() {
 		if(lift.getState() == 0x10) {
 			dropping = false;
 		}
-	}
+	}*/
 	// ARUN'S LIFT
 	// // Override lift limits
 	// if (lift && master.getDigital(ControllerDigital::up)) {
@@ -207,7 +207,7 @@ void opcontrol() {
 	// if (encoder[0] <= 0)
 	// 	move({LIFT}, 0);
 	//TRAY
-	if(master.getDigital(ControllerDigital::L2)) {
+/*	if(master.getDigital(ControllerDigital::L2)) {
 		trayMotor.move_velocity(70);
 	}
 	else if(master.getDigital(ControllerDigital::R2)) {
@@ -235,12 +235,12 @@ void opcontrol() {
 		lSpeed -= accel;
 	else
 		lSpeed = reqLSpeed;
-	drive.arcade(lSpeed, rSpeed, 0.05f);
+	drive.arcade(lSpeed, rSpeed, 0.05f);*/
 	
 	//566, 1157
 	pros::delay(10);
-//	pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
-//	pros::lcd::print(2,"Lift: %f", lift.getPosition());
+	//pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
+	//pros::lcd::print(2,"Lift: %f", lift.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);
