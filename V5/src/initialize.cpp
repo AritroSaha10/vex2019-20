@@ -39,7 +39,7 @@ void initialize() {
 		printf("this is auton id %d, & complete %d\n", getAutonId(), getComplete());
 	}
 	printf("THIS IS AUTON #: %d", getAutonId());
-	pros::delay(5000);
+	//pros::delay(5000);
 }
 
 /**

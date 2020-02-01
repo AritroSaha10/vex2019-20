@@ -5,7 +5,7 @@
 #include "autonSelector.h"
 #include "systems/tray.h"
 #include "systems/lift.h"
-#include "systems.h"
+#include "globals.h"
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -35,7 +35,7 @@ extern float theta;
 
 //Controller master;
 
-okapi::Controller master;
+// okapi::Controller master;
 
 auto drive = ChassisControllerFactory::create(
 	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
