@@ -83,13 +83,13 @@ void motorTemp(void* param) {
 		int overheatMotors = 0;
 		for (int i = 0; i < 8; ++i) {
 			if(allMotors[i].get_temperature() >= 55) {
-				pros::lcd::print(6, "Motor indexed at: %d is overheating", i);
+				//pros::lcd::print(6, "Motor indexed at: %d is overheating", i);
 				overheatMotors++;
 				pros::delay(1000);
 			}
 		}
 		if (!overheatMotors)
-			pros::lcd::print(6, "No motors overheating");
+			//pros::lcd::print(6, "No motors overheating");
 		pros::delay(2);
 	}
 }

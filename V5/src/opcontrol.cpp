@@ -2,6 +2,7 @@
 #include "tracking.h"
 #include "systems/toggle.h"
 #include "systems/intake.h"
+#include "autonSelector.h"
 #include "systems/tray.h"
 #include "systems/lift.h"
 #include "systems.h"
@@ -86,7 +87,7 @@ void opcontrol() {
 	double rSpeed = 0;
 	double reqRSpeed = 0;
 	double reqLSpeed = 0;
-	pros::lcd::print(4, "%i", pros::Task::get_count());
+//	pros::lcd::print(4, "%i", pros::Task::get_count());
 	update.remove();
 	int holdLift = 0;
 	int liftControl = 0;
@@ -108,6 +109,7 @@ void opcontrol() {
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	int lastEncoder = getEncoders({TRAY})[0];
 	while (1) {
+//		printf("This is my auton: %d", getAutonId());
 	tray.update();
 	intake.update();
 	lift.update();
@@ -237,8 +239,8 @@ void opcontrol() {
 	
 	//566, 1157
 	pros::delay(10);
-	pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
-	pros::lcd::print(2,"Lift: %f", lift.getPosition());
+//	pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
+//	pros::lcd::print(2,"Lift: %f", lift.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

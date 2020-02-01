@@ -2,15 +2,41 @@
 #define AUTON_SELECTOR
 
 #include "main.h"
-#define BLUE 0
-#define RED 1
-#define EXPERIMENTAL_BLUE 4
-#define EXPERIMENTAL_RED 5
-#define SIMPLE 3
-#define FLIPOUT 2
 
+enum {
+    AUTON_RED_PROTECTED,
+    AUTON_RED_UNPROTECTED,
+    AUTON_BLUE_PROTECTED,
+    AUTON_BLUE_UNPROTECTED,
+    SIMPLE_ONE_CUBE,
+    FLIPOUT
+ };
+ typedef int auton_options;
+
+static void hal_init(void);
+static int tick_thread(void * data);
+static void memory_monitor(lv_task_t * param);
+static lv_res_t changeBlue(lv_obj_t * btn);
+static lv_res_t changeRed(lv_obj_t * btn);
+static lv_res_t changePurple(lv_obj_t * btn);
+void deleteButtons();
 void autonSelector();
-void deleteSelector(); 
-static lv_res_t btn_click_action(lv_obj_t * btn);
+static int confirmChoice(char autonString[]);
+static lv_res_t click_action(lv_obj_t * m, const char* btn_txt);
+void endRun(int choice);
+void initMainTheme();
+void deleteScr();
+auton_options getAutonId();
+
+static lv_theme_t * th;
+static lv_theme_t * blueBack;
+static int count;
+static int confirmCounter;
+static lv_obj_t * scr;
+static lv_theme_t * actTheme;
+static lv_obj_t * mbox;
+static lv_style_t mboxStyle;
+static lv_style_t greyPreChosen;
+static bool complete;
 
 #endif

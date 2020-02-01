@@ -3,7 +3,9 @@
 #include "tracking.h"
 #include "autonSelector.h"
 
-void on_center_button() {
+extern bool complete;
+
+/*void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
 	if (pressed) {
@@ -11,7 +13,7 @@ void on_center_button() {
 	} else {
 		pros::lcd::clear_line(2);
 	}
-}
+}*/
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -20,7 +22,6 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	autonSelector();
 	// pros::Motor frontLeftMtr (FL);
 	// pros::Motor backLeftMtr (BL);
 	// pros::Motor frontRightMtr (FR);
@@ -28,9 +29,15 @@ void initialize() {
 
 	pros::lcd::initialize();
 
-	pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
+	complete = false;
+	//pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
 	pros::Task tempTask(motorTemp, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Temperature tracking");
 
+	pros::delay(500);
+	//autonSelector();
+	//while (!complete)
+	//	pros::delay(2);
+	printf("THIS IS AUTON #: %d", getAutonId());
 }
 
 /**

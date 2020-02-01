@@ -20,6 +20,7 @@
 using namespace pros;
 using namespace okapi;
 okapi::Controller autoCon;
+extern int auton_id;
 
 void nullTask(void* param) {
 	pros::delay(10);
@@ -72,14 +73,13 @@ void flipout(Intake intake, Lift lift) {
 }
 
 void autonomous() {
-	autonSet = BLUE;
 	//autonSelector();
 	//deleteSelector();
 	tray.fullReset();
 
 	flipout(intake, lift);
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
-	if (autonSet == BLUE) {
+	if (auton_id == AUTON_BLUE_UNPROTECTED) {
 		autoDrive.setMaxVelocity(130);	
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -107,7 +107,7 @@ void autonomous() {
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
-	} else if(autonSet==RED) {
+	} else if(auton_id = AUTON_RED_UNPROTECTED) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -135,14 +135,14 @@ void autonomous() {
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
-	} else if (autonSet == SIMPLE) {
+	} else if (auton_id = SIMPLE_ONE_CUBE) {
 		autoDrive.setMaxVelocity(140);
 		autoDrive.moveDistance(0.4_m);
 		intake.intake(-120);
 		autoDrive.moveDistance(-0.4_m);
 		autoDrive.waitUntilSettled();
 		intake.stop();
-	} else if (autonSet == EXPERIMENTAL_BLUE) {
+	} else if (auton_id = AUTON_BLUE_PROTECTED) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -165,7 +165,7 @@ void autonomous() {
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		autoDrive.moveDistanceAsync(-0.3_m);
-	} else if (autonSet == EXPERIMENTAL_RED) {
+	} else if (auton_id = AUTON_RED_UNPROTECTED) {
 		autoDrive.setMaxVelocity(130);
 		autoDrive.moveDistanceAsync(1.1_m);
 		intake.intake(120);

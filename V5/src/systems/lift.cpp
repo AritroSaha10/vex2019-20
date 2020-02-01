@@ -76,7 +76,7 @@ uint8_t Lift::getState()
 void Lift::update()
 {
     this->position = this->liftMotor.get_position();
-    pros::lcd::print(5, "%f, %u, %f, %f", this->position, this->state, this->liftMotor.get_target_position(), this->liftMotor.get_target_velocity());
+    //pros::lcd::print(5, "%f, %u, %f, %f", this->position, this->state, this->liftMotor.get_target_position(), this->liftMotor.get_target_velocity());
     this->error = this->target - this->position;
 
     switch (this->state)
