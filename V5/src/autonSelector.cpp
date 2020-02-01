@@ -1,4 +1,5 @@
 #include "autonSelector.h"
+LV_FONT_DECLARE(GOTHAM_20)
 
 lv_obj_t * red1;
 lv_obj_t * red2;
@@ -12,6 +13,7 @@ lv_color_t purple = LV_COLOR_MAKE(35, 44, 101);
 static const char * btns[] = {"\221Confirm", "Decline", ""};
 void setAutonId(auton_options x);
 bool confirm = false;
+void initiate();
 int count{};
 int confirmCounter{};
 int complete = 0;
@@ -33,6 +35,7 @@ void autonSelector(void* param)
     	redPreChosen.body.shadow.width = 0;
     	redPreChosen.body.shadow.color = red;
     	redPreChosen.text.color = LV_COLOR_WHITE;
+//	redPreChosen.text.font = &GOTHAM_20;
 
     	lv_style_copy(&mboxStyle, &redPreChosen);
     	mboxStyle.body.main_color = LV_COLOR_WHITE;
@@ -255,6 +258,7 @@ void endRun(int choice) {
        	lv_obj_del(mbox);
 		complete = 1;
         	deleteScr();
+		initiate();
     	} else if (choice == 1)
     	{
 		auton_id = -1;
@@ -264,6 +268,23 @@ void endRun(int choice) {
         //	deleteScr();
         	autonSelector((void*) "PROS");
     	}
+}
+
+void initiate() {
+	blueBack->win.bg->body.main_color = purple;
+	blueBack->win.bg->body.grad_color = purple;
+	lv_style_t sicko;
+	lv_style_copy(&sicko, &greyPreChosen);
+
+	lv_obj_t * toast;
+	lv_obj_t * royals;
+
+	while (1) {
+		toast = lv_label_create(lv_scr_act(), NULL);
+		lv_label_set_style(toast, &sicko);
+		lv_label_set_text(toast, "TOAST 2");
+		pros::delay(1000);
+	}
 }
 
 auton_options getAutonId() {
