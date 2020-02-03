@@ -44,18 +44,17 @@ auto drive = ChassisControllerFactory::create(
 );
 
 void layStack(Intake intake, Tray& tray, Toggle& t) {
-	pros::Motor trayMotor = pros::Motor(TRAY_PORT);
 	tray.layCubes();
 	while(t.checkState() != 0) {
 		tray.update();
 		if(master.getDigital(ControllerDigital::L2)) {
-			trayMotor.move_velocity(70);
+			tray_motor.move_velocity(70);
 		}
 		else if(master.getDigital(ControllerDigital::R2)) {
-			trayMotor.move_velocity(-70);
+			tray_motor.move_velocity(-70);
 		}
 		else if(tray.getState() != 0x12 && tray.getState() != 0x11) {
-			trayMotor.move_velocity(0);
+			tray_motor.move_velocity(0);
 		}
 
 		// float traySpeed = joystickSlew(master.getAnalog(ControllerAnalog::rightY));
@@ -100,17 +99,17 @@ void opcontrol() {
 	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, true);
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
-	//tray.reset();
+	tray.reset();
 	/*pros::Motor trayMotor = pros::Motor(TRAY_PORT);
 	trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);*/
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
-	//int lastEncoder = getEncoders({TRAY})[0];
+	int lastEncoder = getEncoders({TRAY})[0];
 	while (1) {
 	//	printf("This is my auton: %d", getAutonId());
-	/*tray.update();
+	tray.update();
 	intake.update();
 	lift.update();
 	encoder = getEncoders({LIFT, TRAY});
@@ -159,7 +158,7 @@ void opcontrol() {
 		if(lift.getState() == 0x10) {
 			dropping = false;
 		}
-	}*/
+	}
 	// ARUN'S LIFT
 	// // Override lift limits
 	// if (lift && master.getDigital(ControllerDigital::up)) {
@@ -207,14 +206,14 @@ void opcontrol() {
 	// if (encoder[0] <= 0)
 	// 	move({LIFT}, 0);
 	//TRAY
-/*	if(master.getDigital(ControllerDigital::L2)) {
-		trayMotor.move_velocity(70);
+	if(master.getDigital(ControllerDigital::L2)) {
+		tray_motor.move_velocity(70);
 	}
 	else if(master.getDigital(ControllerDigital::R2)) {
-		trayMotor.move_velocity(-70);
+		tray_motor.move_velocity(-70);
 	}
 	else if(tray.getState() != 0x12 && lift.getState() == 0x10) {
-		trayMotor.move_velocity(0);
+		tray_motor.move_velocity(0);
 	}
 	int stack = engageTray.checkState();
 	if(stack == 1) {
@@ -235,7 +234,7 @@ void opcontrol() {
 		lSpeed -= accel;
 	else
 		lSpeed = reqLSpeed;
-	drive.arcade(lSpeed, rSpeed, 0.05f);*/
+	drive.arcade(lSpeed, rSpeed, 0.05f);
 	
 	//566, 1157
 	pros::delay(10);
