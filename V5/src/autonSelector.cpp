@@ -224,7 +224,7 @@ int confirmChoice(char autonString[])
     strcpy(s, "S'il vous plait, confirmez-vous que vous voulez choisir <<");
     strcat(s, autonString);
     strcat(s, ">> pour l'auton?");
-    mbox = lv_mbox_create(lv_scr_act(), NULL);
+    mbox = lv_mbox_create(scr, NULL);
     lv_mbox_set_text(mbox, s);
     lv_mbox_add_btns(mbox, btns, NULL);
     lv_mbox_set_action(mbox, click_action);
@@ -255,7 +255,7 @@ void endRun(int choice) {
 	printf("This is auton #: %d", auton_id);
     	if (choice == 0)
     	{
-       	lv_obj_del(mbox);
+       		//lv_obj_del(mbox);
 		complete = 1;
         	deleteScr();
 		initiate();
@@ -264,13 +264,16 @@ void endRun(int choice) {
 		auton_id = -1;
 			count = 0;
 		confirmCounter = 0;
-        //	lv_obj_del(mbox);
+        	//lv_obj_del(mbox);
         //	deleteScr();
         	autonSelector((void*) "PROS");
     	}
 }
 
 void initiate() {
+	lv_obj_t * scr2 = lv_page_create(NULL, NULL);
+	//lv_obj_set_hidden(scr, true);
+	//lv_scr_load(scr2);
 	blueBack->win.bg->body.main_color = purple;
 	blueBack->win.bg->body.grad_color = purple;
 	lv_style_t sicko;
@@ -279,12 +282,10 @@ void initiate() {
 	lv_obj_t * toast;
 	lv_obj_t * royals;
 
-	while (1) {
 		toast = lv_label_create(lv_scr_act(), NULL);
 		lv_label_set_style(toast, &sicko);
 		lv_label_set_text(toast, "TOAST 2");
-		pros::delay(1000);
-	}
+
 }
 
 auton_options getAutonId() {
