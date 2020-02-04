@@ -2,7 +2,8 @@
 
 #include "main.h"
 
+void stackCubes();
+void disengageStack();
 void liftToMid();
 void liftToLow();
-void stackCubes();
-void incremenetLift(bool up);
+void incrementLift(int dir);
