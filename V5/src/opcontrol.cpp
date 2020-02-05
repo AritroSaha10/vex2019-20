@@ -2,6 +2,7 @@
 #include "tracking.h"
 #include "globals.h"
 #include "systems/toggle.h"
+#include "macros.h"
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -129,27 +130,24 @@ void opcontrol() {
 		intake.stop();
 	}
 
+	int liftIterate = 0;
 	if(master.getDigital(ControllerDigital::X)) {
-		lift.raise(true);
-	}
-	else if(master.getDigital(ControllerDigital::Y)) {
-		lift.raise(false);
+		liftIterate = 1;
 	}
 	else if(master.getDigital(ControllerDigital::B)) {
-		lift.lower();
+		liftIterate = -1;
 	}
-	else if(!dropping){
-		lift.lock();
-	}
+	incrementLift(liftIterate);
 
+	if(master.getDigital(ControllerDigital::Y)) {
+		liftToLow();
+	}
+	if(master.getDigital(ControllerDigital::A)) {
+		liftToMid();
+	}
 	if(master.getDigital(ControllerDigital::down)) {
 		dropping = true;
-		lift.drop();
-	}
-	if(dropping) {
-		if(lift.getState() == 0x10) {
-			dropping = false;
-		}
+		dropLift();
 	}
 
 	//TRAY

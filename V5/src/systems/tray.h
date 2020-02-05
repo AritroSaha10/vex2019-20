@@ -5,7 +5,7 @@
 #include "intake.h"
 #include "chassis.h"
 
-#define LIFT_TIMEOUT 7000
+#define STACK_TIMEOUT 7000
 #define LOWER_TIMEOUT 7000
 
 class Tray : public SystemManager {

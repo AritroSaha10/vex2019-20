@@ -23,3 +23,7 @@ pros::Task update(nullTask, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DE
 
 pros::ADIPotentiometer trayPot(TRAY_POT_PORT);
 pros::ADIPotentiometer liftPot(LIFT_POT_PORT);
+
+void nullCallback() {
+    pros::delay(5);
+}

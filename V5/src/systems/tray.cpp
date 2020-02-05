@@ -112,7 +112,7 @@ void Tray::update() {
 		if(abs(this->error) < 100) {
             // intake.intake(-60);
 		}
-        if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
+        if(this->timedOut(STACK_TIMEOUT) || abs(this->error)<20) {
         	this->stop();
 		    // intake.stop();
            	this->changeState(HOLD_STATE);
@@ -126,7 +126,7 @@ void Tray::update() {
         if(abs(this->error) < 100) {
             // intake.reset();
         }
-        if(this->timedOut(LIFT_TIMEOUT) || abs(this->error)<20) {
+        if(this->timedOut(STACK_TIMEOUT) || abs(this->error)<20) {
             this->stop();
             this->changeState(HOLD_STATE);
             break;

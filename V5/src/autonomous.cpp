@@ -1,6 +1,7 @@
 #include "main.h"
 #include "autonSelector.h"
 #include "globals.h"
+#include "macros.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -38,31 +39,13 @@ void updateSysMan(void* param) {
 	}
 }
 
-void flipout(Intake intake, Lift lift) {
-	lift.raise(false);
-	intake.out(-127);
-	float time = pros::millis();
-	while(pros::millis()-time < 1100) {
-		lift.update();
-		intake.update();
-	}
-	intake.reset();
-	lift.lower();
-	time = pros::millis();
-	while(pros::millis()-time < 800) {
-		lift.update();
-	}
-	lift.reset();
-	pros::delay(750);
-}
-
 void autonomous() {
 	autonSet = BLUE;
 	//autonSelector();
 	//deleteSelector();
 	tray.fullReset();
 
-	flipout(intake, lift);
+	flipout();
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
 		autoDrive.setMaxVelocity(130);	

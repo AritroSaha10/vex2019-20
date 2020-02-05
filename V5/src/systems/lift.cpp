@@ -1,9 +1,9 @@
 #include "main.h"
 #include "lift.h"
 
-#define MID_HEIGHT 3100
-#define LOW_HEIGHT 2250
 #define LIFT_SPEED 107
+#define MAX_LIFT_HEIGHT 3200
+#define LIFT_TIMEOUT 10000
 
 // Constructor
 Lift::Lift(uint8_t _defaultState) : SystemManager(_defaultState) {}
@@ -18,7 +18,8 @@ void Lift::stop()
     this->liftMotor.move(0);
 }
 
-void Lift::moveTo(double _target) {
+void Lift::moveTo(double _target, void(*_callback)()) {
+    this->callback = _callback;
     bool success;
     if(_target > this->position) {
         success = this->changeState(LIFT_STATE);
@@ -82,6 +83,10 @@ uint8_t Lift::getState()
     return this->state;
 }
 
+void Lift::setCallback(void(*_callback)()) {
+    this->callback = _callback;
+}
+
 void Lift::update()
 {
     this->position = this->liftMotor.get_position();
@@ -97,17 +102,28 @@ void Lift::update()
     case IDLE_STATE:
         break;
     case LIFT_STATE:
+        if(timedOut(LIFT_TIMEOUT)) {
+            this->reset();
+            this->callback();
+        }
+
         this->liftMotor.move(127);
         if(this->position > target-10) {
+            this->callback();
             this->lock();
         }
         break;
     case LOWER_STATE:
+        if(timedOut(LIFT_TIMEOUT)) {
+            this->reset();
+            this->callback();
+        }
         this->liftMotor.move(-100);
         if(this->position < 250) {
             // this->tray.setTargetPowerControl(0, 127);
         }
         if(this->position < target+10) {
+            this->callback();
             this->reset();
         }
         break;
@@ -119,37 +135,17 @@ void Lift::update()
     }
 }
 
-void Lift::raise(bool _mid) {
-    this->mid = _mid;
-    if(this->state == LIFT_STATE) {
+void Lift::move(bool up) {
+    bool success;
+    if(up) {
+        success = this->changeState(LIFT_STATE);
+    } else {
+        success = this->changeState(LOWER_STATE);
+    }
+    if (!success) {
         return;
     }
-    this->changeState(LIFT_STATE);
-}
-
-void Lift::lower() {
-    if(this->state == LOWER_STATE) {
-        return;
-    }
-    this->changeState(LOWER_STATE);
-}
-
-void Lift::raiseToLow() {
-    lockState = true;
-    this->raise(false);
-}
-
-void Lift::raiseToMid() {
-    lockState = true;
-    this->raise(true);
-}
-
-void Lift::drop() {
-    lockState = true;
-    if(this->state == LOWER_STATE) {
-        return;
-    }
-    this->changeState(LOWER_STATE);
+    this->target = up ? MAX_LIFT_HEIGHT : 0.0f;
 }
 
 void Lift::lock() {
