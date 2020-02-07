@@ -39,6 +39,7 @@ void initialize() {
 		printf("this is auton id %d, & complete %d\n", getAutonId(), getComplete());
 	}
 	printf("THIS IS AUTON #: %d", getAutonId());
+	pros::Task delTask(autonSel);
 	//pros::delay(5000);
 }
 

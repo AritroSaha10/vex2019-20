@@ -9,6 +9,7 @@
 #include <initializer_list>
 #include <string>
 #include <sstream>
+LV_IMG_DECLARE(royals);
 
 double const accel = 0.045;
 /**
@@ -82,6 +83,11 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
+	lv_theme_t *a = lv_theme_alien_init(10, NULL);
+	lv_theme_set_current(a);
+	lv_obj_t * img = lv_img_create(lv_scr_act(), NULL);
+	lv_img_set_src(img, &royals);
+	lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0, 0);
 	double lSpeed =0;
 	double rSpeed = 0;
 	double reqRSpeed = 0;
