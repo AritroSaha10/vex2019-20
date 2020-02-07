@@ -6,8 +6,6 @@
 #include "tray.h"
 #include "chassis.h"
 
-void nullCallback();
-
 class Lift : public SystemManager
 {
 public:

@@ -22,3 +22,5 @@ extern pros::ADIPotentiometer trayPot;
 extern pros::ADIPotentiometer liftPot;
 
 extern pros::Task update;
+
+extern okapi::ChassisControllerIntegrated drive;

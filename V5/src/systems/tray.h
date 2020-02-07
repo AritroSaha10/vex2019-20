@@ -17,6 +17,8 @@ public:
     static const uint8_t AUTON_LIFT = 0X14;
 
     bool setOperatorPower(double power);
+    void setCallback(void(*_callback)());
+    void setOperatorControl(int op);
     void layCubes();
     void moveTo(double _position);
     void layCubesAuton();

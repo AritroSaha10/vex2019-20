@@ -30,12 +30,6 @@ extern float x;
 extern float y;
 extern float theta;
 
-auto drive = ChassisControllerFactory::create(
-	{+FL_PORT, +BL_PORT}, {-FR_PORT, -BR_PORT},
-	AbstractMotor::gearset::green,
-	{4_in, 11.5_in}
-);
-
 void layStack(Intake intake, Tray& tray, Toggle& t) {
 	tray.layCubes();
 	while(t.checkState() != 0) {
@@ -87,7 +81,7 @@ void opcontrol() {
 	// Speed limit
 	float speed = 1.0f;
 
-	bool dropping = false;
+	bool stacking = false;
 
 	// Toggle switches
 	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
@@ -95,7 +89,6 @@ void opcontrol() {
 	Toggle engageTray = Toggle({ControllerDigital::L1}, master);
 	Toggle liftButton = Toggle({ControllerDigital::Y}, master);
 
-	tray_motor.set_brake_mode(MOTOR_BRAKE_HOLD);
 	/*pros::Vision andyVision(VISION_PORT);
 	pros::vision_signature_s_t PURPLE[3];
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
@@ -112,7 +105,7 @@ void opcontrol() {
 		lastEncoder = getEncoders({TRAY})[0];
 	}
 
-	//INTAKE
+	// INTAKE
 	int in = fullIntake.checkState();
 	if(in == 1) {
 		intake.intake(INTAKE_SPEED);
@@ -121,7 +114,7 @@ void opcontrol() {
 		intake.stop();
 	}
 
-	//OUTTAKE
+	// CONTROL INTAKE
 	int control = controlIntake.checkState();
 	if(control == 1) {
 		intake.control();
@@ -146,24 +139,27 @@ void opcontrol() {
 		liftToMid();
 	}
 	if(master.getDigital(ControllerDigital::down)) {
-		dropping = true;
 		dropLift();
 	}
 
 	//TRAY
 	if(master.getDigital(ControllerDigital::L2)) {
-		tray_motor.move_velocity(70);
+		tray.setOperatorControl(1);;
 	}
 	else if(master.getDigital(ControllerDigital::R2)) {
-		tray_motor.move_velocity(-70);
+		tray.setOperatorControl(-1);
 	}
-	else if(tray.getState() != 0x12 && lift.getState() == 0x10) {
-		tray_motor.move_velocity(0);
+	else {
+		tray.setOperatorControl(0);
 	}
 	int stack = engageTray.checkState();
 	if(stack == 1) {
-		layStack(intake, tray, engageTray);
-		tray.lower();
+		stackCubes();
+		stacking = true;
+	}
+	if(stack == -1) {
+		disengageStack();
+		stacking = false;
 	}
 
 	// Acceleration curve

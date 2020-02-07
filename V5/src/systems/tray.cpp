@@ -58,6 +58,16 @@ void Tray::moveTo(double _position) {
     this->changeState(LIFT_STATE);
 }
 
+void Tray::setCallback(void(*_callback)()) {
+    this->callback = _callback;
+}
+
+void Tray::setOperatorControl(int op) {
+    if(op != 1 && opUp != 0 && opUp != -1) { return; }
+    if(this->state == LIFT_STATE || this->state == LOWER_STATE) { return; }
+    this->opUp = op;
+}
+
 // Overrides
 bool Tray::changeState(uint8_t newState) {
     bool processed = SystemManager::changeState(newState);
@@ -81,16 +91,18 @@ bool Tray::changeState(uint8_t newState) {
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
         case LIFT_STATE:
+            this->trayMotor.set_brake_mode(MOTOR_BRAKE_BRAKE);
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
         case LOWER_STATE:
+            this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
             this->setTarget(0);
             break;
         case HOLD_STATE:
             this->trayMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
             break;
         case OPERATOR_OVERRIDE:
-            this->trayMotor.set_brake_mode(MOTOR_BRAKE_COAST);
+            this->trayMotor.set_brake_mode(MOTOR_BRAKE_BRAKE);
     }
 
     return true;
@@ -124,6 +136,7 @@ void Tray::update() {
         if(this->timedOut(STACK_TIMEOUT) || abs(this->error)<20) {
         	this->stop();
 		    // intake.stop();
+            this->callback();
            	this->changeState(HOLD_STATE);
            	break;
         }
@@ -139,6 +152,7 @@ void Tray::update() {
         }
         if(this->timedOut(STACK_TIMEOUT) || abs(this->error)<20) {
             this->stop();
+            this->callback();
             this->changeState(HOLD_STATE);
             break;
         }
@@ -149,6 +163,7 @@ void Tray::update() {
         if(this->timedOut(LOWER_TIMEOUT) || abs(this->error)<20) {
             this->trayMotor.tare_position();
             this->stop();
+            this->callback();
             this->changeState(IDLE_STATE);
             break;
         }

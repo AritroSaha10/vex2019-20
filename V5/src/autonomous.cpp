@@ -24,12 +24,6 @@ const auto WHEEL_DIAMETER = 4_in;
 const auto CHASSIS_WIDTH = 11.5_in;
 */
 
-auto autoDrive = ChassisControllerFactory::create(
-	{ +FL_PORT, +BL_PORT}, { -FR_PORT, -BR_PORT },
-	AbstractMotor::gearset::green,
-	{ 3.25_in, 13_in }
-);
-
 void updateSysMan(void* param) {
 	while(1) {
 		intake.update();
@@ -48,16 +42,16 @@ void autonomous() {
 	flipout();
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	if (autonSet == BLUE) {
-		autoDrive.setMaxVelocity(130);	
-		autoDrive.moveDistanceAsync(1.1_m);
+		drive.setMaxVelocity(130);	
+		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
-		autoDrive.waitUntilSettled();
+		drive.waitUntilSettled();
 		pros::delay(500);
 		intake.stop();
-		autoDrive.turnAngle(-90_deg);
-		autoDrive.moveDistance(0.42_m);
-		autoDrive.turnAngle(-90_deg);
-		autoDrive.moveDistance(0.75_m);
+		drive.turnAngle(-90_deg);
+		drive.moveDistance(0.42_m);
+		drive.turnAngle(-90_deg);
+		drive.moveDistance(0.75_m);
 		tray.layCubesAuton();
 		while(tray.getTrayState() == tray.AUTON_LIFT) {
 			if (pros::millis() <= 14800)
@@ -68,24 +62,24 @@ void autonomous() {
 			else
 			{
 				intake.stop();
-				autoDrive.moveDistance(-0.3_m);
+				drive.moveDistance(-0.3_m);
 				intake.reset();
 			}
 		}
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
-		autoDrive.moveDistanceAsync(-0.3_m);
+		drive.moveDistanceAsync(-0.3_m);
 	} else if(autonSet==RED) {
-		autoDrive.setMaxVelocity(130);
-		autoDrive.moveDistanceAsync(1.1_m);
+		drive.setMaxVelocity(130);
+		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
-		autoDrive.waitUntilSettled();
+		drive.waitUntilSettled();
 		pros::delay(400);
 		intake.stop();
-		autoDrive.turnAngle(90_deg);
-		autoDrive.moveDistance(0.45_m);
-		autoDrive.turnAngle(90_deg);
-		autoDrive.moveDistance(0.65_m);
+		drive.turnAngle(90_deg);
+		drive.moveDistance(0.45_m);
+		drive.turnAngle(90_deg);
+		drive.moveDistance(0.65_m);
 		intake.reset();
 		tray.layCubes();
 		while (tray.getTrayState() == 0x11)
@@ -97,28 +91,28 @@ void autonomous() {
 			}
 			else
 			{
-				autoDrive.moveDistance(-0.3_m);
+				drive.moveDistance(-0.3_m);
 			}
 		}
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
-		autoDrive.moveDistanceAsync(-0.3_m);
+		drive.moveDistanceAsync(-0.3_m);
 	} else if (autonSet == SIMPLE) {
-		autoDrive.setMaxVelocity(140);
-		autoDrive.moveDistance(0.4_m);
+		drive.setMaxVelocity(140);
+		drive.moveDistance(0.4_m);
 		intake.intake(-120);
-		autoDrive.moveDistance(-0.4_m);
-		autoDrive.waitUntilSettled();
+		drive.moveDistance(-0.4_m);
+		drive.waitUntilSettled();
 		intake.stop();
 	} else if (autonSet == EXPERIMENTAL_BLUE) {
-		autoDrive.setMaxVelocity(130);
-		autoDrive.moveDistanceAsync(1.1_m);
+		drive.setMaxVelocity(130);
+		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
 		pros::delay(2000);
 		intake.stop();
-		autoDrive.waitUntilSettled();
-		autoDrive.turnAngle(120_deg);
-		autoDrive.moveDistance(1.5_m);
+		drive.waitUntilSettled();
+		drive.turnAngle(120_deg);
+		drive.moveDistance(1.5_m);
 		intake.reset();
 		tray.layCubes();
 		while (tray.getTrayState() == 0x11)
@@ -127,21 +121,21 @@ void autonomous() {
 				pros::lcd::print(1, "Hello");
 				pros::delay(2);
 			} else {
-				autoDrive.moveDistance(-0.3_m);
+				drive.moveDistance(-0.3_m);
 			}
 		}
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
-		autoDrive.moveDistanceAsync(-0.3_m);
+		drive.moveDistanceAsync(-0.3_m);
 	} else if (autonSet == EXPERIMENTAL_RED) {
-		autoDrive.setMaxVelocity(130);
-		autoDrive.moveDistanceAsync(1.1_m);
+		drive.setMaxVelocity(130);
+		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
 		pros::delay(3000);
 		intake.stop();
-		autoDrive.waitUntilSettled();
-		autoDrive.turnAngle(-120_deg);
-		autoDrive.moveDistance(1.5_m);
+		drive.waitUntilSettled();
+		drive.turnAngle(-120_deg);
+		drive.moveDistance(1.5_m);
 		intake.reset();
 		tray.layCubes();
 	}

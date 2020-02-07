@@ -5,6 +5,7 @@
 #define MID_HEIGHT 3100
 #define LOW_HEIGHT 2250
 #define LIFT_MULTIPLIER 0.5f
+#define TRAY_LIFT_MAX 1200
 
 bool stacking = false;
 bool lifting = false;
@@ -22,7 +23,8 @@ void droppedLiftCallback() {
 
 void finishedTrayCallback() {
     stacking = false;
-    
+    tray.setCallback(nullCallback);
+    drive.setMaxVelocity(600);
 }
 
 void stackCubes() {
@@ -31,6 +33,7 @@ void stackCubes() {
     }
     stacking = true;
     tray.layCubes();
+    tray.setCallback(finishedTrayCallback);
 }
 
 void disengageStack() {
@@ -39,6 +42,8 @@ void disengageStack() {
     }
     stacking = true;
     /*Something with the intake*/
+    drive.setMaxVelocity(400);
+    drive.moveDistanceAsync(-0.2);
     tray.lower();
 }
 
@@ -48,7 +53,7 @@ void liftToMid() {
     }
     lifting = true;
     lift.moveTo(MID_HEIGHT, finishedLiftCallback);
-    tray.moveTo(1000);
+    tray.moveTo(TRAY_LIFT_MAX);
 }
 
 void liftToLow() {
@@ -57,7 +62,7 @@ void liftToLow() {
     }
     lifting = true;
     lift.moveTo(LOW_HEIGHT, finishedLiftCallback);
-    tray.moveTo(1000);
+    tray.moveTo(TRAY_LIFT_MAX);
 }
 
 void dropLift() {
@@ -70,7 +75,12 @@ void incrementLift(int dir) {
     if(lifting) {
         return;
     }
-    tray.moveTo(lift.getPosition()*LIFT_MULTIPLIER);
+    if(tray.getTarget() < TRAY_LIFT_MAX) {
+        tray.moveTo(lift.getPosition() * LIFT_MULTIPLIER);
+    }
+    else if(tray.getTarget() > TRAY_LIFT_MAX) {
+        tray.moveTo(TRAY_LIFT_MAX);
+    }
     if(dir == 0) {
         lift.lock();
     }

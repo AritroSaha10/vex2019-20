@@ -72,6 +72,7 @@ void disabled(void);
 void competition_initialize(void);
 void opcontrol(void);
 void updateSysMan(void *param);
+void nullCallback();
 
 static int autonSet;
 //pros::Vision vision_sensor(VISION_PORT);
