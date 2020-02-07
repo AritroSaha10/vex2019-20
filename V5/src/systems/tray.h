@@ -18,6 +18,7 @@ public:
 
     bool setOperatorPower(double power);
     void layCubes();
+    void moveTo(double _position);
     void layCubesAuton();
     void lower();
     void update() override;
@@ -34,6 +35,8 @@ private:
     void setTarget(double target);
     bool changeState(uint8_t newState) override;
 
+    void (*callback)(){nullCallback};
+    bool stacking = true;
     pros::Motor trayMotor = pros::Motor(TRAY_PORT, true);
     okapi::Controller controller;
     int opUp = 0;

@@ -4,6 +4,7 @@
 
 #define MID_HEIGHT 3100
 #define LOW_HEIGHT 2250
+#define LIFT_MULTIPLIER 0.5f
 
 bool stacking = false;
 bool lifting = false;
@@ -13,17 +14,32 @@ void finishedLiftCallback() {
     lift.setCallback(nullCallback);
 }
 
+void droppedLiftCallback() {
+    lifting = false;
+    lift.setCallback(nullCallback);
+    tray.lower();
+}
+
+void finishedTrayCallback() {
+    stacking = false;
+    
+}
+
 void stackCubes() {
     if(stacking || lifting) {
         return;
     }
+    stacking = true;
+    tray.layCubes();
 }
 
 void disengageStack() {
     if(!stacking) {
         return;
     }
-
+    stacking = true;
+    /*Something with the intake*/
+    tray.lower();
 }
 
 void liftToMid() {
@@ -32,6 +48,7 @@ void liftToMid() {
     }
     lifting = true;
     lift.moveTo(MID_HEIGHT, finishedLiftCallback);
+    tray.moveTo(1000);
 }
 
 void liftToLow() {
@@ -40,18 +57,20 @@ void liftToLow() {
     }
     lifting = true;
     lift.moveTo(LOW_HEIGHT, finishedLiftCallback);
+    tray.moveTo(1000);
 }
 
 void dropLift() {
     if(stacking) return;
     lifting = true;
-    lift.moveTo(0, finishedLiftCallback);
+    lift.moveTo(0, droppedLiftCallback);
 }
 
 void incrementLift(int dir) {
     if(lifting) {
         return;
     }
+    tray.moveTo(lift.getPosition()*LIFT_MULTIPLIER);
     if(dir == 0) {
         lift.lock();
     }

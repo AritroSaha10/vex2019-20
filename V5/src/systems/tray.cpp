@@ -29,10 +29,13 @@ void Tray::setTarget(double _target) {
 }
 
 void Tray::layCubes() {
+    this->stacking = true;
+    this->target = MAX_TRAY;
     this->changeState(LIFT_STATE);
 }
 
 void Tray::layCubesAuton() {
+    this->stacking = true;
 	this->changeState(AUTON_LIFT);
 }
 
@@ -46,6 +49,13 @@ double Tray::getPowerFunction(double time) {
 
 double Tray::getReversePowerFunction(double time) {
     return 70 * pow(2, 0.003*(time-1000)) + 60;
+}
+
+void Tray::moveTo(double _position) {
+    this->stacking = false;
+    this->target = _position;
+    this->setPower(127);
+    this->changeState(LIFT_STATE);
 }
 
 // Overrides
@@ -71,7 +81,6 @@ bool Tray::changeState(uint8_t newState) {
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
         case LIFT_STATE:
-            this->target = MAX_TRAY;
             this->trayMotor.move_velocity(getPowerFunction(0));
             break;
         case LOWER_STATE:
@@ -118,7 +127,9 @@ void Tray::update() {
            	this->changeState(HOLD_STATE);
            	break;
         }
-        this->setPower(getPowerFunction(this->position));
+        if(stacking) {
+            this->setPower(getPowerFunction(this->position));
+        }
         this->trayMotor.move_velocity(this->power);
         break;
 
