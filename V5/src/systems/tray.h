@@ -39,7 +39,7 @@ private:
 
     void (*callback)(){nullCallback};
     bool stacking = true;
-    pros::Motor trayMotor = pros::Motor(TRAY_PORT, true);
+    pros::Motor trayMotor = pros::Motor(TRAY_PORT, false);
     okapi::Controller controller;
     int opUp = 0;
 };

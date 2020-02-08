@@ -78,6 +78,8 @@ void opcontrol() {
 	double reqRSpeed = 0;
 	double reqLSpeed = 0;
 
+	flipout();
+
 	// Speed limit
 	float speed = 1.0f;
 
@@ -94,7 +96,10 @@ void opcontrol() {
 	PURPLE[0] = pros::Vision::signature_from_utility(PURPLE_SIG, 2931, 3793, 3362, 5041, 6631, 5836, 4.800, 1);
 	PURPLE[1] = pros::Vision::signature_from_utility(PURPLE_SIG2, 2227, 3669, 2948, 2047, 3799, 2923, 3.6, 0);*/
 	int lastEncoder = getEncoders({TRAY})[0];
+	tray.reset();
+	lift.reset();
 	while (1) {
+	pros::lcd::print(3, "Tray: %f", tray.getTarget());
 	tray.update();
 	intake.update();
 	lift.update();
@@ -125,6 +130,7 @@ void opcontrol() {
 
 	int liftIterate = 0;
 	if(master.getDigital(ControllerDigital::X)) {
+		//tray.moveTo(100);
 		liftIterate = 1;
 	}
 	else if(master.getDigital(ControllerDigital::B)) {
@@ -142,23 +148,27 @@ void opcontrol() {
 		dropLift();
 	}
 
-	//TRAY
-	if(master.getDigital(ControllerDigital::L2)) {
-		tray.setOperatorControl(1);;
-	}
-	else if(master.getDigital(ControllerDigital::R2)) {
-		tray.setOperatorControl(-1);
-	}
-	else {
-		tray.setOperatorControl(0);
+	// TRAY 
+	if(tray.getState() == Tray::HOLD_STATE) {
+		if(master.getDigital(ControllerDigital::L2) && !stacking) {
+			tray.setOperatorControl(1);
+		}
+		else if(master.getDigital(ControllerDigital::R2) && !stacking) {
+			tray.setOperatorControl(-1);
+		}
+		else if(!stacking) {
+			tray.setOperatorControl(0);
+		}
 	}
 	int stack = engageTray.checkState();
 	if(stack == 1) {
 		stackCubes();
 		stacking = true;
 	}
-	if(stack == -1) {
+	if(stack == 0) {
 		disengageStack();
+	}
+	if(stacking == true && tray.getState() == 0x10) {
 		stacking = false;
 	}
 
@@ -181,7 +191,6 @@ void opcontrol() {
 	
 	// Diagnostics
 	pros::delay(10);
-	pros::lcd::print(1, "reqRSpeed: %f, reqLSpeed: %f", reqRSpeed, reqLSpeed);
 	pros::lcd::print(2,"Lift: %f", lift.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);

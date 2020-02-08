@@ -1,7 +1,7 @@
 #include "main.h"
 #include "tray.h"
 
-#define MAX_TRAY 2250
+#define MAX_TRAY 1020
 #define OPERATOR_TRAY_VELOCITY 50
 
 // Constructor
@@ -54,7 +54,7 @@ double Tray::getReversePowerFunction(double time) {
 void Tray::moveTo(double _position) {
     this->stacking = false;
     this->target = _position;
-    this->setPower(127);
+    this->power = 127;
     this->changeState(LIFT_STATE);
 }
 
@@ -63,8 +63,13 @@ void Tray::setCallback(void(*_callback)()) {
 }
 
 void Tray::setOperatorControl(int op) {
-    if(op != 1 && opUp != 0 && opUp != -1) { return; }
-    if(this->state == LIFT_STATE || this->state == LOWER_STATE) { return; }
+    if(this->stacking) {
+        return;
+    }
+    // if(this->state == LIFT_STATE || this->state == LOWER_STATE) { return; }
+    if(this->state != OPERATOR_OVERRIDE) {
+        this->changeState(OPERATOR_OVERRIDE);
+    }
     this->opUp = op;
 }
 
@@ -119,7 +124,7 @@ void Tray::fullReset() {
 
 void Tray::update() {
     this->position = this->trayMotor.get_position();
-    pros::lcd::print(5, "%f, %u, %f, %f", this->position, this->state, this->trayMotor.get_target_position(), this->trayMotor.get_target_velocity());
+    // pros::lcd::print(5, "%f, %u, %f, %f", this->position, this->state, this->trayMotor.get_target_position(), this->trayMotor.get_target_velocity());
     this->error = this->target - this->position;
 
     switch(this->state) {
@@ -153,6 +158,7 @@ void Tray::update() {
         if(this->timedOut(STACK_TIMEOUT) || abs(this->error)<20) {
             this->stop();
             this->callback();
+            this->stacking = false;
             this->changeState(HOLD_STATE);
             break;
         }

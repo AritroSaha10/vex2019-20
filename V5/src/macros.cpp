@@ -2,10 +2,11 @@
 #include "globals.h"
 #include "main.h"
 
-#define MID_HEIGHT 3100
-#define LOW_HEIGHT 2250
+#define MID_HEIGHT 700
+#define LOW_HEIGHT 450
 #define LIFT_MULTIPLIER 0.5f
-#define TRAY_LIFT_MAX 1200
+#define TRAY_LIFT_MAX 360
+#define MANUAL_TRAY_VELOCITY 50
 
 bool stacking = false;
 bool lifting = false;
@@ -25,25 +26,29 @@ void finishedTrayCallback() {
     stacking = false;
     tray.setCallback(nullCallback);
     drive.setMaxVelocity(600);
+    intake.control();
 }
 
 void stackCubes() {
-    if(stacking || lifting) {
-        return;
-    }
     stacking = true;
     tray.layCubes();
     tray.setCallback(finishedTrayCallback);
 }
 
+void autonStack() {
+    stacking = true;
+    tray.layCubes();
+    tray.setCallback(finishedTrayCallback);
+    intake.reset();
+}
+
 void disengageStack() {
-    if(!stacking) {
-        return;
-    }
     stacking = true;
     /*Something with the intake*/
-    drive.setMaxVelocity(400);
-    drive.moveDistanceAsync(-0.2);
+    //drive.setMaxVelocity(400);
+    //intake.out(40);
+    using namespace okapi::literals;
+    //drive.moveDistanceAsync(-0.2_m);
     tray.lower();
 }
 
@@ -52,8 +57,9 @@ void liftToMid() {
         return;
     }
     lifting = true;
+    tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
+    pros::delay(200);
     lift.moveTo(MID_HEIGHT, finishedLiftCallback);
-    tray.moveTo(TRAY_LIFT_MAX);
 }
 
 void liftToLow() {
@@ -61,8 +67,9 @@ void liftToLow() {
         return;
     }
     lifting = true;
+    tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
+    pros::delay(200);
     lift.moveTo(LOW_HEIGHT, finishedLiftCallback);
-    tray.moveTo(TRAY_LIFT_MAX);
 }
 
 void dropLift() {
@@ -75,28 +82,40 @@ void incrementLift(int dir) {
     if(lifting) {
         return;
     }
-    if(tray.getTarget() < TRAY_LIFT_MAX) {
-        tray.moveTo(lift.getPosition() * LIFT_MULTIPLIER);
-    }
-    else if(tray.getTarget() > TRAY_LIFT_MAX) {
-        tray.moveTo(TRAY_LIFT_MAX);
-    }
     if(dir == 0) {
         lift.lock();
     }
     else {
-        lift.move(dir == 1 ? true : false);
+        if(dir == 1) {
+            if (lift.getPosition()+150 < TRAY_LIFT_MAX) {
+                tray.setTargetPowerControl(lift.getPosition()+150, 127);
+            }
+            else if (tray.getTarget() > TRAY_LIFT_MAX) {
+                tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
+            }
+        }
+        else if(lift.getPosition() < 250) {
+            lift.reset();
+            tray.lower();
+        }
+        if(tray.getPosition() > 100) {
+            lift.move(dir == 1 ? true : false);
+        }
     }
 }
 
 void flipout()
 {
-    lift.moveTo(1000, nullCallback);
+    tray.setTargetPowerControl(100, 127);
+    pros::delay(200);
+    lift.moveTo(500, nullCallback);
+    tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
     intake.out(-127);
     float time = pros::millis();
-    while (pros::millis() - time < 1100)
+    while (pros::millis() - time < 800)
     {
         lift.update();
+        tray.update();
         intake.update();
     }
     intake.reset();
@@ -104,7 +123,12 @@ void flipout()
     time = pros::millis();
     while (pros::millis() - time < 800)
     {
+        if(lift.getPosition() < 250) {
+            lift.reset();
+            tray.lower();
+        }
         lift.update();
+        tray.update();
     }
     pros::delay(750);
 }
