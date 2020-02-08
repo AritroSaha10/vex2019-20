@@ -20,7 +20,7 @@ void Intake::out(double _power) {
 }
 
 void Intake::control() {
-    this->changeState(CONTROL_STATE);
+    this->changeState(OPERATOR_OVERRIDE);
 }
 
 void Intake::stop() {
@@ -43,7 +43,7 @@ void Intake::update() {
             break;
         case OUT_STATE:
             break;
-        case CONTROL_STATE: {
+        case OPERATOR_OVERRIDE: {
             float newIntakeSpeed = joystickSlew(this->controller.getAnalog(okapi::ControllerAnalog::rightY)) * 127;
             this->setPower(-newIntakeSpeed);
             break; }
@@ -73,13 +73,21 @@ bool Intake::changeState(uint8_t newState) {
             this->setPower(0);
             break;
         case IN_STATE:
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+            this->rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
             this->setPower(power);
             break;
         case OUT_STATE:
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+            this->rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
             this->setPower(power);
             break;
-        case CONTROL_STATE:
-            this->setPower(0);
+        case OPERATOR_OVERRIDE:
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+            this->rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+            if(this->leftIntakeMotor.get_actual_velocity() > 20) {
+                this->setPower(0);
+            }
             break;
         case HOLD_STATE:
             this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
@@ -95,6 +103,8 @@ bool Intake::changeState(uint8_t newState) {
             this->changeState(IDLE_STATE);
             break;
         case DISABLED_STATE:
+            this->leftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+            this->rightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             this->setPower(0);
             break;
     }

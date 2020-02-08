@@ -1,6 +1,12 @@
 {
     "files.associations": {
         "ios": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "istream": "cpp"
     }
 }

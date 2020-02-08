@@ -1,12 +1,12 @@
 #include "main.h"
 #include "lift.h"
 
-#define MID_HEIGHT 3100
-#define LOW_HEIGHT 2250
 #define LIFT_SPEED 107
+#define MAX_LIFT_HEIGHT 3200
+#define LIFT_TIMEOUT 10000
 
 // Constructor
-Lift::Lift(uint8_t _defaultState, Tray _tray) : SystemManager(_defaultState), tray(_tray) {}
+Lift::Lift(uint8_t _defaultState) : SystemManager(_defaultState) {}
 
 // Sub-class specific functions
 
@@ -18,9 +18,18 @@ void Lift::stop()
     this->liftMotor.move(0);
 }
 
-void Lift::overridePower(double power)
-{
-    this->liftMotor.move_absolute(this->target, this->power);
+void Lift::moveTo(double _target, void(*_callback)()) {
+    this->callback = _callback;
+    bool success;
+    if(_target > this->position) {
+        success = this->changeState(LIFT_STATE);
+    } else {
+        success = this->changeState(LOWER_STATE);
+    }
+    if (!success) {
+        return;
+    }
+    this->target = _target;
 }
 
 void Lift::setTarget(double _target)
@@ -54,9 +63,10 @@ bool Lift::changeState(uint8_t newState)
         liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         break;
     case LIFT_STATE:
-        this->tray.setTargetPowerControl(1000, 100);
+        // this->tray.setTargetPowerControl(1000, 100);
         break;
     case LOWER_STATE:
+        this->liftMotor.set_brake_mode(MOTOR_BRAKE_COAST);
         break;
     case HOLD_STATE:
         this->target = this->liftMotor.get_position();
@@ -71,6 +81,10 @@ bool Lift::changeState(uint8_t newState)
 uint8_t Lift::getState()
 {
     return this->state;
+}
+
+void Lift::setCallback(void(*_callback)()) {
+    this->callback = _callback;
 }
 
 void Lift::update()
@@ -88,18 +102,28 @@ void Lift::update()
     case IDLE_STATE:
         break;
     case LIFT_STATE:
-        this->liftMotor.move(127);
-        if(this->position > MID_HEIGHT-10 && mid) {
-            this->lock();
+        if(timedOut(LIFT_TIMEOUT)) {
+            this->reset();
+            this->callback();
         }
-        else if(this->position > LOW_HEIGHT-10 && !mid) {
+
+        this->liftMotor.move(127);
+        if(this->position > target-10) {
+            this->callback();
             this->lock();
         }
         break;
     case LOWER_STATE:
+        if(timedOut(LIFT_TIMEOUT)) {
+            this->reset();
+            this->callback();
+        }
         this->liftMotor.move(-100);
         if(this->position < 250) {
-            this->tray.setTargetPowerControl(0, 127);
+            // this->tray.setTargetPowerControl(0, 127);
+        }
+        if(this->position < target+10) {
+            this->callback();
             this->reset();
         }
         break;
@@ -111,37 +135,17 @@ void Lift::update()
     }
 }
 
-void Lift::raise(bool _mid) {
-    this->mid = _mid;
-    if(this->state == LIFT_STATE) {
+void Lift::move(bool up) {
+    bool success;
+    if(up) {
+        success = this->changeState(LIFT_STATE);
+    } else {
+        success = this->changeState(LOWER_STATE);
+    }
+    if (!success) {
         return;
     }
-    this->changeState(LIFT_STATE);
-}
-
-void Lift::lower() {
-    if(this->state == LOWER_STATE) {
-        return;
-    }
-    this->changeState(LOWER_STATE);
-}
-
-void Lift::raiseToLow() {
-    lockState = true;
-    this->raise(false);
-}
-
-void Lift::raiseToMid() {
-    lockState = true;
-    this->raise(true);
-}
-
-void Lift::drop() {
-    lockState = true;
-    if(this->state == LOWER_STATE) {
-        return;
-    }
-    this->changeState(LOWER_STATE);
+    this->target = up ? MAX_LIFT_HEIGHT : 0.0f;
 }
 
 void Lift::lock() {

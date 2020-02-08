@@ -5,7 +5,7 @@
 #include "intake.h"
 #include "chassis.h"
 
-#define LIFT_TIMEOUT 7000
+#define STACK_TIMEOUT 7000
 #define LOWER_TIMEOUT 7000
 
 class Tray : public SystemManager {
@@ -16,14 +16,18 @@ public:
     static const uint8_t HOLD_STATE = 0x13;
     static const uint8_t AUTON_LIFT = 0X14;
 
+    bool setOperatorPower(double power);
+    void setCallback(void(*_callback)());
+    void setOperatorControl(int op);
     void layCubes();
+    void moveTo(double _position);
     void layCubesAuton();
     void lower();
     void update() override;
     void fullReset() override;
     void setTargetPowerControl(double target, double power);
 	uint8_t getTrayState();
-    Tray(uint8_t _defaultState, okapi::Controller _controller, Intake _intake);
+    Tray(uint8_t _defaultState, okapi::Controller _controller);
 
 private:
     double getPowerFunction(double time);
@@ -33,7 +37,9 @@ private:
     void setTarget(double target);
     bool changeState(uint8_t newState) override;
 
-    pros::Motor trayMotor = pros::Motor(TRAY_PORT, true);
+    void (*callback)(){nullCallback};
+    bool stacking = true;
+    pros::Motor trayMotor = pros::Motor(TRAY_PORT, false);
     okapi::Controller controller;
-    Intake intake;
+    int opUp = 0;
 };
