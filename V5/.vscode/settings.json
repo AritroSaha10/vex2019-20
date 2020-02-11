@@ -7,6 +7,11 @@
         "vector": "cpp",
         "xstring": "cpp",
         "xtree": "cpp",
-        "istream": "cpp"
+        "istream": "cpp",
+        "algorithm": "cpp",
+        "cstdio": "cpp",
+        "xmemory0": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp"
     }
 }

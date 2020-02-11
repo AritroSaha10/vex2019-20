@@ -38,10 +38,22 @@ void autonomous() {
 	//autonSelector();
 	//deleteSelector();
 	tray.fullReset();
-
-	flipout();
+	if(getAutonId() == FLIPOUT) {
+		drive.setMaxVelocity(75);
+		drive.moveDistance(0.3_m);
+		drive.moveDistance(-0.3_m);
+		drive.setMaxVelocity(600);
+		pros::delay(1000);
+		flipout();
+	}
+	else {
+		flipout();
+	}
+	//	setAutonId(FLIPOUT);
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
-	if (auton_id == AUTON_BLUE_UNPROTECTED) {
+	if (getAutonId() == FLIPOUT)
+		;
+	else if (getAutonId() == AUTON_BLUE_UNPROTECTED) {
 		drive.setMaxVelocity(130);	
 		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -52,8 +64,8 @@ void autonomous() {
 		drive.moveDistance(0.42_m);
 		drive.turnAngle(-90_deg);
 		drive.moveDistance(0.75_m);
-		tray.layCubesAuton();
-		while(tray.getTrayState() == tray.AUTON_LIFT) {
+		stackCubes();
+		while(tray.getTrayState() == tray.LIFT_STATE) {
 			if (pros::millis() <= 14800)
 			{
 				pros::lcd::print(1, "Hello");
@@ -69,7 +81,7 @@ void autonomous() {
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		drive.moveDistanceAsync(-0.3_m);
-	} else if(auton_id = AUTON_RED_UNPROTECTED) {
+	} else if(getAutonId() == AUTON_RED_UNPROTECTED) {
 		drive.setMaxVelocity(130);
 		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -81,8 +93,8 @@ void autonomous() {
 		drive.turnAngle(90_deg);
 		drive.moveDistance(0.65_m);
 		intake.reset();
-		tray.layCubes();
-		while (tray.getTrayState() == 0x11)
+		stackCubes();
+		while (tray.getTrayState() == tray.LIFT_STATE)
 		{
 			if (pros::millis() <= 14800)
 			{
@@ -97,14 +109,14 @@ void autonomous() {
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		drive.moveDistanceAsync(-0.3_m);
-	} else if (auton_id = SIMPLE_ONE_CUBE) {
+	} else if (getAutonId() == SIMPLE_ONE_CUBE) {
 		drive.setMaxVelocity(140);
-		drive.moveDistance(0.4_m);
-		intake.intake(-120);
-		drive.moveDistance(-0.4_m);
+		drive.moveDistance(0.08_m);
+		intake.out(-127);
+		drive.moveDistance(-0.12_m);
 		drive.waitUntilSettled();
 		intake.stop();
-	} else if (auton_id = AUTON_BLUE_PROTECTED) {
+	} else if (getAutonId() == AUTON_BLUE_PROTECTED) {
 		drive.setMaxVelocity(130);
 		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -114,7 +126,7 @@ void autonomous() {
 		drive.turnAngle(120_deg);
 		drive.moveDistance(1.5_m);
 		intake.reset();
-		tray.layCubes();
+		stackCubes();
 		while (tray.getTrayState() == 0x11)
 		{
 			if (pros::millis() <= 14000) {
@@ -127,7 +139,7 @@ void autonomous() {
 		pros::lcd::print(1, "Hello again");
 		tray.lower();
 		drive.moveDistanceAsync(-0.3_m);
-	} else if (auton_id = AUTON_RED_UNPROTECTED) {
+	} else if (getAutonId() == AUTON_RED_UNPROTECTED) {
 		drive.setMaxVelocity(130);
 		drive.moveDistanceAsync(1.1_m);
 		intake.intake(120);
@@ -137,7 +149,7 @@ void autonomous() {
 		drive.turnAngle(-120_deg);
 		drive.moveDistance(1.5_m);
 		intake.reset();
-		tray.layCubes();
+		stackCubes();
 	}
 	intake.reset();
 	pros::Task task_delete(update);

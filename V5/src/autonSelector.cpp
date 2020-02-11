@@ -10,7 +10,6 @@ lv_color_t red = LV_COLOR_MAKE(234, 35, 58);
 lv_color_t blue = LV_COLOR_MAKE(41, 130, 198);
 lv_color_t purple = LV_COLOR_MAKE(35, 44, 101);
 static const char * btns[] = {"\221Confirm", "Decline", ""};
-void setAutonId(auton_options x);
 bool confirm = false;
 void initiate();
 int count{};
@@ -254,7 +253,7 @@ void endRun(int choice) {
 	printf("This is auton #: %d", auton_id);
     	if (choice == 0)
     	{
-       		lv_obj_del(mbox);
+       	//	lv_obj_del(mbox);
 		complete = 1;
         	deleteScr();
 		initiate();

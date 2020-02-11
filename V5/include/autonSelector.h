@@ -28,6 +28,8 @@ void initMainTheme();
 void deleteScr();
 auton_options getAutonId();
 int getComplete();
+void setAutonId(auton_options x);
+auton_options getAutonId();
 
 static lv_theme_t * th;
 static lv_theme_t * blueBack;

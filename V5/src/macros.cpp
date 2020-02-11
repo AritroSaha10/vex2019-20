@@ -53,9 +53,6 @@ void disengageStack() {
 }
 
 void liftToMid() {
-    if(stacking) {
-        return;
-    }
     lifting = true;
     tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
     pros::delay(200);
@@ -106,29 +103,31 @@ void incrementLift(int dir) {
 
 void flipout()
 {
+    intake.out(-127);
     tray.setTargetPowerControl(100, 127);
     pros::delay(200);
-    lift.moveTo(500, nullCallback);
+    lift.moveTo(1000, nullCallback);
     tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
     intake.out(-127);
     float time = pros::millis();
-    while (pros::millis() - time < 800)
+    while (pros::millis() - time < 1500)
     {
         lift.update();
         tray.update();
         intake.update();
     }
     intake.reset();
-    lift.moveTo(0, nullCallback);
+    lift.move(false);
     time = pros::millis();
-    while (pros::millis() - time < 800)
+    while (pros::millis() - time < 2500)
     {
-        if(lift.getPosition() < 250) {
-            lift.reset();
-            tray.lower();
+        if(lift.getPosition() < 350) {
+            tray.setTargetPowerControl(0, 127);
         }
         lift.update();
         tray.update();
     }
+    lift.reset();
+    tray.setTargetPowerControl(0, 127);
     pros::delay(750);
 }

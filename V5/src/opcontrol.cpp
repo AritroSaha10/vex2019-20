@@ -75,11 +75,11 @@ std::string IntToStr(double i)
 }
 
 void opcontrol() {
-	lv_theme_t *a = lv_theme_alien_init(10, NULL);
-	lv_theme_set_current(a);
-	lv_obj_t * img = lv_img_create(lv_scr_act(), NULL);
+	//lv_theme_t *a = lv_theme_alien_init(10, NULL);
+	//lv_theme_set_current(a);
+	/*lv_obj_t * img = lv_img_create(lv_scr_act(), NULL);
 	lv_img_set_src(img, &royals);
-	lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0, 0);
+	lv_obj_align(img, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);*/
 	update.remove();
 	intake.control();
 
@@ -150,7 +150,7 @@ void opcontrol() {
 		liftToLow();
 	}
 	if(master.getDigital(ControllerDigital::A)) {
-		liftToMid();
+		//liftToMid();
 	}
 	if(master.getDigital(ControllerDigital::down)) {
 		dropLift();
