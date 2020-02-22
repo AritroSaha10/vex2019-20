@@ -4,7 +4,7 @@
 #include "autonSelector.h"
 
 extern bool complete;
-static const int _TESTING = 0;
+static const int _TESTING = 1;
 
 /*void on_center_button() {
 	static bool pressed = false;

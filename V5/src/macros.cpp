@@ -105,12 +105,12 @@ void flipout()
 {
     intake.out(-127);
     tray.setTargetPowerControl(100, 127);
-    pros::delay(200);
+    pros::delay(100);
     lift.moveTo(1000, nullCallback);
     tray.setTargetPowerControl(TRAY_LIFT_MAX, 127);
     intake.out(-127);
     float time = pros::millis();
-    while (pros::millis() - time < 1500)
+    while (pros::millis() - time < 1000)
     {
         lift.update();
         tray.update();
@@ -119,7 +119,7 @@ void flipout()
     intake.reset();
     lift.move(false);
     time = pros::millis();
-    while (pros::millis() - time < 2500)
+    while (pros::millis() - time < 2000)
     {
         if(lift.getPosition() < 350) {
             tray.setTargetPowerControl(0, 127);
@@ -129,5 +129,5 @@ void flipout()
     }
     lift.reset();
     tray.setTargetPowerControl(0, 127);
-    pros::delay(750);
+    pros::delay(250);
 }
