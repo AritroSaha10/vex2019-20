@@ -13,6 +13,8 @@
 #include <sstream>
 LV_IMG_DECLARE(royals);
 
+#define DEAD_ZONE_TIGHTNESS 6
+
 double const accel = 0.045;
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -72,6 +74,31 @@ std::string IntToStr(double i)
 	std::ostringstream out;
 	out << i;
 	return out.str();
+}
+
+void processDrive(double straight, double turn) {
+	// Absolute dead zones
+	if(straight <= 0.05)
+		straight = 0;
+	if(turn <= 0.05)
+		turn = 0;
+
+	// Straight and turn dead zones
+	if(straight / turn > DEAD_ZONE_TIGHTNESS)
+		turn = 0;
+	else if(turn / straight > DEAD_ZONE_TIGHTNESS)
+		straight = 0;
+	
+	double leftSpeed = straight;
+	double rightSpeed = straight;
+	if(turn < 0)
+		leftSpeed -= turn * 2;
+	else
+		rightSpeed -= turn * 2;
+	frontRightDrive.move(rightSpeed * 127);
+	backRightDrive.move(rightSpeed * 127);
+	frontLeftDrive.move(leftSpeed * 127);
+	backLeftDrive.move(leftSpeed * 127);
 }
 
 void opcontrol() {
@@ -185,17 +212,17 @@ void opcontrol() {
 	reqRSpeed = joystickSlew(master.getAnalog(ControllerAnalog::leftX));
 	if (reqRSpeed > (rSpeed+accel))
 		rSpeed+=accel;
-	else if (reqRSpeed < (rSpeed-accel))
-		rSpeed -= accel;
+	else if (reqRSpeed < (rSpeed-(accel*2)))
+		rSpeed -= accel*2;
 	else
 		rSpeed = reqRSpeed;
 	if (reqLSpeed > (lSpeed+accel))
 		lSpeed+=accel;
-	else if (reqLSpeed < (lSpeed-accel))
-		lSpeed -= accel;
+	else if (reqLSpeed < (lSpeed-(accel*2)))
+		lSpeed -= accel*2;
 	else
 		lSpeed = reqLSpeed;
-	drive.arcade(lSpeed, rSpeed, 0.05f);
+	processDrive(lSpeed, rSpeed);
 	
 	// Diagnostics
 	pros::delay(10);
