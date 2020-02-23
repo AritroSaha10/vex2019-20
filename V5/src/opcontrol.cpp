@@ -119,8 +119,6 @@ void opcontrol() {
 	// Speed limit
 	float speed = 1.0f;
 
-	bool stacking = false;
-
 	// Toggle switches
 	Toggle fullIntake = Toggle({ControllerDigital::L2, ControllerDigital::R2}, master);
 	Toggle controlIntake = Toggle({ControllerDigital::R1}, master, true);
@@ -198,13 +196,9 @@ void opcontrol() {
 	int stack = engageTray.checkState();
 	if(stack == 1) {
 		stackCubes();
-		stacking = true;
 	}
 	if(stack == 0) {
 		disengageStack();
-	}
-	if(stacking == true && tray.getState() == 0x10) {
-		stacking = false;
 	}
 
 	// Acceleration curve

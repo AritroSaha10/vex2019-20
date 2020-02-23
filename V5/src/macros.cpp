@@ -10,16 +10,23 @@
 
 bool stacking = false;
 bool lifting = false;
+bool suspendDrive = false;
+
+int callbackCount = 0;
 
 void finishedLiftCallback() {
     lifting = false;
     lift.setCallback(nullCallback);
+    pros::lcd::print(4, "LIFT CALLBACK: %i", callbackCount);
+    callbackCount++;
 }
 
 void droppedLiftCallback() {
     lifting = false;
     lift.setCallback(nullCallback);
     tray.lower();
+    pros::lcd::print(4, "DROP CALLBACK: %i", callbackCount);
+    callbackCount++;
 }
 
 void finishedTrayCallback() {
@@ -27,6 +34,8 @@ void finishedTrayCallback() {
     tray.setCallback(nullCallback);
     drive.setMaxVelocity(600);
     intake.control();
+    pros::lcd::print(4, "TRAY CALLBACK: %i", callbackCount);
+    callbackCount++;
 }
 
 void stackCubes() {

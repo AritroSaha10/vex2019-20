@@ -34,14 +34,14 @@ void initialize() {
 	pros::Task tempTask(motorTemp, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Temperature tracking");
 
 	pros::delay(500);
-	pros::Task autonSel(autonSelector, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Auton Selector");
-	if (_TESTING == 0) 
-		while (getComplete() == 0 && pros::millis() <= 5000) {
-			pros::delay(2);
-			printf("this is auton id %d, & complete %d\n", getAutonId(), getComplete());
-		}
-	printf("THIS IS AUTON #: %d", getAutonId());
-	pros::Task delTask(autonSel);
+	// pros::Task autonSel(autonSelector, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Auton Selector");
+	// if (_TESTING == 0) 
+	// 	while (getComplete() == 0 && pros::millis() <= 5000) {
+	// 		pros::delay(2);
+	// 		printf("this is auton id %d, & complete %d\n", getAutonId(), getComplete());
+	// 	}
+	// printf("THIS IS AUTON #: %d", getAutonId());
+	// pros::Task delTask(autonSel);
 	//pros::delay(5000);
 }
 
