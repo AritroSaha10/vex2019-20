@@ -13,7 +13,7 @@
 #include <sstream>
 LV_IMG_DECLARE(royals);
 
-#define DEAD_ZONE_TIGHTNESS 6
+#define DEAD_ZONE_TIGHTNESS 100
 
 double const accel = 0.045;
 /**
@@ -78,9 +78,9 @@ std::string IntToStr(double i)
 
 void processDrive(double straight, double turn) {
 	// Absolute dead zones
-	if(straight <= 0.05)
+	if(abs(straight) <= 0.05)
 		straight = 0;
-	if(turn <= 0.05)
+	if(abs(turn) <= 0.05)
 		turn = 0;
 
 	// Straight and turn dead zones
@@ -88,13 +88,31 @@ void processDrive(double straight, double turn) {
 		turn = 0;
 	else if(turn / straight > DEAD_ZONE_TIGHTNESS)
 		straight = 0;
-	
-	double leftSpeed = straight;
-	double rightSpeed = straight;
-	if(turn < 0)
-		leftSpeed -= turn * 2;
-	else
-		rightSpeed -= turn * 2;
+
+	double leftSpeed = 0;
+	double rightSpeed = 0;
+	if(turn == 0) {
+		leftSpeed = straight;
+		rightSpeed = straight;
+		pros::lcd::print(3, "STRAIGHT");
+	}
+	else if(straight == 0) {
+		rightSpeed = -turn;
+		leftSpeed = turn;
+		pros::lcd::print(3, "TURN");
+	}
+	else {
+		double magnitude = sqrt((turn*turn)+(straight*straight));
+		if(straight < 0) {
+			magnitude = -magnitude;
+		} 
+		// double ratio = turn/straight;
+		leftSpeed = magnitude;
+		rightSpeed = magnitude;
+		pros::lcd::print(3, "SUB-RIGHT");
+		leftSpeed += turn;
+		rightSpeed -= turn;
+	}
 	frontRightDrive.move(rightSpeed * 127);
 	backRightDrive.move(rightSpeed * 127);
 	frontLeftDrive.move(leftSpeed * 127);
@@ -132,7 +150,6 @@ void opcontrol() {
 	tray.reset();
 	lift.reset();
 	while (1) {
-	pros::lcd::print(3, "Tray: %f", tray.getTarget());
 	tray.update();
 	intake.update();
 	lift.update();

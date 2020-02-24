@@ -28,7 +28,7 @@ void initialize() {
 	// pros::Motor frontRightMtr (FR);
 	// pros::Motor backRightMtr (BR);
 
-//	pros::lcd::initialize();
+	pros::lcd::initialize();
 
 	pros::Task trackingTask(tracking, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Tracking Wheels");
 	pros::Task tempTask(motorTemp, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Temperature tracking");

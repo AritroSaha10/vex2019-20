@@ -17,7 +17,7 @@ int callbackCount = 0;
 void finishedLiftCallback() {
     lifting = false;
     lift.setCallback(nullCallback);
-    pros::lcd::print(4, "LIFT CALLBACK: %i", callbackCount);
+    pros::lcd::print(5, "LIFT CALLBACK: %i", callbackCount);
     callbackCount++;
 }
 
@@ -25,7 +25,7 @@ void droppedLiftCallback() {
     lifting = false;
     lift.setCallback(nullCallback);
     tray.lower();
-    pros::lcd::print(4, "DROP CALLBACK: %i", callbackCount);
+    pros::lcd::print(5, "DROP CALLBACK: %i", callbackCount);
     callbackCount++;
 }
 
@@ -34,7 +34,7 @@ void finishedTrayCallback() {
     tray.setCallback(nullCallback);
     drive.setMaxVelocity(600);
     intake.control();
-    pros::lcd::print(4, "TRAY CALLBACK: %i", callbackCount);
+    pros::lcd::print(5, "TRAY CALLBACK: %i", callbackCount);
     callbackCount++;
 }
 
