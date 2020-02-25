@@ -20,6 +20,7 @@ public:
     void setCallback(void(*_callback)());
     void setOperatorControl(int op);
     void layCubes();
+    void layHalf();
     void moveTo(double _position);
     void layCubesAuton();
     void lower();

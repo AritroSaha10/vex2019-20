@@ -2,6 +2,7 @@
 #include "tray.h"
 
 #define MAX_TRAY 1020
+#define HALF_STACK 300
 #define OPERATOR_TRAY_VELOCITY 50
 
 // Constructor
@@ -34,6 +35,12 @@ void Tray::layCubes() {
     this->changeState(LIFT_STATE);
 }
 
+void Tray::layHalf() {
+    this->stacking = true;
+    this->target = HALF_STACK;
+    this->changeState(LIFT_STATE);
+}
+
 void Tray::layCubesAuton() {
     this->stacking = true;
 	this->changeState(AUTON_LIFT);
@@ -44,7 +51,7 @@ void Tray::lower() {
 }
 
 double Tray::getPowerFunction(double time) {
-    return 60 * pow(2, -0.0015*time) + 40;
+    return 60 * pow(2, -0.003*time) + 40;
 }
 
 double Tray::getReversePowerFunction(double time) {

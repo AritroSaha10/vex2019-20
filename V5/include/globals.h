@@ -20,6 +20,7 @@ extern pros::Motor leftIntake_motor;
 
 extern pros::ADIPotentiometer trayPot;
 extern pros::ADIPotentiometer liftPot;
+extern pros::ADIEncoder backTrackingWheel;
 
 extern pros::Task update;
 

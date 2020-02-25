@@ -11,6 +11,7 @@
 bool stacking = false;
 bool lifting = false;
 bool suspendDrive = false;
+bool trayUp = false;
 
 int callbackCount = 0;
 
@@ -29,7 +30,17 @@ void droppedLiftCallback() {
     callbackCount++;
 }
 
+void outtakeStack(void *param) {
+    intake.out(-80);
+    pros::delay(450);
+    intake.reset();
+}
+
 void finishedTrayCallback() {
+    if(tray.getPosition() <  20) {
+        trayUp = false;
+    }
+    suspendDrive = false;
     stacking = false;
     tray.setCallback(nullCallback);
     drive.setMaxVelocity(600);
@@ -39,8 +50,16 @@ void finishedTrayCallback() {
 }
 
 void stackCubes() {
+    trayUp = true;
     stacking = true;
     tray.layCubes();
+    tray.setCallback(finishedTrayCallback);
+}
+
+void halfStack() {
+    trayUp = true;
+    stacking = true;
+    tray.layHalf();
     tray.setCallback(finishedTrayCallback);
 }
 
@@ -52,13 +71,15 @@ void autonStack() {
 }
 
 void disengageStack() {
+    suspendDrive = true;
     stacking = true;
     /*Something with the intake*/
-    //drive.setMaxVelocity(400);
-    //intake.out(40);
+    drive.setMaxVelocity(30);
     using namespace okapi::literals;
-    //drive.moveDistanceAsync(-0.2_m);
+    pros::Task trackingTask(outtakeStack, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Let go");
+    drive.moveDistanceAsync(-0.3_m);
     tray.lower();
+    tray.setCallback(finishedTrayCallback);
 }
 
 void liftToMid() {

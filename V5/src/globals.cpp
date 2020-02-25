@@ -25,6 +25,7 @@ pros::Task update(nullTask, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DE
 
 pros::ADIPotentiometer trayPot(TRAY_POT_PORT);
 pros::ADIPotentiometer liftPot(LIFT_POT_PORT);
+pros::ADIEncoder backTrackingWheel('A', 'B', true);
 
 using namespace okapi::literals;
 okapi::ChassisControllerIntegrated drive = okapi::ChassisControllerFactory::create(

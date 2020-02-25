@@ -94,12 +94,10 @@ void processDrive(double straight, double turn) {
 	if(turn == 0) {
 		leftSpeed = straight;
 		rightSpeed = straight;
-		pros::lcd::print(3, "STRAIGHT");
 	}
 	else if(straight == 0) {
 		rightSpeed = -turn;
 		leftSpeed = turn;
-		pros::lcd::print(3, "TURN");
 	}
 	else {
 		double magnitude = sqrt((turn*turn)+(straight*straight));
@@ -109,7 +107,6 @@ void processDrive(double straight, double turn) {
 		// double ratio = turn/straight;
 		leftSpeed = magnitude;
 		rightSpeed = magnitude;
-		pros::lcd::print(3, "SUB-RIGHT");
 		leftSpeed += turn;
 		rightSpeed -= turn;
 	}
@@ -149,15 +146,19 @@ void opcontrol() {
 	int lastEncoder = getEncoders({TRAY})[0];
 	tray.reset();
 	lift.reset();
-	while (1) {
-	tray.update();
-	intake.update();
-	lift.update();
-	encoder = getEncoders({LIFT, TRAY});
 
-	if(abs(getEncoders({TRAY})[0]-lastEncoder) > 5) {
-		master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
-		lastEncoder = getEncoders({TRAY})[0];
+	bool L1Pressed = false;
+	while (1) {
+		pros::lcd::print(3, "%d", backTrackingWheel.get_value());
+		tray.update();
+		intake.update();
+		lift.update();
+		encoder = getEncoders({LIFT, TRAY});
+
+		if (abs(getEncoders({TRAY})[0] - lastEncoder) > 5)
+		{
+			master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
+			lastEncoder = getEncoders({TRAY})[0];
 	}
 
 	// INTAKE
@@ -192,7 +193,7 @@ void opcontrol() {
 		liftToLow();
 	}
 	if(master.getDigital(ControllerDigital::A)) {
-		//liftToMid();
+		liftToMid();
 	}
 	if(master.getDigital(ControllerDigital::down)) {
 		dropLift();
@@ -210,12 +211,30 @@ void opcontrol() {
 			tray.setOperatorControl(0);
 		}
 	}
-	int stack = engageTray.checkState();
-	if(stack == 1) {
-		stackCubes();
+	// int stack = engageTray.checkState();
+	// if(stack == 1) {
+	// 	stackCubes();
+	// }
+	// if(stack == 0) {
+	// 	disengageStack();
+	// }
+
+	pros::lcd::print(5, "TRAY UP: %d", trayUp ? 1 : 0);
+	pros::lcd::print(1, "L1: %d", L1Pressed ? 1 : 0);
+	if(master.getDigital(ControllerDigital::L1) && !L1Pressed) {
+		L1Pressed = true;
+		if(trayUp) {
+			disengageStack();
+		}
+		else {
+			halfStack();
+		}
 	}
-	if(stack == 0) {
-		disengageStack();
+	else if(!master.getDigital(ControllerDigital::L1) && L1Pressed && tray.getState() != Tray::LOWER_STATE) {
+		L1Pressed = false;
+		if(trayUp) {
+			stackCubes();
+		}
 	}
 
 	// Acceleration curve
@@ -233,7 +252,8 @@ void opcontrol() {
 		lSpeed -= accel*2;
 	else
 		lSpeed = reqLSpeed;
-	processDrive(lSpeed, rSpeed);
+	if(!suspendDrive)
+		processDrive(lSpeed, rSpeed);
 	
 	// Diagnostics
 	pros::delay(10);
