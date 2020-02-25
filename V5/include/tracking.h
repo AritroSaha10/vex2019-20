@@ -6,7 +6,8 @@
 #include "chassis.h"
 #include <math.h> 
 #define _USE_MATH_DEFINES
-#define DEGREE_TO_CM (M_PI*8.255/900) //cm per tick
+#define DRIVE_DEGREE_TO_INCH (M_PI*4/900) //cm per tick
+#define TRACKING_WHEEL_DEGREE_TO_INCH (M_PI*3.25/360)
 
 /*
 	Tracks encoder positions; No parameters
