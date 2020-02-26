@@ -149,16 +149,17 @@ void opcontrol() {
 
 	bool L1Pressed = false;
 	while (1) {
-		pros::lcd::print(3, "%d", backTrackingWheel.get_value());
-		tray.update();
-		intake.update();
-		lift.update();
-		encoder = getEncoders({LIFT, TRAY});
+	pros::lcd::print(2, "DRIVE: %f", frontLeftDrive.get_actual_velocity());
+	pros::lcd::print(3, "%d", backTrackingWheel.get_value());
+	tray.update();
+	intake.update();
+	lift.update();
+	encoder = getEncoders({LIFT, TRAY});
 
-		if (abs(getEncoders({TRAY})[0] - lastEncoder) > 5)
-		{
-			master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
-			lastEncoder = getEncoders({TRAY})[0];
+	if (abs(getEncoders({TRAY})[0] - lastEncoder) > 5)
+	{
+		master.setText(0, 0, IntToStr(getEncoders({TRAY})[0]));
+		lastEncoder = getEncoders({TRAY})[0];
 	}
 
 	// INTAKE
@@ -200,17 +201,17 @@ void opcontrol() {
 	}
 
 	// TRAY 
-	if(tray.getState() == Tray::HOLD_STATE) {
-		if(master.getDigital(ControllerDigital::L2) && !stacking) {
-			tray.setOperatorControl(1);
-		}
-		else if(master.getDigital(ControllerDigital::R2) && !stacking) {
-			tray.setOperatorControl(-1);
-		}
-		else if(!stacking) {
-			tray.setOperatorControl(0);
-		}
-	}
+	// if(tray.getState() == Tray::HOLD_STATE) {
+	// 	if(master.getDigital(ControllerDigital::L2) && !stacking) {
+	// 		tray.setOperatorControl(1);
+	// 	}
+	// 	else if(master.getDigital(ControllerDigital::R2) && !stacking) {
+	// 		tray.setOperatorControl(-1);
+	// 	}
+	// 	else if(!stacking) {
+	// 		tray.setOperatorControl(0);
+	// 	}
+	// }
 	// int stack = engageTray.checkState();
 	// if(stack == 1) {
 	// 	stackCubes();
@@ -219,8 +220,6 @@ void opcontrol() {
 	// 	disengageStack();
 	// }
 
-	pros::lcd::print(5, "TRAY UP: %d", trayUp ? 1 : 0);
-	pros::lcd::print(1, "L1: %d", L1Pressed ? 1 : 0);
 	if(master.getDigital(ControllerDigital::L1) && !L1Pressed) {
 		L1Pressed = true;
 		if(trayUp) {
@@ -235,6 +234,10 @@ void opcontrol() {
 		if(trayUp) {
 			stackCubes();
 		}
+	}
+
+	if(master.getDigital(ControllerDigital::L2)) {
+		dropTray();
 	}
 
 	// Acceleration curve
@@ -257,7 +260,6 @@ void opcontrol() {
 	
 	// Diagnostics
 	pros::delay(10);
-	pros::lcd::print(2,"Lift: %f", lift.getPosition());
 	//}
 		//pros::vision_object_s_t testCube = andyVision.get_by_sig(0, PURPLE_SIG2);
 		//pros::lcd::print(5, "location of purple cube: %f", testCube.left_coord);

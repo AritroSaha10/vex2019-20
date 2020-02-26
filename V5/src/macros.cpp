@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "main.h"
 
-#define MID_HEIGHT 700
+#define MID_HEIGHT 680
 #define LOW_HEIGHT 450
 #define LIFT_MULTIPLIER 0.5f
 #define TRAY_LIFT_MAX 360
@@ -34,6 +34,24 @@ void outtakeStack(void *param) {
     intake.out(-80);
     pros::delay(450);
     intake.reset();
+}
+
+float driveCurve(float time) {
+    float speed = 20 * pow(2, 0.003 * time);
+    if(speed < 100) return speed;
+    else {return 100;}
+}
+
+void backOff(void *param) {
+    uint32_t start = pros::millis();
+    while(suspendDrive && pros::millis() - start < 300) {
+        float power = -driveCurve(pros::millis()-start);
+        frontLeftDrive.move_velocity(power);
+        frontRightDrive.move_velocity(power);
+        backLeftDrive.move_velocity(power);
+        backRightDrive.move_velocity(power);
+        pros::delay(10);
+    }
 }
 
 void finishedTrayCallback() {
@@ -70,6 +88,12 @@ void autonStack() {
     intake.reset();
 }
 
+void dropTray() {
+    stacking = true;
+    tray.lower();
+    tray.setCallback(finishedTrayCallback);
+}
+
 void disengageStack() {
     suspendDrive = true;
     stacking = true;
@@ -77,7 +101,8 @@ void disengageStack() {
     drive.setMaxVelocity(30);
     using namespace okapi::literals;
     pros::Task trackingTask(outtakeStack, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Let go");
-    drive.moveDistanceAsync(-0.3_m);
+    pros::Task backOffTas(backOff, (void*)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Back off");
+    //drive.moveDistanceAsync(-0.3_m);
     tray.lower();
     tray.setCallback(finishedTrayCallback);
 }

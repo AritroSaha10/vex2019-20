@@ -55,7 +55,8 @@ double Tray::getPowerFunction(double time) {
 }
 
 double Tray::getReversePowerFunction(double time) {
-    return 70 * pow(2, 0.003*(time-1000)) + 60;
+    return 200;
+    //return 70 * pow(2, 0.003*(time-1000)) + 60;
 }
 
 void Tray::moveTo(double _position) {
