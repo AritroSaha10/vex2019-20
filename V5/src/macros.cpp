@@ -32,11 +32,12 @@ void droppedLiftCallback() {
 
 void outtakeStack(void *param) {
     intake.out(-80);
-    pros::delay(450);
+    pros::delay(600);
     intake.reset();
 }
 
 float driveCurve(float time) {
+    return 0.08*time + 20;
     float speed = 20 * pow(2, 0.003 * time);
     if(speed < 100) return speed;
     else {return 100;}
@@ -44,7 +45,7 @@ float driveCurve(float time) {
 
 void backOff(void *param) {
     uint32_t start = pros::millis();
-    while(suspendDrive && pros::millis() - start < 300) {
+    while(pros::millis() - start < 300) {
         float power = -driveCurve(pros::millis()-start);
         frontLeftDrive.move_velocity(power);
         frontRightDrive.move_velocity(power);
@@ -52,6 +53,7 @@ void backOff(void *param) {
         backRightDrive.move_velocity(power);
         pros::delay(10);
     }
+    suspendDrive = false;
 }
 
 void finishedTrayCallback() {
