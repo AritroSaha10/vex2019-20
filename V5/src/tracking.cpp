@@ -52,7 +52,10 @@ void tracking(void* param) {
 		bDist = bDelta * TRACKING_WHEEL_DEGREE_TO_INCH;
 		lateral += bDist;
 
-		aDelta = (lDist - rDist)/(lrOffset*2.0f);
+		//aDelta = (lDist - rDist)/(lrOffset*2.0f);
+		float holdAngle = angle;
+		angle = ((leftEncoder * DRIVE_DEGREE_TO_INCH) - (rightEncoder * DRIVE_DEGREE_TO_INCH))/(lrOffset * 2.0f);
+		aDelta = angle - holdAngle;
 		if(aDelta) {
 			float radius = rDist / aDelta;
 			halfA = aDelta/2.0f;
@@ -60,7 +63,7 @@ void tracking(void* param) {
 			localCoord[1] = ((radius + lrOffset) * sinHalf) * 2.0f;
 
 			float backRadius = bDist / aDelta;
-			localCoord[0] = ((radius + lrOffset) * sinHalf) * 2.0f;
+			localCoord[0] = ((radius + bOffset) * sinHalf) * 2.0f;
 		}
 		else {
 			aDelta = 0;
@@ -68,7 +71,7 @@ void tracking(void* param) {
 			localCoord[0] = bDist;
 		}
 
-		float p = halfA + angle; // The global ending angle of the robot
+		float p = halfA + holdAngle; // The global ending angle of the robot
 		float cosP = cos(p);
 		float sinP = sin(p);
 
@@ -77,7 +80,7 @@ void tracking(void* param) {
 		x += localCoord[1] * sinP + localCoord[0] * cosP;
 
 		//Update angle
-		angle += aDelta;
+		//angle += aDelta;
 
 		pros::lcd::print(1, "X: %f, Y: %f, A: %f", x, y, angle/M_PI*360);
 		pros::lcd::print(2, "L: %f R: %f B: %f", left, right, lateral);
