@@ -63,9 +63,10 @@ void tracking(void* param) {
 			localCoord[1] = ((radius + lrOffset) * sinHalf) * 2.0f;
 
 			float backRadius = bDist / aDelta;
-			localCoord[0] = ((radius + bOffset) * sinHalf) * 2.0f;
+			localCoord[0] = ((backRadius + bOffset) * sinHalf) * 2.0f;
 		}
 		else {
+			halfA = 0;
 			aDelta = 0;
 			localCoord[1] = (rDist+lDist)/2;
 			localCoord[0] = bDist;
@@ -101,15 +102,15 @@ typedef struct pid_info {
   }
 } pid_info;
 
-pid_info turnConstants(0.25, 0, 0.2);
+pid_info turnConstants(0.60, 0.001, 0.5);
 
 typedef struct pidData
 {
 	float sense;
-	int lastError;
-	int integral;
-	int error, derivative, speed;
-	int target, lastTarget;
+	float lastError;
+	float integral;
+	float error, derivative, speed;
+	float target, lastTarget;
 
 	pidData(int _target) {
 		this->target = _target;
@@ -148,13 +149,22 @@ pidData CalculatePID(pidData data, pid_info pid)
 void turnToAngle(float target) {
 	pidData turnPid(target);
 
-	while(turnPid.error < TOLERANCE) {
-		turnPid.sense = angle;
+	int count = 0;
+
+	do {
+		turnPid.sense = angle * 180 / M_PI;
 		turnPid = CalculatePID(turnPid, turnConstants);
 		frontLeftDrive.move(turnPid.speed);
 		backLeftDrive.move(turnPid.speed);
 		frontRightDrive.move(-turnPid.speed);
 		backRightDrive.move(-turnPid.speed);
+		pros::lcd::print(6, "%f, %f, %f", turnPid.error, target, TOLERANCE);
 		pros::delay(5);
-	}
+		if(abs(turnPid.error) <= TOLERANCE) {
+			count++;
+		}
+		else {
+			count = 0;
+		}
+	} while(count < 5);
 }

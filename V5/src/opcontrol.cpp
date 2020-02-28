@@ -162,6 +162,10 @@ void opcontrol() {
 		lastEncoder = getEncoders({TRAY})[0];
 	}
 
+	if(master.getDigital(ControllerDigital::right)) {
+		turnToAngle(90);
+	}
+
 	// INTAKE
 	int in = fullIntake.checkState();
 	if(in == 1) {

@@ -2,6 +2,7 @@
 #include "autonSelector.h"
 #include "globals.h"
 #include "macros.h"
+#include "tracking.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -48,7 +49,7 @@ void autonomous() {
 		flipout();
 	}
 	else {
-		flipout();
+		//flipout();
 	}
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	drive.setMaxVelocity(120);
@@ -84,7 +85,8 @@ void autonomous() {
 		drive.moveDistance(-0.3_m);
 		intake.reset();
 	} else if(getAutonId() == AUTON_RED_UNPROTECTED) {
-		drive.moveDistanceAsync(1.05_m);
+		drive.setMaxVelocity(100);
+		drive.moveDistanceAsync(1.00_m);
 		intake.intake(100);
 		drive.waitUntilSettled();
 		pros::delay(400);
@@ -108,10 +110,11 @@ void autonomous() {
 		}
 		intake.stop();
 		pros::delay(500);
-		intake.out(-60);
-		drive.setMaxVelocity(70);
-		drive.moveDistance(-0.3_m);
-		intake.reset();
+		// intake.out(-60);
+		// drive.setMaxVelocity(70);
+		// drive.moveDistance(-0.3_m);
+		disengageStack();
+		//intake.reset();
 	} else if (getAutonId() == SIMPLE_ONE_CUBE) {
 		drive.setMaxVelocity(140);
 		drive.moveDistance(0.08_m);
