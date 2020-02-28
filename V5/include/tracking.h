@@ -12,4 +12,6 @@
 */
 void tracking(void* param);
 
+void turnToAngle(float target);
+
 #endif

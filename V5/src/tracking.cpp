@@ -82,9 +82,79 @@ void tracking(void* param) {
 		//Update angle
 		//angle += aDelta;
 
-		pros::lcd::print(1, "X: %f, Y: %f, A: %f", x, y, angle/M_PI*360);
+		pros::lcd::print(1, "X: %f, Y: %f, A: %f", x, y, angle/M_PI*180);
 		pros::lcd::print(2, "L: %f R: %f B: %f", left, right, lateral);
 
+		pros::delay(5);
+	}
+}
+
+#define TOLERANCE 1
+
+typedef struct pid_info {
+  double p, i, d, motor;
+
+  pid_info(double _p, double _i, double _d) {
+	  this->p = _p;
+	  this->i = _i;
+	  this->d = _d;
+  }
+} pid_info;
+
+pid_info turnConstants(0.25, 0, 0.2);
+
+typedef struct pidData
+{
+	float sense;
+	int lastError;
+	int integral;
+	int error, derivative, speed;
+	int target, lastTarget;
+
+	pidData(int _target) {
+		this->target = _target;
+	}
+} pidData;
+
+pidData CalculatePID(pidData data, pid_info pid)
+{
+	//calculate the error from target to current readings
+	data.error = data.target - data.sense;
+	data.integral += data.error; //add the error to the integral
+	//find the derivative by calculating the difference from the previous two
+	//  errors
+	data.derivative = data.error - data.lastError;
+
+	//disable the integral until it comes into a usable range
+	if (data.error == 0 || (abs(data.error) > (127 / 2)))
+	{
+		data.integral = 0;
+	}
+
+	//put the whole PID shenanigan together and calculate the speed
+	data.speed = (pid.p * data.error) + (pid.i * data.integral) + (pid.d * data.derivative);
+
+	//if the previous two errors were 0, then the robot has probably stopped,
+	//  so exit the program
+	if ((abs(data.error) <= 0 && abs(data.lastError) <= 0) || (data.target == data.lastTarget && data.error == data.lastError))
+	{
+		data.speed = 0;
+		data.target = data.sense;
+	}
+
+	return data;
+}
+
+void turnToAngle(float target) {
+	pidData turnPid(target);
+
+	while(turnPid.error < TOLERANCE) {
+		turnPid.sense = angle;
+		turnPid = CalculatePID(turnPid, turnConstants);
+		frontLeftDrive.move(turnPid.speed);
+		backLeftDrive.move(turnPid.speed);
+		frontRightDrive.move(-turnPid.speed);
+		backRightDrive.move(-turnPid.speed);
 		pros::delay(5);
 	}
 }
