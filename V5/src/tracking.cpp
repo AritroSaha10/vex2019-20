@@ -102,7 +102,7 @@ typedef struct pid_info {
   }
 } pid_info;
 
-pid_info turnConstants(0.60, 0.001, 0.5);
+pid_info turnConstants(0.20, 0.012, 0.6);
 
 typedef struct pidData
 {
@@ -154,10 +154,14 @@ void turnToAngle(float target) {
 	do {
 		turnPid.sense = angle * 180 / M_PI;
 		turnPid = CalculatePID(turnPid, turnConstants);
-		frontLeftDrive.move(turnPid.speed);
-		backLeftDrive.move(turnPid.speed);
-		frontRightDrive.move(-turnPid.speed);
-		backRightDrive.move(-turnPid.speed);
+		float speed = turnPid.speed;
+		if(abs(speed) > 80) {
+			speed = speed < 0 ? -80 : 80;
+		}
+		frontLeftDrive.move(speed);
+		backLeftDrive.move(speed);
+		frontRightDrive.move(-speed);
+		backRightDrive.move(-speed);
 		pros::lcd::print(6, "%f, %f, %f", turnPid.error, target, TOLERANCE);
 		pros::delay(5);
 		if(abs(turnPid.error) <= TOLERANCE) {

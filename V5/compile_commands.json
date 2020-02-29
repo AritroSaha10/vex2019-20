@@ -63,11 +63,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/macros.cpp.o",
-            "src\\macros.cpp"
+            "bin/tracking.cpp.o",
+            "src\\tracking.cpp"
         ],
         "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
-        "file": "src\\macros.cpp"
+        "file": "src\\tracking.cpp"
     },
     {
         "arguments": [
@@ -98,11 +98,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/tracking.cpp.o",
-            "src\\tracking.cpp"
+            "bin/macros.cpp.o",
+            "src\\macros.cpp"
         ],
         "directory": "C:\\Users\\Rayhaan\\Documents\\GitHub\\VEX2019-20\\V5",
-        "file": "src\\tracking.cpp"
+        "file": "src\\macros.cpp"
     },
     {
         "arguments": [

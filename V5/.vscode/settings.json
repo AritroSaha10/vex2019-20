@@ -12,6 +12,7 @@
         "cstdio": "cpp",
         "xmemory0": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "xstddef": "cpp"
     }
 }
