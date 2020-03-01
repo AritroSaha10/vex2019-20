@@ -148,6 +148,8 @@ void opcontrol() {
 	lift.reset();
 
 	bool L1Pressed = false;
+	//flipout();
+
 	while (1) {
 	pros::lcd::print(2, "DRIVE: %f", frontLeftDrive.get_actual_velocity());
 	pros::lcd::print(3, "%d", backTrackingWheel.get_value());

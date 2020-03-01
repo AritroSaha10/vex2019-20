@@ -39,32 +39,34 @@ void autonomous() {
 	//autonSelector();
 	//deleteSelector();
 	tray.fullReset();
-	setAutonId(AUTON_RED_UNPROTECTED);
+	//setAutonId(AUTON_BLUE_PROTECTED);
 	if(getAutonId() == FLIPOUT) {
+		flipout();
 		drive.setMaxVelocity(75);
-		drive.moveDistance(0.3_m);
 		drive.moveDistance(-0.3_m);
+		drive.moveDistance(0.3_m);
 		drive.setMaxVelocity(600);
 		pros::delay(1000);
-		flipout();
 	}
 	else {
-		flipout();
+		//flipout();
 	}
 	update = pros::Task(updateSysMan, (void *)"PROS", TASK_PRIORITY_DEFAULT, TASK_STACK_DEPTH_DEFAULT, "Update system manager");
 	drive.setMaxVelocity(120);
 	if (getAutonId() == FLIPOUT)
 		;
 	else if (getAutonId() == AUTON_BLUE_UNPROTECTED) {
-		drive.moveDistanceAsync(1.05_m);
+		flipout();
+		drive.setMaxVelocity(80);
+		drive.moveDistanceAsync(0.80_m);
 		intake.intake(100);
 		drive.waitUntilSettled();
 		pros::delay(400);
 		intake.stop();
 		drive.setMaxVelocity(60);
-		drive.turnAngle(-109_deg);
+		drive.turnAngle(-107_deg);
 		drive.setMaxVelocity(120);
-		drive.moveDistance(0.94_m);
+		drive.moveDistance(0.87_m);
 		intake.out(-50);
 		pros::delay(400);
 		intake.reset();
@@ -85,16 +87,17 @@ void autonomous() {
 		drive.moveDistance(-0.3_m);
 		intake.reset();
 	} else if(getAutonId() == AUTON_RED_UNPROTECTED) {
-		drive.setMaxVelocity(100);
-		drive.moveDistanceAsync(1.00_m);
+		flipout();
+		drive.setMaxVelocity(80);
+		drive.moveDistanceAsync(0.80_m);
 		intake.intake(100);
 		drive.waitUntilSettled();
 		pros::delay(400);
 		intake.stop();
 		drive.setMaxVelocity(60);
-		drive.turnAngle(109_deg);
+		drive.turnAngle(107_deg);
 		drive.setMaxVelocity(120);
-		drive.moveDistance(0.94_m);
+		drive.moveDistance(0.87_m);
 		intake.out(-50);
 		pros::delay(400);
 		intake.reset();
@@ -124,18 +127,29 @@ void autonomous() {
 		intake.stop();
 	} else if (getAutonId() == AUTON_BLUE_PROTECTED) {
 		drive.setMaxVelocity(130);
-		drive.moveDistanceAsync(1.1_m);
+		drive.moveDistance(0.1_m);
+		drive.moveDistance(-0.1_m);
+		flipout();
+		drive.setMaxVelocity(130);
 		intake.intake(120);
-		pros::delay(2000);
+		drive.moveDistance(0.4_m);
+		pros::delay(200);
+		drive.setMaxVelocity(80);
+		drive.turnAngle(70_deg);
+		drive.setMaxVelocity(130);
+		drive.moveDistance(0.5_m);
+		pros::delay(300);
 		intake.stop();
-		drive.waitUntilSettled();
-		drive.turnAngle(120_deg);
-		drive.moveDistance(1.5_m);
+		drive.setMaxVelocity(80);
+		drive.turnAngle(25_deg);
+		drive.moveDistance(0.2_m);
+		intake.out(-50);
+		pros::delay(400);
 		intake.reset();
 		stackCubes();
 		while (tray.getTrayState() == 0x11)
 		{
-			if (pros::millis() <= 14000) {
+			if (pros::millis() <= 14500) {
 				pros::lcd::print(1, "Hello");
 				pros::delay(2);
 			} else {
@@ -143,19 +157,36 @@ void autonomous() {
 			}
 		}
 		pros::lcd::print(1, "Hello again");
-		tray.lower();
-		drive.moveDistanceAsync(-0.3_m);
-	} else if (getAutonId() == AUTON_RED_UNPROTECTED) {
+		disengageStack();
+	} else if (getAutonId() == AUTON_RED_PROTECTED) {
 		drive.setMaxVelocity(130);
-		drive.moveDistanceAsync(1.1_m);
+		drive.moveDistance(0.3_m);
+		drive.moveDistance(-0.3_m);
+		flipout();
+		drive.setMaxVelocity(80);
 		intake.intake(120);
-		pros::delay(3000);
-		intake.stop();
-		drive.waitUntilSettled();
-		drive.turnAngle(-120_deg);
-		drive.moveDistance(1.5_m);
-		intake.reset();
+		drive.moveDistance(0.4_m);
+		pros::delay(200);
+		drive.setMaxVelocity(60);
+		drive.turnAngle(-90);
+		drive.setMaxVelocity(80);
+		drive.moveDistanceAsync(0.5_m);
+		pros::delay(300);
+		drive.setMaxVelocity(60);
+		drive.turnAngle(90);
+		drive.moveDistance(0.3);
 		stackCubes();
+		while (tray.getTrayState() == 0x11)
+		{
+			if (pros::millis() <= 14500) {
+				pros::lcd::print(1, "Hello");
+				pros::delay(2);
+			} else {
+				drive.moveDistance(-0.3_m);
+			}
+		}
+		pros::lcd::print(1, "Hello again");
+		disengageStack();
 	}
 	intake.reset();
 	pros::Task task_delete(update);

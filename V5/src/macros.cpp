@@ -164,12 +164,14 @@ void incrementLift(int dir) {
 
 void flipout()
 {
-    tray.setTargetPowerControl(100, 100);
+    tray.setTargetPowerControl(80, 100);
     pros::delay(200);
     intake.out(-127);
-    lift_motor.move_absolute(400, 100);
-    pros::delay(700);
+    lift_motor.move_absolute(600, 100);
+    pros::delay(2000);
     lift_motor.move_absolute(0, 250);
     tray.setTargetPowerControl(0, 100);
+    intake.reset();
+    pros::delay(500);
     intake.reset();
 }
