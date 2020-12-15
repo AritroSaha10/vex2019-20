@@ -63,7 +63,6 @@ void autonomous() {
 		drive.waitUntilSettled();
 		pros::delay(400);
 		intake.stop();
-		drive.setMaxVelocity(60);
 		drive.turnAngle(-107_deg);
 		drive.setMaxVelocity(120);
 		drive.moveDistance(0.87_m);
