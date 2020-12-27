@@ -9,6 +9,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2.0.0
     - name: Build VEX project
-      uses: schineaj23/vex-build@v1.0
+      uses: AritroSaha10/vex-build@v1.0
       with:
         path: /home/runner/work/vex2019-20/vex2019-20/V5
