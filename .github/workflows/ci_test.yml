@@ -11,4 +11,4 @@ jobs:
     - name: Build VEX project
       uses: schineaj23/vex-build@v1.0
       with:
-        path: V5/
+        path: /home/runner/work/vex2019-20/vex2019-20/V5
