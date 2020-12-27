@@ -9,7 +9,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2.0.0
     - name: Build VEX project
-      uses: AritroSaha10/vex-build@v1.1-beta.7
+      uses: AritroSaha10/vex-build@v1.1-beta.8
       with:
         path: V5/
     - name: Run make command
