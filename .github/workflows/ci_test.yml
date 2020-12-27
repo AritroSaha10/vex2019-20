@@ -13,7 +13,7 @@ jobs:
       with:
         path: V5/
     - name: Run make command
-      uses: AritroSaha10/build-make-project@v0.2-alpha
+      uses: AritroSaha10/build-make-project@v0.3-alpha
       with:
         path: V5/
       
